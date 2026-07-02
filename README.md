@@ -1,6 +1,36 @@
+# Sake Triangle Chart Diagnosis (Demo)
+
+An interactive tool that maps Japanese sake across three flavor axes — **Clean (すっきり)**, **Fruity (フルーティー)**, and **Rich (しっかり)** — helping you get closer to a bottle you'll love by ruling out flavors you dislike.
+
+**Live demo:** https://sakestory.github.io/sake-triangle-chart-demo/
+
+## Concept
+
+When choosing sake, saying "something dry" or "something easy to drink" often still leads to a bottle that doesn't match your taste. Instead of only searching for flavors you like, this diagnosis visualizes your direction by ruling out the flavors you dislike.
+
+## The Three Axes
+
+- **Clean / すっきり**
+- **Fruity / フルーティー**
+- **Rich / しっかり**
+
+Your result is plotted as a balance of these three axes on a triangle chart.
+
+## About This Repository
+
+This is a public **demo** version. Store-specific brand selection, question design, result copy, onboarding support, staff training, and commercial use are all offered as individual customizations.
+
+## Trademark & Brand
+
+Commercial use of the "Sake Triangle Chart" ("日本酒三角チャート") name, logo, and related brand expressions requires permission from the rights holder. The terms for using the code and the terms for using the name/brand are handled separately.
+
+---
+
 # 日本酒三角チャート診断 デモ版
 
 日本酒三角チャート診断は、日本酒を「すっきり・フルーティー・しっかり」の3軸で整理し、苦手な味わいを外しながら、自分に合う一杯に近づくための診断ツールです。
+
+**デモを試す:** https://sakestory.github.io/sake-triangle-chart-demo/
 
 ## コンセプト
 
