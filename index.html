@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>好きな一杯が、見つかる。｜日本酒三角チャー診断 SAKE story</title>
+<title>好きな一杯が、見つかる。｜日本酒三角チャート診断 SAKE story</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
@@ -41,7 +41,6 @@ body{
 
 /* 屋号 */
 .brand{text-align:center;font-family:var(--serif);letter-spacing:.45em;font-size:12px;color:var(--sumi-soft);padding:4px 0;text-indent:.45em;}
-.hero-brand{text-align:center;font-family:var(--serif);letter-spacing:.45em;font-size:13px;color:var(--sumi-soft);text-indent:.45em;margin-bottom:10px;}
 .brand-rule{width:32px;height:1px;background:var(--line);margin:10px auto 0;}
 
 /* 画面切替 */
@@ -146,12 +145,11 @@ body{
   <!-- ===== スタート ===== -->
   <section id="sc-start" class="screen active">
     <div class="hero">
-      
       <div class="hero-sub">日本酒三角チャート診断</div>
       <h1>好きな一杯が、<br>見つかる。</h1>
 
       <!-- 三角チャート：20〜30%大きく、ラベル外側・視認性UP -->
-      <svg class="emblem" width="260" height="234" viewBox="0 0 260 234" fill="none">
+      <svg class="emblem" width="300" height="230" viewBox="-40 -10 340 260" fill="none">
         <!-- グリッド（淡く） -->
         <g stroke="#DDD3BB" stroke-width="0.7">
           <line x1="130" y1="38" x2="74" y2="131"/><line x1="130" y1="38" x2="186" y2="131"/>
@@ -165,19 +163,19 @@ body{
         <circle cx="130" cy="30" r="9" fill="#6E8FA3"/>
         <circle cx="230" cy="207" r="9" fill="#C46B7E"/>
         <circle cx="30" cy="207" r="9" fill="#C0893C"/>
-        <!-- ラベル：三角の外側に、少し大きめ・太め -->
+        <!-- ラベル：内側に寄せて切れない位置に -->
         <text x="130" y="13" text-anchor="middle" font-size="15" fill="#6E8FA3" font-family="serif" font-weight="700">すっきり</text>
-        <text x="246" y="226" text-anchor="middle" font-size="15" fill="#C46B7E" font-family="serif" font-weight="700">フルーティー</text>
-        <text x="14" y="226" text-anchor="middle" font-size="15" fill="#C0893C" font-family="serif" font-weight="700">しっかり</text>
+        <text x="215" y="228" text-anchor="middle" font-size="15" fill="#C46B7E" font-family="serif" font-weight="700">フルーティー</text>
+        <text x="45" y="228" text-anchor="middle" font-size="15" fill="#C0893C" font-family="serif" font-weight="700">しっかり</text>
       </svg>
 
-      <p class="hero-desc">9つの質問で、あなたの好みを三角チャートに。<br>苦手な味を外すことで、好きな一杯に近づきます。</p>
+      <p class="hero-desc">たった9問で、あなたに合う日本酒が見つかります。<br>苦手な味を外すことで、失敗しない一杯へ。</p>
     </div>
 
     <div class="start-chips">
       <span class="chip">⏱ 約2分</span>
-      <span class="chip">名前・メール不要</span>
-      <span class="chip">他のお店でも使える</span>
+      <span class="chip">9問で診断</span>
+      <span class="chip">三角チャートで見える化</span>
     </div>
 
     <button class="btn btn-primary" onclick="startQuiz()">診断を始める</button>
@@ -354,7 +352,14 @@ const TYPES = [
 /* 質問（QUESTIONS） ── 将来13問への拡張可 */
 const QUESTIONS = [
   /* ① 苦手・直接（橋野メソッド：嫌いから入る） */
-  {tag:"まずは、ここから", kind:"penalty", mode:"zero",
+  {tag:"一杯目のこと", kind:"axis",
+   text:"まず一杯目に飲むなら、どれがうれしい？",
+   opts:[
+     {label:"軽くて、すっと入る一杯",           v:"x"},
+     {label:"香りがよくて、気分が上がる一杯",   v:"y"},
+     {label:"味わいがあって、満足感のある一杯", v:"z"},
+   ]},
+  {tag:"失敗しないために", kind:"penalty", mode:"zero",
    text:"お酒で「これだけは避けたいな」と感じるのは？",
    opts:[
      {label:"うすくて、水っぽい感じ",        v:"x"},
@@ -363,12 +368,6 @@ const QUESTIONS = [
      {label:"特にないかも",                   v:""},
    ]},
   /* ② 苦手・間接（どっちがまし？） */
-  {tag:"避けたいのは？", kind:"penalty", mode:"half",
-   text:"注文したあとに「あれ？」となりやすいのは？",
-   opts:[
-     {label:"薄くて、物足りない感じ", v:"x"},
-     {label:"重くて、くどい感じ",     v:"z"},
-   ]},
   /* ③ 苦手・間接（後味） */
   {tag:"後味のこと", kind:"penalty", mode:"half",
    text:"飲んだあとの後味、どちらの方が少し気になりますか？",
@@ -377,12 +376,12 @@ const QUESTIONS = [
      {label:"辛くてぴりっとする感じ", v:"x"},
    ]},
   /* ④〜⑧ 好み（axis） */
-  {tag:"のどが渇いたら", kind:"axis",
-   text:"まず一杯、飲むなら？",
+  {tag:"飲み方のこと", kind:"axis",
+   text:"飲むなら、どんな感じがいい？",
    opts:[
-     {label:"キンと冷えた、すっきり爽快なもの",     v:"x"},
-     {label:"香りの華やかな、フルーティーなもの",     v:"y"},
-     {label:"どっしり飲みごたえのあるもの",         v:"z"},
+     {label:"冷やして、すっきり飲みたい",           v:"x"},
+     {label:"ワイングラスで、香りを楽しみたい",     v:"y"},
+     {label:"少し温度を上げて、旨味を感じたい",     v:"z"},
    ]},
   {tag:"合わせる料理", kind:"axis",
    text:"惹かれるのは、どれ？",
@@ -556,7 +555,7 @@ function renderResult(){
     d.className="rec"+(i===0?" top1":"");
     d.innerHTML='<span class="rec-rank">'+(i+1)+'位</span>'+
                 '<span class="rec-name">'+b.name+'</span>'+
-                '<span class="rec-coord">爽'+b.x+'・華'+b.y+'・旨'+b.z+'</span>';
+                '<span class="rec-coord">す'+b.x+'・フ'+b.y+'・し'+b.z+'</span>';
     rl.appendChild(d);
   });
   /* シェアカードを自動描画（フォント読み込み後＋少し遅延させて確実に） */
@@ -829,8 +828,6 @@ function drawCard(r){
 
 async function saveAndShare(){
   if(!result) return;
-  drawCard(result);
-  const cv=document.getElementById("shareCanvas");
   const r=result;
   const shareText=
     "私の日本酒タイプは「"+r.type.name+"」でした。\n\n"+
@@ -838,26 +835,41 @@ async function saveAndShare(){
     "「"+r.orderPhrase+"」\n\n"+
     "すっきり"+r.X+"／フルーティー"+r.Y+"／しっかり"+r.Z+"\n"+
     "#SAKEstory #日本酒三角チャート";
-  /* Web Share API（スマホ対応） */
-  if(navigator.share && navigator.canShare){
-    cv.toBlob(async(blob)=>{
+
+  /* フォント読み込みを待ってから描画 */
+  await document.fonts.ready;
+  drawCard(r);
+
+  const cv=document.getElementById("shareCanvas");
+
+  /* スマホ：Web Share API で画像ファイルごと共有 */
+  if(navigator.share){
+    try{
+      const blob=await new Promise(res=>cv.toBlob(res,'image/png'));
       const file=new File([blob],'sake-result.png',{type:'image/png'});
-      if(navigator.canShare({files:[file]})){
-        try{
-          await navigator.share({files:[file],text:shareText});
-          return;
-        }catch(e){ /* キャンセルなど */ }
+      /* ファイル共有に対応しているか確認 */
+      if(navigator.canShare && navigator.canShare({files:[file]})){
+        await navigator.share({files:[file], text:shareText});
+        return;
       }
-      /* ファイル共有非対応の場合はテキストのみ */
-      try{ await navigator.share({text:shareText}); }catch(e){}
-    },'image/png');
-  } else {
-    /* PC：画像保存 → X投稿の導線 */
-    downloadCard();
-    setTimeout(()=>{
-      window.open("https://twitter.com/intent/tweet?text="+encodeURIComponent(shareText),"_blank");
-    },800);
+      /* ファイル非対応ならテキストのみ共有 */
+      await navigator.share({text:shareText});
+      return;
+    }catch(e){
+      if(e.name==='AbortError') return; /* ユーザーキャンセルは何もしない */
+      /* エラーはPC導線にフォールバック */
+    }
   }
+
+  /* PC：画像を保存してからXを開く */
+  const a=document.createElement('a');
+  a.download='sake-result.png';
+  a.href=cv.toDataURL('image/png');
+  a.click();
+  /* 少し待ってXを開く（保存ダイアログが落ち着くのを待つ） */
+  setTimeout(()=>{
+    window.open("https://twitter.com/intent/tweet?text="+encodeURIComponent(shareText),"_blank");
+  },1200);
 }
 
 function downloadCard(){
