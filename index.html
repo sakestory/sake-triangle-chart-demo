@@ -244,9 +244,6 @@ body{
     <button class="more-btn" id="moreBtn" onclick="showMore()">もっと見る</button>
     <p style="font-size:12px;color:var(--sumi-soft);margin:8px 2px 0;line-height:1.75;">本日の在庫と連動していない事もございます、スタッフにご相談下さい。</p>
 
-    <div class="sec">近いタイプの有名銘柄</div>
-    <div id="famousList" class="famous-box"></div>
-
     <div class="sec">合う料理</div>
     <div id="pairing" class="pairing"></div>
 
@@ -259,7 +256,7 @@ body{
     </div>
     <p class="share-hint">スマホの場合は画像つき共有が起動します。<br>PCの場合は画像を保存してXに添付してください。</p>
 
-    <div class="onsite">色々とご相談に乗れるかと思いますし、是非当店スタッフに結果を教えて下さい！</div>
+    <div class="onsite">結果をスタッフにお見せ頂けたらここに入っている以外のお酒のおすすめもある時がございます。</div>
 
     <button class="btn btn-ghost" onclick="restart()" style="margin-top:22px;">もう一度、診断する</button>
     <div class="foot">© SAKE story ／ 橋野元樹　v4</div>
@@ -508,7 +505,7 @@ const QUESTIONS = [
    text:"お店で日本酒を頼むとき、近いのはどれ？",
    opts:[
      {label:"迷って、つい「辛口で」と言ってしまう",         v:"x"},
-     {label:"実は甘めや華やかも好きだけど、言い出しにくい", v:"y"},
+     {label:"「辛口で」と言いつつ、甘めや華やかも飲んでみたい", v:"y"},
      {label:"濃いめ・旨味系をちゃんと選びたい",             v:"z"},
    ]},
   {tag:"失敗しないために", kind:"penalty",
@@ -627,7 +624,7 @@ function choose(v){
 }
 
 /* ==== 調整用設定（公開後にここだけ変えれば全体調整できます） ==== */
-const CONFIG = { PENALTY_STRONG:0.2, PENALTY_MILD:0.5, BODY_BONUS:1.5 };
+const CONFIG = { PENALTY_STRONG:0.2, PENALTY_MILD:0.5, BODY_BONUS:1.5, BONUS_MAX:1.5 };
 
 function compute(){
   const axisQs=QUESTIONS.filter(q=>q.kind==="axis");
@@ -638,10 +635,15 @@ function compute(){
     y:raw.y/axisQs.length*10,
     z:raw.z/axisQs.length*10,
   };
-  /* 苦手補正（乗算）とボーナス（薄い苦手→Z上げ 等） */
+  /* 苦手補正（乗算）とボーナス（薄い苦手→Z上げ 等）
+     ※ボーナスは軸ごとに累計BONUS_MAXまで。「薄いのが嫌い」を複数回選んでも
+       しっかり軸へ過剰に引っ張られないようにする（2026-07-04修正） */
+  const bonusUsed={x:0,y:0,z:0};
   answers.forEach(a=>{
     if(a.kind!=="penalty"||!a.v) return;
-    if(a.v[0]==="+"){ sc[a.v[1]]=Math.min(10, sc[a.v[1]]+CONFIG.BODY_BONUS); return; }
+    if(a.v[0]==="+"){ const ax=a.v[1];
+      const add=Math.max(0, Math.min(CONFIG.BODY_BONUS, CONFIG.BONUS_MAX-bonusUsed[ax]));
+      sc[ax]=Math.min(10, sc[ax]+add); bonusUsed[ax]+=add; return; }
     const [ax,f]=a.v.split("*");
     const factor = f==="S"?CONFIG.PENALTY_STRONG:CONFIG.PENALTY_MILD;
     sc[ax]=sc[ax]*factor;
@@ -689,10 +691,6 @@ function renderResult(){
   document.getElementById("chart").innerHTML=buildChart(r);
   /* 今日飲めるおすすめ：TOP3表示・「もっと見る」で5位まで */
   renderRecs(3);
-  /* 近いタイプの有名銘柄 */
-  const fl=document.getElementById("famousList");
-  fl.innerHTML=r.recFamous.map(b=>b.name).join("　・　")
-    +'<br><span class="famous-note">※ 味の方向が近い有名銘柄です（常時ご用意しているものではありません）</span>';
   /* 合う料理 */
   document.getElementById("pairing").innerHTML=t.pairing.map(p=>"<span>"+p+"</span>").join("");
   /* シェアカード事前生成 */
