@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>SAKE story｜物語を、呑む。— リデザイン提案デモ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* =====================================================
+   SAKE story — リデザイン提案デモ
+   コンセプト：「一冊の物語として読むサイト」
+   夜＝墨と朱のバー空間 / 昼＝和紙の設え（既存ブランド継承）
+   ===================================================== */
+:root{
+  /* ---- 昼：和紙の設え（既存診断アプリと同じ世界観） ---- */
+  --ground:#F5EFE0;
+  --ground-deep:#EAE1CC;
+  --card:#FDFAF3;
+  --ink:#2C2620;
+  --ink-soft:#5B5247;
+  --shu:#B23A2E;
+  --shu-soft:#C9705F;
+  --kin:#A8873E;
+  --ai:#5E7F94;
+  --beni:#C46B7E;
+  --kohaku:#B98336;
+  --line:#DDD3BB;
+  --line-strong:#C9BC9E;
+  --hero-glow:rgba(178,58,46,.08);
+  --shadow:0 14px 40px -18px rgba(44,38,32,.35);
+  --serif:"Noto Serif JP","Hiragino Mincho ProN","Yu Mincho","Noto Serif CJK JP","BIZ UDMincho",serif;
+  --sans:"Noto Sans JP","Hiragino Kaku Gothic ProN","Yu Gothic","Noto Sans CJK JP",sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --ground:#171310;
+    --ground-deep:#100D0B;
+    --card:#211B16;
+    --ink:#EDE4D3;
+    --ink-soft:#A2947F;
+    --shu:#D8604A;
+    --shu-soft:#B24A38;
+    --kin:#C5A059;
+    --ai:#8FA9BC;
+    --beni:#D28B9B;
+    --kohaku:#D3A055;
+    --line:#3A322A;
+    --line-strong:#4E4438;
+    --hero-glow:rgba(216,96,74,.10);
+    --shadow:0 18px 50px -20px rgba(0,0,0,.7);
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#171310;
+  --ground-deep:#100D0B;
+  --card:#211B16;
+  --ink:#EDE4D3;
+  --ink-soft:#A2947F;
+  --shu:#D8604A;
+  --shu-soft:#B24A38;
+  --kin:#C5A059;
+  --ai:#8FA9BC;
+  --beni:#D28B9B;
+  --kohaku:#D3A055;
+  --line:#3A322A;
+  --line-strong:#4E4438;
+  --hero-glow:rgba(216,96,74,.10);
+  --shadow:0 18px 50px -20px rgba(0,0,0,.7);
+}
+:root[data-theme="light"]{
+  --ground:#F5EFE0;
+  --ground-deep:#EAE1CC;
+  --card:#FDFAF3;
+  --ink:#2C2620;
+  --ink-soft:#5B5247;
+  --shu:#B23A2E;
+  --shu-soft:#C9705F;
+  --kin:#A8873E;
+  --ai:#5E7F94;
+  --beni:#C46B7E;
+  --kohaku:#B98336;
+  --line:#DDD3BB;
+  --line-strong:#C9BC9E;
+  --hero-glow:rgba(178,58,46,.08);
+  --shadow:0 14px 40px -18px rgba(44,38,32,.35);
+}
+
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html{scroll-behavior:smooth;}
+html,body{margin:0;padding:0;}
+body{
+  background:var(--ground);
+  color:var(--ink);
+  font-family:var(--serif);
+  line-height:2.1;
+  -webkit-font-smoothing:antialiased;
+  transition:background .5s ease,color .5s ease;
+  overflow-x:hidden;
+}
+::selection{background:var(--shu);color:var(--ground);}
+a{color:inherit;}
+img,svg{max-width:100%;}
+:focus-visible{outline:2px solid var(--shu);outline-offset:3px;border-radius:2px;}
+
+/* 縦書きユーティリティ */
+.tate{writing-mode:vertical-rl;text-orientation:mixed;}
+
+/* =============== 左レール（PC） =============== */
+.rail{
+  position:fixed;inset:0 auto 0 0;width:88px;z-index:50;
+  display:flex;flex-direction:column;align-items:center;
+  justify-content:space-between;padding:34px 0 30px;
+  border-right:1px solid var(--line);
+  background:color-mix(in srgb, var(--ground) 88%, transparent);
+  backdrop-filter:blur(8px);
+}
+.rail-brand{
+  font-weight:700;font-size:17px;letter-spacing:.34em;
+  text-decoration:none;line-height:1;
+}
+.rail-nav{display:flex;flex-direction:column;align-items:center;gap:26px;list-style:none;margin:0;padding:0;}
+.rail-nav a{
+  writing-mode:vertical-rl;text-orientation:mixed;display:inline-block;
+  font-size:12.5px;letter-spacing:.3em;text-decoration:none;
+  color:var(--ink-soft);transition:color .25s;position:relative;
+}
+.rail-nav a:hover{color:var(--shu);}
+.rail-foot{font-family:var(--sans);font-size:10px;letter-spacing:.28em;color:var(--ink-soft);}
+
+/* 昼夜トグル */
+.theme-btn{
+  border:1px solid var(--line-strong);background:var(--card);color:var(--ink);
+  width:44px;height:44px;border-radius:50%;cursor:pointer;
+  font-family:var(--serif);font-size:14px;letter-spacing:0;
+  transition:transform .2s,border-color .2s;
+}
+.theme-btn:hover{transform:rotate(15deg);border-color:var(--shu);}
+
+/* =============== モバイルヘッダ =============== */
+.topbar{
+  display:none;position:fixed;inset:0 0 auto 0;z-index:50;
+  align-items:center;justify-content:space-between;
+  padding:14px 20px;border-bottom:1px solid var(--line);
+  background:color-mix(in srgb, var(--ground) 90%, transparent);
+  backdrop-filter:blur(8px);
+}
+.topbar-brand{font-weight:700;letter-spacing:.3em;font-size:15px;text-decoration:none;}
+.topbar-right{display:flex;gap:10px;align-items:center;}
+.topbar .theme-btn{width:38px;height:38px;font-size:12px;}
+
+@media (max-width:900px){
+  .rail{display:none;}
+  .topbar{display:flex;}
+}
+
+/* =============== レイアウト =============== */
+main{margin-left:88px;}
+@media (max-width:900px){ main{margin-left:0;} }
+.sect{
+  position:relative;
+  padding:110px clamp(24px,7vw,110px);
+  max-width:1200px;
+}
+.sect+.sect{border-top:1px solid var(--line);}
+
+/* 章ラベル（縦書き・各章の右肩） */
+.ch{
+  position:absolute;top:104px;right:clamp(18px,4.5vw,64px);
+  writing-mode:vertical-rl;
+  font-size:12px;letter-spacing:.42em;color:var(--kin);
+  display:flex;align-items:center;gap:14px;height:max-content;
+}
+.ch::after{content:"";width:1px;height:56px;background:var(--kin);opacity:.55;margin-top:14px;}
+
+.eyebrow{
+  font-family:var(--sans);font-size:11.5px;letter-spacing:.4em;
+  color:var(--shu);margin:0 0 18px;font-weight:500;
+}
+h2.title{
+  font-size:clamp(26px,4.2vw,40px);font-weight:600;letter-spacing:.06em;
+  line-height:1.7;margin:0 0 30px;text-wrap:balance;
+}
+.lede{max-width:38em;font-size:15px;color:var(--ink-soft);margin:0;}
+.lede em{font-style:normal;color:var(--ink);border-bottom:1px solid var(--kin);padding-bottom:1px;}
+
+/* スクロール出現 */
+.reveal{opacity:0;transform:translateY(26px);transition:opacity .9s ease,transform .9s ease;}
+.reveal.in{opacity:1;transform:none;}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto;}
+  .reveal{opacity:1;transform:none;transition:none;}
+}
+
+/* =============== HERO =============== */
+.hero{
+  min-height:100svh;display:flex;align-items:stretch;position:relative;
+  padding:0;max-width:none;overflow:hidden;
+}
+.hero-bg{position:absolute;inset:0;pointer-events:none;}
+.hero-bg::before{
+  content:"";position:absolute;inset:0;
+  background:
+    radial-gradient(1100px 700px at 78% 18%, var(--hero-glow), transparent 65%),
+    radial-gradient(900px 800px at 12% 92%, color-mix(in srgb, var(--ai) 9%, transparent), transparent 70%);
+}
+/* 大きな円相（盃の輪郭） */
+.enso{
+  position:absolute;top:50%;left:56%;transform:translate(-50%,-50%);
+  width:min(74vh,680px);height:min(74vh,680px);opacity:.5;
+}
+.enso circle{fill:none;stroke:var(--kin);stroke-width:1;opacity:.55;}
+.enso .thin{opacity:.3;}
+.hero-inner{
+  position:relative;flex:1;display:flex;
+  justify-content:space-between;align-items:stretch;
+  padding:clamp(90px,12vh,130px) clamp(26px,7vw,110px) clamp(46px,7vh,70px);
+  gap:24px;
+}
+.hero-copy{
+  writing-mode:vertical-rl;text-orientation:mixed;
+  font-size:clamp(52px,9.5vmin,104px);font-weight:600;letter-spacing:.16em;
+  line-height:1.55;margin:0;align-self:flex-start;
+}
+.hero-copy .ln{display:block;}
+.hero-copy .ln+.ln{margin-block-start:.3em;}
+.hero-copy .c{opacity:0;transform:translateY(-14px);display:inline-block;
+  animation:drop 1s cubic-bezier(.2,.7,.2,1) forwards;}
+@keyframes drop{to{opacity:1;transform:none;}}
+@media (prefers-reduced-motion:reduce){.hero-copy .c{animation:none;opacity:1;transform:none;}}
+.hero-copy .comma{color:var(--shu);}
+
+.hero-side{
+  align-self:flex-end;max-width:30em;
+}
+.hero-kicker{
+  font-family:var(--sans);font-size:11.5px;letter-spacing:.42em;color:var(--shu);
+  margin:0 0 16px;font-weight:500;
+}
+.hero-lead{font-size:15px;color:var(--ink-soft);margin:0 0 30px;line-height:2.2;}
+.hero-brandline{font-size:13px;letter-spacing:.22em;color:var(--ink);margin:0 0 26px;}
+.cta-row{display:flex;flex-wrap:wrap;gap:12px;}
+.btn{
+  display:inline-block;text-decoration:none;font-family:var(--serif);font-weight:600;
+  letter-spacing:.14em;font-size:14px;padding:15px 34px;border-radius:999px;
+  transition:transform .18s,opacity .18s,background .18s;cursor:pointer;border:none;
+}
+.btn:active{transform:scale(.97);}
+.btn-shu{background:var(--shu);color:#FFF6EC;box-shadow:0 8px 26px -10px var(--shu);}
+.btn-shu:hover{opacity:.9;}
+.btn-line{background:transparent;color:var(--ink);border:1px solid var(--line-strong);}
+.btn-line:hover{border-color:var(--shu);color:var(--shu);}
+
+.hero-scroll{
+  position:absolute;bottom:40px;right:clamp(26px,6vw,90px);
+  writing-mode:vertical-rl;font-size:11px;letter-spacing:.4em;color:var(--ink-soft);
+  display:flex;align-items:center;gap:12px;
+}
+.hero-scroll::after{
+  content:"";width:1px;height:64px;background:var(--ink-soft);
+  animation:flow 2.4s ease-in-out infinite;transform-origin:top;
+}
+@keyframes flow{0%{transform:scaleY(0);}45%{transform:scaleY(1);}100%{transform:scaleY(1);opacity:0;}}
+@media (prefers-reduced-motion:reduce){.hero-scroll::after{animation:none;}}
+
+@media (max-width:900px){
+  .hero-inner{flex-direction:column-reverse;justify-content:space-between;padding-top:104px;gap:40px;}
+  .hero-copy{font-size:clamp(46px,13vmin,76px);align-self:flex-end;margin-right:2vw;}
+  .hero-side{align-self:flex-start;}
+  .hero-lead br{display:none;}
+  .hero-kicker{letter-spacing:.26em;}
+  .enso{left:50%;top:40%;}
+  .hero-scroll{display:none;}
+}
+
+/* =============== 口上 =============== */
+.kojo-grid{display:grid;grid-template-columns:auto 1fr;gap:clamp(30px,6vw,80px);align-items:start;}
+.kojo-tate{
+  writing-mode:vertical-rl;font-size:clamp(17px,2vw,22px);font-weight:600;
+  letter-spacing:.24em;line-height:2.4;height:clamp(380px,36vw,500px);
+  border-right:1px solid var(--line-strong);padding-right:clamp(16px,2.5vw,30px);
+}
+@media (max-width:700px){
+  .kojo-grid{grid-template-columns:1fr;}
+  .kojo-tate{height:auto;max-height:340px;border-right:none;border-left:1px solid var(--line-strong);
+    padding:0 0 0 18px;align-self:end;}
+}
+.three{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:44px;}
+@media (max-width:700px){.three{grid-template-columns:1fr;}}
+.tenet{
+  background:var(--card);border:1px solid var(--line);border-radius:4px;
+  padding:26px 24px 24px;position:relative;box-shadow:var(--shadow);
+}
+.tenet::before{
+  content:"";position:absolute;top:0;left:22px;width:34px;height:3px;background:var(--shu);
+}
+.tenet h3{font-size:19px;font-weight:600;letter-spacing:.18em;margin:0 0 10px;}
+.tenet p{font-family:var(--sans);font-size:13px;color:var(--ink-soft);margin:0;line-height:1.95;}
+
+/* =============== 季節 =============== */
+.seasons{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:50px;}
+@media (max-width:1000px){.seasons{grid-template-columns:repeat(2,1fr);}}
+@media (max-width:560px){.seasons{grid-template-columns:1fr;}}
+.season{
+  --sc:var(--shu);
+  background:var(--card);border:1px solid var(--line);border-radius:4px;
+  padding:30px 24px 26px;position:relative;overflow:hidden;
+  transition:transform .3s ease,border-color .3s ease;
+}
+.season:hover{transform:translateY(-6px);border-color:var(--sc);}
+.season .kanji{
+  position:absolute;top:-14px;right:2px;font-size:110px;font-weight:700;
+  color:var(--sc);opacity:.1;line-height:1;pointer-events:none;
+}
+.season .s-tate{
+  writing-mode:vertical-rl;font-size:21px;font-weight:600;letter-spacing:.3em;
+  color:var(--sc);margin:0 0 18px;min-height:96px;
+}
+.season dl{margin:0;font-family:var(--sans);font-size:13px;}
+.season dt{color:var(--ink-soft);font-size:10.5px;letter-spacing:.3em;margin-bottom:2px;}
+.season dd{margin:0 0 14px;font-family:var(--serif);font-size:14.5px;line-height:1.9;}
+.season dd:last-child{margin-bottom:0;}
+.s-haru{--sc:var(--beni);}
+.s-natsu{--sc:var(--ai);}
+.s-aki{--sc:var(--kohaku);}
+.s-fuyu{--sc:var(--ink-soft);}
+
+/* =============== 献立 =============== */
+.courses{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:50px;}
+@media (max-width:820px){.courses{grid-template-columns:1fr;}}
+.course{
+  background:var(--card);border:1px solid var(--line);border-radius:4px;
+  padding:34px 30px;box-shadow:var(--shadow);position:relative;
+}
+.course.omakase{border-color:var(--shu-soft);}
+.course .c-tag{
+  position:absolute;top:-11px;left:26px;background:var(--shu);color:#FFF6EC;
+  font-family:var(--sans);font-size:10.5px;letter-spacing:.26em;padding:3px 14px 3px 16px;border-radius:999px;
+}
+.course h3{font-size:21px;letter-spacing:.12em;margin:4px 0 6px;font-weight:600;}
+.course .price{
+  font-size:26px;font-weight:600;color:var(--shu);letter-spacing:.04em;
+  font-variant-numeric:tabular-nums;margin:0 0 14px;
+}
+.course .price small{font-size:12px;color:var(--ink-soft);letter-spacing:.1em;font-weight:400;}
+.course p{font-family:var(--sans);font-size:13px;color:var(--ink-soft);margin:0;line-height:2;}
+.flow{
+  display:flex;align-items:center;flex-wrap:wrap;gap:0 6px;margin-top:44px;
+  font-size:14px;letter-spacing:.14em;
+}
+.flow .st{background:var(--card);border:1px solid var(--line);border-radius:999px;padding:8px 20px;}
+.flow .ar{color:var(--kin);font-family:var(--sans);}
+.note{font-family:var(--sans);font-size:11.5px;color:var(--ink-soft);margin-top:22px;line-height:1.9;}
+
+/* =============== 診断 =============== */
+.shindan{display:grid;grid-template-columns:minmax(280px,420px) 1fr;gap:clamp(30px,6vw,80px);align-items:center;margin-top:20px;}
+@media (max-width:860px){.shindan{grid-template-columns:1fr;}}
+.tri-card{
+  background:var(--card);border:1px solid var(--line);border-radius:4px;
+  padding:34px 26px;box-shadow:var(--shadow);
+}
+.tri-card svg{display:block;width:100%;height:auto;}
+.tri-card text{font-family:var(--serif);font-weight:700;}
+.tri-labels{display:flex;justify-content:space-between;margin-top:14px;font-family:var(--sans);font-size:11px;color:var(--ink-soft);letter-spacing:.16em;}
+.shindan-body .chips{display:flex;flex-wrap:wrap;gap:8px;margin:24px 0 30px;}
+.chip{
+  font-size:12.5px;color:var(--ink-soft);border:1px solid var(--line-strong);
+  border-radius:999px;padding:5px 16px;background:var(--card);letter-spacing:.08em;
+}
+
+/* =============== 店主 =============== */
+.master{display:grid;grid-template-columns:auto 1fr;gap:clamp(30px,5vw,70px);align-items:start;}
+@media (max-width:760px){.master{grid-template-columns:1fr;}}
+.master-mon{
+  width:170px;height:170px;border-radius:50%;border:1px solid var(--kin);
+  display:grid;place-items:center;position:relative;flex:none;
+}
+.master-mon::before{
+  content:"";position:absolute;inset:8px;border-radius:50%;border:1px solid var(--line-strong);
+}
+.master-mon span{font-size:52px;font-weight:700;letter-spacing:0;color:var(--shu);}
+.master h3{font-size:24px;letter-spacing:.14em;margin:0 0 4px;font-weight:600;}
+.master .role{font-family:var(--sans);font-size:12px;letter-spacing:.3em;color:var(--kin);margin:0 0 22px;}
+.master p{max-width:36em;font-size:14.5px;color:var(--ink-soft);margin:0 0 16px;}
+.master blockquote{
+  margin:30px 0 0;padding:0 0 0 22px;border-left:2px solid var(--shu);
+  font-size:17px;letter-spacing:.1em;line-height:2.2;color:var(--ink);
+}
+
+/* =============== 案内 =============== */
+.info-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:50px;}
+.info{
+  background:var(--card);border:1px solid var(--line);border-radius:4px;padding:26px 24px;
+}
+.info h4{
+  font-family:var(--sans);font-size:11px;letter-spacing:.36em;color:var(--kin);
+  margin:0 0 12px;font-weight:500;
+}
+.info p{margin:0;font-size:14.5px;line-height:2;}
+.info p small{font-family:var(--sans);font-size:11.5px;color:var(--ink-soft);display:block;margin-top:6px;letter-spacing:.04em;}
+.last-cta{margin-top:54px;display:flex;flex-wrap:wrap;gap:12px;align-items:center;}
+
+/* =============== フッタ =============== */
+footer{
+  margin-left:88px;border-top:1px solid var(--line);
+  padding:44px clamp(24px,7vw,110px) 60px;
+  display:flex;flex-wrap:wrap;gap:20px;justify-content:space-between;align-items:baseline;
+}
+@media (max-width:900px){footer{margin-left:0;}}
+footer .f-brand{font-weight:700;letter-spacing:.3em;font-size:15px;}
+footer .f-note{font-family:var(--sans);font-size:11px;color:var(--ink-soft);letter-spacing:.06em;line-height:1.9;}
+</style>
+</head>
+<body>
+
+<!-- 左レール（PC） -->
+<header class="rail" aria-label="サイト内メニュー">
+  <a class="rail-brand tate" href="#top">SAKE story</a>
+  <nav>
+    <ul class="rail-nav">
+      <li><a href="#kojo">口上</a></li>
+      <li><a href="#kisetsu">季節</a></li>
+      <li><a href="#kondate">献立</a></li>
+      <li><a href="#shindan">診断</a></li>
+      <li><a href="#tenshu">店主</a></li>
+      <li><a href="#annai">案内</a></li>
+    </ul>
+  </nav>
+  <div style="display:flex;flex-direction:column;align-items:center;gap:18px;">
+    <button class="theme-btn" id="themeBtn" aria-label="昼夜の切り替え">夜</button>
+    <span class="rail-foot tate">東京・五反田</span>
+  </div>
+</header>
+
+<!-- モバイルヘッダ -->
+<header class="topbar">
+  <a class="topbar-brand" href="#top">SAKE story</a>
+  <div class="topbar-right">
+    <button class="theme-btn" id="themeBtnM" aria-label="昼夜の切り替え">夜</button>
+    <a class="btn btn-shu" style="padding:9px 20px;font-size:12px;" href="#annai">ご予約</a>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- ============ 序：HERO ============ -->
+  <section class="sect hero">
+    <div class="hero-bg" aria-hidden="true">
+      <svg class="enso" viewBox="0 0 100 100">
+        <circle cx="50" cy="50" r="47"/>
+        <circle class="thin" cx="50" cy="50" r="38"/>
+      </svg>
+    </div>
+    <div class="hero-inner">
+      <div class="hero-side">
+        <p class="hero-kicker">GOTANDA・TOKYO — SAKE PAIRING BAR</p>
+        <p class="hero-brandline">日本酒と肴の店　SAKE story</p>
+        <p class="hero-lead">
+          季節がめぐるたび、酒と料理の物語は書き変わる。<br>
+          旅する店主が綴る、一夜かぎりの頁（ページ）を、<br>
+          カウンター越しにどうぞ。
+        </p>
+        <div class="cta-row">
+          <a class="btn btn-shu" href="#annai">ご予約へ</a>
+          <a class="btn btn-line" href="#shindan">好みを診断する</a>
+        </div>
+      </div>
+      <h1 class="hero-copy" aria-label="物語を、呑む。">
+        <span class="ln" aria-hidden="true"><span class="c" style="animation-delay:.15s">物</span><span class="c" style="animation-delay:.3s">語</span><span class="c" style="animation-delay:.45s">を</span><span class="c comma" style="animation-delay:.6s">、</span></span>
+        <span class="ln" aria-hidden="true"><span class="c" style="animation-delay:.85s">呑</span><span class="c" style="animation-delay:1s">む</span><span class="c comma" style="animation-delay:1.15s">。</span></span>
+      </h1>
+    </div>
+    <span class="hero-scroll" aria-hidden="true">頁をめくる</span>
+  </section>
+
+  <!-- ============ 口上 ============ -->
+  <section class="sect" id="kojo">
+    <span class="ch" aria-hidden="true">序　口上</span>
+    <div class="reveal">
+      <p class="eyebrow">ABOUT</p>
+      <h2 class="title">旅するように、日本酒を味わう。</h2>
+    </div>
+    <div class="kojo-grid reveal">
+      <p class="kojo-tate" aria-hidden="true">酒には、土地の記憶が眠っている。</p>
+      <div>
+        <p class="lede">
+          SAKE story は、山手線・五反田駅から歩いて数分の路地にある、小さな日本酒の店です。
+          元・旅行作家の店主が全国の酒蔵と産地を訪ね歩き、そこで出会った<em>感動の一杯</em>と<em>土地の肴</em>を、
+          季節ごとの「物語」に仕立ててお出しします。
+        </p>
+        <p class="lede" style="margin-top:18px;">
+          銘柄の知識は要りません。カウンターに座って、今日の頁を開くだけ。
+          呑み終わる頃には、行ったことのない町が、少しだけ懐かしくなっているはずです。
+        </p>
+        <div class="three">
+          <div class="tenet">
+            <h3>酒</h3>
+            <p>全国の蔵元から届く季節の日本酒。派手な銘柄より、物語のある一本を。</p>
+          </div>
+          <div class="tenet">
+            <h3>肴</h3>
+            <p>酒の産地に寄り添う土地の味。一皿ごとに一杯を合わせる酒肴一体の献立。</p>
+          </div>
+          <div class="tenet">
+            <h3>噺</h3>
+            <p>蔵で見たこと、旅で聞いたこと。店主の噺が、味の輪郭をくっきりさせる。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 第一章 季節 ============ -->
+  <section class="sect" id="kisetsu">
+    <span class="ch" aria-hidden="true">第一章　季節</span>
+    <div class="reveal">
+      <p class="eyebrow">SEASONAL STORY</p>
+      <h2 class="title">季節ごとに、物語は書き変わる。</h2>
+      <p class="lede">
+        黒板の献立は、季節のめぐりとともに更新されます。
+        いま呑むべき酒と、いま食べるべき肴。その組み合わせ自体が、この店の「連載」です。
+      </p>
+    </div>
+    <div class="seasons reveal">
+      <article class="season s-haru">
+        <span class="kanji" aria-hidden="true">春</span>
+        <h3 class="s-tate">春の頁</h3>
+        <dl>
+          <dt>SAKE</dt><dd>うすにごりの花見酒</dd>
+          <dt>SAKANA</dt><dd>山菜の天ぷら、桜鯛</dd>
+        </dl>
+      </article>
+      <article class="season s-natsu">
+        <span class="kanji" aria-hidden="true">夏</span>
+        <h3 class="s-tate">夏の頁</h3>
+        <dl>
+          <dt>SAKE</dt><dd>キリリと冷えた夏の生酒</dd>
+          <dt>SAKANA</dt><dd>鮎の塩焼き、水茄子</dd>
+        </dl>
+      </article>
+      <article class="season s-aki">
+        <span class="kanji" aria-hidden="true">秋</span>
+        <h3 class="s-tate">秋の頁</h3>
+        <dl>
+          <dt>SAKE</dt><dd>まろやかに熟したひやおろし</dd>
+          <dt>SAKANA</dt><dd>きのこの土瓶蒸し、銀杏</dd>
+        </dl>
+      </article>
+      <article class="season s-fuyu">
+        <span class="kanji" aria-hidden="true">冬</span>
+        <h3 class="s-tate">冬の頁</h3>
+        <dl>
+          <dt>SAKE</dt><dd>しぼりたて新酒と、ぬる燗</dd>
+          <dt>SAKANA</dt><dd>鰤しゃぶ、聖護院かぶら</dd>
+        </dl>
+      </article>
+    </div>
+    <p class="note">※ 献立は仕入れにより変わります。掲載内容はデザイン提案用のサンプルです。</p>
+  </section>
+
+  <!-- ============ 第二章 献立 ============ -->
+  <section class="sect" id="kondate">
+    <span class="ch" aria-hidden="true">第二章　献立</span>
+    <div class="reveal">
+      <p class="eyebrow">COURSE &amp; PAIRING</p>
+      <h2 class="title">一皿に、一杯。酒肴一体のコース。</h2>
+      <p class="lede">
+        お料理はおまかせのコース仕立て。それぞれの皿に、店主が物語ごと選んだ一杯を添える
+        ペアリングをおすすめしています。
+      </p>
+    </div>
+    <div class="courses reveal">
+      <div class="course omakase">
+        <span class="c-tag">おすすめ</span>
+        <h3>おまかせコース</h3>
+        <p class="price">6,000<small>円（税込・一例）</small></p>
+        <p>
+          季節の肴・全七品ほど。その日の仕入れと物語にあわせて店主が組み立てます。
+          日本酒ペアリング（＋5,000円・一例）を添えると、一皿ごとに旅が進みます。
+        </p>
+      </div>
+      <div class="course">
+        <h3>宵の前半コース</h3>
+        <p class="price">3,500<small>円（税込・一例）</small></p>
+        <p>
+          早い時間にさらりと呑みたい方へ。肴数品と季節の酒で、物語の序章だけを味わう短編仕立て。
+        </p>
+      </div>
+    </div>
+    <div class="flow reveal" aria-label="一夜の流れ">
+      <span class="st">乾杯の一杯</span><span class="ar">─</span>
+      <span class="st">季節の肴と酒</span><span class="ar">─</span>
+      <span class="st">店主の噺</span><span class="ar">─</span>
+      <span class="st">〆の一杯</span>
+    </div>
+    <p class="note">※ 内容・価格は時期により変わります。最新の献立はご予約時にご確認ください。</p>
+  </section>
+
+  <!-- ============ 第三章 診断 ============ -->
+  <section class="sect" id="shindan">
+    <span class="ch" aria-hidden="true">第三章　診断</span>
+    <div class="reveal">
+      <p class="eyebrow">SAKE TRIANGLE CHART</p>
+      <h2 class="title">好きな一杯が、見つかる。<br>日本酒三角チャート診断。</h2>
+    </div>
+    <div class="shindan reveal">
+      <div class="tri-card">
+        <svg viewBox="-45 -14 350 262" role="img" aria-label="すっきり・フルーティー・しっかりの三角チャート">
+          <polygon points="130,30 230,207 30,207" stroke="var(--ink)" stroke-width="1.3" fill="none" stroke-linejoin="round"/>
+          <polygon points="130,95 166,160 94,160" stroke="var(--line-strong)" stroke-width="1" fill="none" stroke-linejoin="round"/>
+          <circle cx="130" cy="30" r="9" fill="var(--ai)"/>
+          <circle cx="230" cy="207" r="9" fill="var(--beni)"/>
+          <circle cx="30" cy="207" r="9" fill="var(--kohaku)"/>
+          <text x="130" y="12" text-anchor="middle" font-size="15" fill="var(--ai)">すっきり</text>
+          <text x="216" y="230" text-anchor="middle" font-size="15" fill="var(--beni)">フルーティー</text>
+          <text x="44" y="230" text-anchor="middle" font-size="15" fill="var(--kohaku)">しっかり</text>
+          <circle cx="146" cy="138" r="7" fill="var(--shu)">
+            <animate attributeName="r" values="7;9;7" dur="2.6s" repeatCount="indefinite"/>
+          </circle>
+          <text x="146" y="122" text-anchor="middle" font-size="12" fill="var(--shu)">あなた</text>
+        </svg>
+        <div class="tri-labels"><span>SUKKIRI</span><span>FRUITY</span><span>SHIKKARI</span></div>
+      </div>
+      <div class="shindan-body">
+        <p class="lede">
+          「日本酒はよくわからない」——それなら、13問だけ答えてみてください。
+          あなたの好みを<em>三角チャート上のひとつの点</em>にして、
+          今夜おすすめの銘柄と、他のお店でも使える「頼み方の一言」までお渡しします。
+        </p>
+        <div class="chips">
+          <span class="chip">所要 2〜3分</span>
+          <span class="chip">全13問</span>
+          <span class="chip">結果はシェア用カード付き</span>
+        </div>
+        <a class="btn btn-shu" href="./index.html">診断を始める</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 第四章 店主 ============ -->
+  <section class="sect" id="tenshu">
+    <span class="ch" aria-hidden="true">第四章　店主</span>
+    <div class="reveal">
+      <p class="eyebrow">THE STORYTELLER</p>
+      <h2 class="title">語り部は、旅から帰ってきたばかり。</h2>
+    </div>
+    <div class="master reveal" style="margin-top:44px;">
+      <div class="master-mon" aria-hidden="true"><span>咄</span></div>
+      <div>
+        <h3>橋野 元樹</h3>
+        <p class="role">MOTOKI HASHINO — 初代 Mr. SAKE</p>
+        <p>
+          旅行作家として全国を歩き、俳優として舞台に立ち、やがて日本酒の伝承をライフワークに。
+          初代「Mr. SAKE」に選ばれた店主が、蔵元を訪ねて集めてきた物語を、一杯の酒とともに語ります。
+        </p>
+        <p>
+          カウンター越しの噺は、酒の説明書ではなく、旅の続き。
+          わからないことは、なんでも聞いてください。
+        </p>
+        <blockquote>「酒は、呑む人のところで物語になる。」</blockquote>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 終章 案内 ============ -->
+  <section class="sect" id="annai">
+    <span class="ch" aria-hidden="true">終章　案内</span>
+    <div class="reveal">
+      <p class="eyebrow">INFORMATION</p>
+      <h2 class="title">今夜の頁を、ご一緒に。</h2>
+    </div>
+    <div class="info-grid reveal">
+      <div class="info">
+        <h4>所在</h4>
+        <p>東京・五反田<br>山手線 五反田駅より徒歩4分
+        <small>路地の小さな看板が目印です。</small></p>
+      </div>
+      <div class="info">
+        <h4>刻限</h4>
+        <p>夕方6時より、夜更けまで
+        <small>営業日・時間の最新情報はご予約時にご確認ください。</small></p>
+      </div>
+      <div class="info">
+        <h4>席</h4>
+        <p>カウンター 15席<br>個室 5〜8名様
+        <small>コースはご予約制です。</small></p>
+      </div>
+      <div class="info">
+        <h4>持ち帰りの物語</h4>
+        <p>オンラインショップにて<br>季節の酒をお届け
+        <small>店で出会った一本を、家の食卓へ。</small></p>
+      </div>
+    </div>
+    <div class="last-cta reveal">
+      <a class="btn btn-shu" href="#" onclick="return false;">席を予約する（デモ）</a>
+      <a class="btn btn-line" href="#" onclick="return false;">オンラインショップ（デモ）</a>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <span class="f-brand">SAKE story</span>
+  <p class="f-note">
+    本ページはリデザイン提案用のデザインデモです。文言・価格・営業情報はサンプルを含みます。<br>
+    © SAKE story — Design Proposal Demo
+  </p>
+</footer>
+
+<script>
+// ---- 昼夜トグル ----
+const root = document.documentElement;
+function currentDark(){
+  const t = root.getAttribute('data-theme');
+  if (t) return t === 'dark';
+  return matchMedia('(prefers-color-scheme: dark)').matches;
+}
+function paintBtns(){
+  const label = currentDark() ? '昼' : '夜';
+  for (const id of ['themeBtn','themeBtnM']){
+    const b = document.getElementById(id);
+    if (b) b.textContent = label;
+  }
+}
+function toggleTheme(){
+  root.setAttribute('data-theme', currentDark() ? 'light' : 'dark');
+  paintBtns();
+}
+for (const id of ['themeBtn','themeBtnM']){
+  const b = document.getElementById(id);
+  if (b) b.addEventListener('click', toggleTheme);
+}
+paintBtns();
+new MutationObserver(paintBtns).observe(root, {attributes:true, attributeFilter:['data-theme']});
+
+// ---- スクロール出現 ----
+const io = new IntersectionObserver((entries)=>{
+  for (const e of entries){
+    if (e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }
+  }
+},{threshold:.12});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+</script>
+</body>
+</html>
