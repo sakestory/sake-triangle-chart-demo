@@ -208,7 +208,7 @@ body{
     </div>
 
     <button class="btn btn-primary" onclick="startQuiz()">診断を始める</button>
-    <div class="foot">v10.7</div>
+    <div class="foot">v10.8</div>
   </section>
 
   <!-- ===== 質問 ===== -->
@@ -269,7 +269,7 @@ body{
     <button class="btn btn-ghost" onclick="restart()" style="margin-top:22px;">もう一度、診断する</button>
 
     <p class="story-note">この占いのもとになった『日本酒三角チャート』は、東京・五反田の日本酒バー SAKE story の店主が、20年間カウンターで「とりあえず辛口で」と言われ続けた末にたどり着いた、ひとつの答えなんです。<br>→ <a href="https://sake-story.com/" target="_blank" rel="noopener">SAKE story</a></p>
-    <div class="foot">© SAKE story ／ 橋野元樹　v10.7</div>
+    <div class="foot">© SAKE story ／ 橋野元樹　v10.8</div>
   </section>
 
 </div>
@@ -498,10 +498,10 @@ const TYPES = [
 ];
 
 
-/* ── v10.7：占い版の全国市販酒リスト（RECS3）は撤去。
+/* ── v10.8：占い版の全国市販酒リスト（RECS3）は撤去。
    店内版は STORE_SAKE から診断座標に近い順で提示する（下の compute / renderResult 参照）── */
 
-/* 質問（QUESTIONS） ── v10.7：9問・複合配点 */
+/* 質問（QUESTIONS） ── v10.8：9問・複合配点 */
 const QUESTIONS = [
   {tag:"「辛口」のこと",
    text:"もし「辛口ください」と頼むとしたら、期待するのは？",
@@ -591,7 +591,9 @@ function startQuiz(){
 
 function prevQ(){
   if(qi===0){ show("sc-start"); return; }
-  qi--; answers.pop(); renderQ();
+  /* v10.8: 回答を捨てずに戻る。renderQが前回選択をハイライト表示し、
+     選び直した場合はchoose()が answers[qi] を上書きする */
+  qi--; renderQ();
 }
 
 function renderQ(){
@@ -620,7 +622,7 @@ function choose(sc){
   else{ compute(); show("sc-result"); renderResult(); }
 }
 
-/* ==== v10.7 診断エンジン（複合配点方式）====
+/* ==== v10.8 診断エンジン（複合配点方式）====
    ・各選択肢が複数軸に同時加点できる sc:{x,y,z} 形式（負値＝嫌い減点）
    ・軸ごとに「合計点（下限0）÷ DIV × 10」で0〜10座標へ（上限10）
    ・DIVは理論満点ではなく実効満点。全262,144通りの自動検証で
@@ -679,9 +681,8 @@ function renderResult(){
       +'<span class="rec-reason">'+reasonFor(b,r.X,r.Y,r.Z,i)+'</span></span>'
     +'</div>').join("");
   document.getElementById("orderPhrase").textContent="「"+t.orderPhrase+"」";
-  setScore("sX","bX",r.X);
-  setScore("sY","bY",r.Y);
-  setScore("sZ","bZ",r.Z);
+  /* v10.8: スコア数値の表示欄は設けない方針（三角チャート上の位置が数値の役目を担う）。
+     旧setScore呼び出しは表示先の要素が存在せず空振りしていたため削除 */
   document.getElementById("chart").innerHTML=buildChart(r);
   /* 合う料理 */
   document.getElementById("pairing").innerHTML=t.pairing.map(p=>"<span>"+p+"</span>").join("");
@@ -744,11 +745,6 @@ function reasonFor(b,X,Y,Z,i){
   return head + tailBase;
 }
 
-function setScore(vi,bi,v){
-  if(!document.getElementById(vi)) return;
-  document.getElementById(vi).innerHTML=v+'<small>/10</small>';
-  setTimeout(()=>{ document.getElementById(bi).style.width=(v*10)+"%"; },100);
-}
 
 /* =============================================
    三角チャート（重なり回避）
