@@ -75,6 +75,7 @@ body{
 .q-text{font-family:var(--serif);font-weight:700;font-size:clamp(19px,5.2vw,24px);line-height:1.65;margin:0 0 24px;}
 .opt{display:block;width:100%;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:13px;padding:16px 18px;margin-bottom:11px;font-size:15px;color:var(--sumi);font-family:var(--sans);line-height:1.65;cursor:pointer;transition:border-color .12s,transform .12s,background .12s;}
 .opt:hover{border-color:var(--shu-soft);transform:translateX(3px);background:#fff;}
+.opt-selected{border-color:var(--shu-soft);background:#fff;box-shadow:0 0 0 1px var(--shu-soft) inset;}
 .q-back{background:none;border:none;color:var(--sumi-soft);font-size:13px;cursor:pointer;padding:10px 4px;margin-top:4px;font-family:var(--sans);}
 
 /* ========== 結果 ========== */
@@ -197,17 +198,17 @@ body{
         <text x="130" y="168" text-anchor="middle" font-size="14" fill="#8A7A5E" font-family="serif" font-weight="700">?</text>
       </svg>
 
-      <p class="hero-desc">たった13問で、あなたに合う日本酒が見つかります。<br>苦手な味を外すことで、失敗しない一杯へ。</p>
+      <p class="hero-desc">たった9問で、あなたに合う日本酒が見つかります。<br>苦手な味を外すことで、失敗しない一杯へ。</p>
     </div>
 
     <div class="start-chips">
-      <span class="chip">⏱ 2〜3分でわかる</span>
-      <span class="chip">13問で診断</span>
+      <span class="chip">⏱ 約2分でわかる</span>
+      <span class="chip">9問で診断</span>
       <span class="chip">三角チャートで見える化</span>
     </div>
 
     <button class="btn btn-primary" onclick="startQuiz()">診断を始める</button>
-    <div class="foot">v10.6</div>
+    <div class="foot">v10.7</div>
   </section>
 
   <!-- ===== 質問 ===== -->
@@ -268,7 +269,7 @@ body{
     <button class="btn btn-ghost" onclick="restart()" style="margin-top:22px;">もう一度、診断する</button>
 
     <p class="story-note">この占いのもとになった『日本酒三角チャート』は、東京・五反田の日本酒バー SAKE story の店主が、20年間カウンターで「とりあえず辛口で」と言われ続けた末にたどり着いた、ひとつの答えなんです。<br>→ <a href="https://sake-story.com/" target="_blank" rel="noopener">SAKE story</a></p>
-    <div class="foot">© SAKE story ／ 橋野元樹　v10.6</div>
+    <div class="foot">© SAKE story ／ 橋野元樹　v10.7</div>
   </section>
 
 </div>
@@ -497,10 +498,10 @@ const TYPES = [
 ];
 
 
-/* ── v10.6：占い版の全国市販酒リスト（RECS3）は撤去。
+/* ── v10.7：占い版の全国市販酒リスト（RECS3）は撤去。
    店内版は STORE_SAKE から診断座標に近い順で提示する（下の compute / renderResult 参照）── */
 
-/* 質問（QUESTIONS） ── 将来13問への拡張可 */
+/* 質問（QUESTIONS） ── v10.7：9問・複合配点 */
 const QUESTIONS = [
   {tag:"「辛口」のこと",
    text:"もし「辛口ください」と頼むとしたら、期待するのは？",
@@ -604,6 +605,8 @@ function renderQ(){
   q.opts.forEach(o=>{
     const b=document.createElement("button");
     b.className="opt"; b.textContent=o.label;
+    /* 「ひとつ戻る」で戻ってきた時、前に選んだ選択肢を薄く点灯させる */
+    if(answers[qi]&&answers[qi].sc===o.sc) b.classList.add("opt-selected");
     b.onclick=()=>choose(o.sc);
     box.appendChild(b);
   });
@@ -617,7 +620,7 @@ function choose(sc){
   else{ compute(); show("sc-result"); renderResult(); }
 }
 
-/* ==== v10.6 診断エンジン（複合配点方式）====
+/* ==== v10.7 診断エンジン（複合配点方式）====
    ・各選択肢が複数軸に同時加点できる sc:{x,y,z} 形式（負値＝嫌い減点）
    ・軸ごとに「合計点（下限0）÷ DIV × 10」で0〜10座標へ（上限10）
    ・DIVは理論満点ではなく実効満点。全262,144通りの自動検証で
@@ -673,7 +676,7 @@ function renderResult(){
     '<div class="rec'+(i===0?" top1":"")+'">'
       +'<span class="rec-rank">'+(i+1)+'位</span>'
       +'<span class="rec-body"><span class="rec-name">'+b.name+'</span>'
-      +'<span class="rec-reason">'+reasonFor(b,r.X,r.Y,r.Z)+'</span></span>'
+      +'<span class="rec-reason">'+reasonFor(b,r.X,r.Y,r.Z,i)+'</span></span>'
     +'</div>').join("");
   document.getElementById("orderPhrase").textContent="「"+t.orderPhrase+"」";
   setScore("sX","bX",r.X);
@@ -705,19 +708,26 @@ function renderResult(){
    ・橋野さん本人のコメント（comment）があれば、それを最優先で表示する。
    ・無ければ、ユーザーと銘柄で最も強く重なる軸（共通軸）から自動生成する（仮の文章）。
    ※将来、19銘柄に橋野さんが一言ずつ comment を書き加えれば、そのまま置き換わる。 */
-function reasonFor(b,X,Y,Z){
+function reasonFor(b,X,Y,Z,i){
   if(b.comment&&b.comment.trim()) return b.comment.trim();
-  /* すっきりX / フルーティーY / しっかりZ の各軸で、ユーザーと銘柄の“重なりの強さ”を測る（共通軸）*/
+  i=i||0;
+  /* すっきりX / フルーティーY / しっかりZ の各軸で、ユーザーと銘柄の"重なりの強さ"を測る（共通軸）*/
   const shared={x:Math.min(X,b.x), y:Math.min(Y,b.y), z:Math.min(Z,b.z)};
   const max=Math.max(shared.x,shared.y,shared.z);
-  /* どの軸も突出しない＝中間タイプ */
-  if(max<3) return "どの味にも寄りすぎない、穏やかな一本。あなたの好みに、すっと馴染むと思います。";
-  /* 主軸（あなたと最も響き合う方向）*/
+  if(max<3){
+    const mids=["どの味にも寄りすぎない、穏やかな一本。あなたの好みに、すっと馴染むと思います。",
+                "派手さより、バランスの良さ。じわじわ好きになる、そんな一本です。",
+                "肩の力が抜けた、素直な味わい。迷ったらこれ、という安心感があります。"];
+    return mids[i%mids.length];
+  }
   const primary = shared.x===max ? "x" : (shared.y===max ? "y" : "z");
-  const head = primary==="x" ? "すっきりした飲み口が好きなあなたに。"
-             : primary==="y" ? "華やかな香りが好きなあなたへ。"
-             :                  "旨みやコクを楽しみたいあなたに。";
-  /* 副軸（この銘柄ならではの、もうひとつの表情）。主軸以外で銘柄が3以上持つ軸を拾う */
+  /* 順位(i)で言い出しを回し、1位と2位が同文にならないようにする（2026-07-10改修）*/
+  const heads={
+    x:["すっきりした飲み口が好きなあなたに。","キレの良さを求めるなら、これも外せません。","透明感のある味わいで、あなたの好みに寄り添います。"],
+    y:["華やかな香りが好きなあなたへ。","果実のような甘みを楽しむなら、この一本も。","ジューシーな味わいが、あなたの好みと響き合います。"],
+    z:["旨みやコクを楽しみたいあなたに。","米の旨味をじっくり味わうなら、これも良い相棒です。","腰の据わった味わいが、あなたの好みに応えてくれます。"]
+  };
+  const head=heads[primary][i%3];
   const other=[["x",b.x],["y",b.y],["z",b.z]].filter(a=>a[0]!==primary&&a[1]>=3)
     .sort((a,b)=>b[1]-a[1]);
   const tailBase = primary==="x" ? "雑味のない、透明感のある一杯なんです。"
@@ -725,7 +735,7 @@ function reasonFor(b,X,Y,Z){
                  :                  "飲みごたえのある、腰の据わった一杯です。";
   if(other.length){
     const [sec,val]=other[0];
-    const deg = val>=6 ? "しっかり" : "ほんのり";  /* 副軸の強さで言い回しを変える */
+    const deg = val>=6 ? "しっかり" : "ほんのり";
     const nuance = sec==="x" ? `${deg}としたキレも隠れていて、後口はすっと引きます。`
                  : sec==="y" ? `奥に${deg}と華やかな香りもあって、飲むほど楽しくなります。`
                  :             `米の旨みも${deg}と乗っていて、料理にもよく合います。`;
@@ -755,7 +765,7 @@ function buildChart(r){
   const meX=r.X+base, meY=r.Y+base, meZ=r.Z+base;
   const me=pos(meX,meY,meZ);
   const ranked=r.ranked;
-  const labeled=new Set(ranked.slice(0,7).map(b=>b.name));
+  const labeled=new Set(ranked.slice(0,5).map(b=>b.name));  /* おすすめ5本と一致させ、ラベル密集を緩和(2026-07-10) */
   const FS=12.5,PAD=1.5;
   const overlap=(a,b)=>!(a.r+PAD<b.l||a.l-PAD>b.r||a.b+PAD<b.t||a.t-PAD>b.b);
   const inBounds=bx=>bx.l>=4&&bx.r<=W-4&&bx.t>=4&&bx.b<=H-4;
