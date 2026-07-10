@@ -107,11 +107,14 @@ body{
 .chart-card svg{width:100%;height:auto;display:block;}
 
 /* おすすめ */
-.rec{display:flex;align-items:center;gap:13px;background:var(--card);border:1px solid var(--line);border-radius:13px;padding:12px 15px;margin-bottom:9px;}
-.rec-rank{font-family:var(--serif);font-weight:700;font-size:14px;color:var(--shu);width:30px;flex:none;}
-.rec-name{font-family:var(--serif);font-weight:600;font-size:16px;flex:1;}
+.rec{display:flex;align-items:flex-start;gap:13px;background:var(--card);border:1px solid var(--line);border-radius:13px;padding:14px 16px;margin-bottom:10px;}
+.rec-rank{font-family:var(--serif);font-weight:700;font-size:14px;color:var(--shu);min-width:34px;flex:none;padding-top:1px;white-space:nowrap;}
+.rec-body{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px;}
+.rec-name{font-family:var(--serif);font-weight:700;font-size:16px;color:var(--sumi);line-height:1.5;}
+.rec-reason{font-size:13px;color:var(--sumi-soft);line-height:1.85;}
 .rec-coord{font-size:11px;color:var(--sumi-soft);}
 .rec.top1{border-color:var(--shu-soft);background:#fff;}
+.store-note{font-size:12px;color:var(--sumi-soft);margin:10px 2px 0;line-height:1.8;}
 
 /* 店主ライン */
 .onsite{text-align:center;font-family:var(--serif);font-size:13.5px;color:var(--shu);letter-spacing:.04em;margin:26px 4px 0;line-height:1.75;padding:14px 18px;border:1px solid var(--shu-soft);border-radius:13px;background:#fff9f8;}
@@ -132,8 +135,6 @@ body{
 .share-hint{font-size:12px;color:var(--sumi-soft);text-align:center;margin:10px 4px 0;line-height:1.75;}
 .one-liner{display:inline-block;background:var(--shu);color:#fff;font-family:var(--serif);font-size:14px;letter-spacing:.06em;padding:7px 20px;border-radius:3px;margin-top:14px;line-height:1.6;}
 .more-btn{display:block;margin:10px auto 0;background:none;border:1px solid var(--line);border-radius:999px;color:var(--sumi-soft);font-family:var(--serif);font-size:12.5px;padding:8px 26px;cursor:pointer;}
-.famous-box{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:13px 16px;font-family:var(--serif);font-size:14px;color:var(--sumi);line-height:2;}
-.famous-note{font-size:11.5px;color:var(--sumi-soft);font-family:var(--sans);}
 .pairing{display:flex;gap:9px;flex-wrap:wrap;}
 .pairing span{background:var(--card);border:1px solid var(--line);border-radius:999px;padding:7px 16px;font-size:13.5px;font-family:var(--serif);color:var(--sumi);}
 .share-card-label{font-family:var(--serif);font-size:12px;color:var(--sumi-soft);letter-spacing:.18em;margin:30px 0 12px;display:flex;align-items:center;gap:9px;}
@@ -141,9 +142,17 @@ body{
 #shareCanvas{width:100%;border-radius:14px;box-shadow:0 6px 20px -8px rgba(44,38,32,.25);display:block;}
 .share-btns{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px;}
 .share-btns .btn{margin:0;font-size:14px;padding:14px 8px;}
+
+/* 店の物語（署名） */
+.story-note{font-family:var(--serif);font-size:12.5px;color:var(--sumi-soft);line-height:1.95;margin:34px 2px 0;padding-top:18px;border-top:1px solid var(--line);}
+.story-note a{color:var(--shu);text-decoration:none;}
+/* 猫の透かし背景 */
+#catBg{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:-1;}
+#catBg img{position:absolute;pointer-events:none;user-select:none;-webkit-user-drag:none;}
 </style>
 </head>
 <body>
+<div id="catBg" aria-hidden="true"></div>
 <div class="wrap">
   <!-- ===== スタート ===== -->
   <section id="sc-start" class="screen active">
@@ -198,6 +207,7 @@ body{
     </div>
 
     <button class="btn btn-primary" onclick="startQuiz()">診断を始める</button>
+    <div class="foot">v10.6</div>
   </section>
 
   <!-- ===== 質問 ===== -->
@@ -230,7 +240,11 @@ body{
     <div class="sec">あなたと日本酒</div>
     <div class="res-copy" style="margin-top:0;"><p id="sakeRelation"></p></div>
 
-    <div class="sec">他のお店で頼むなら</div>
+    <div class="sec">あなたに近い、店の一杯</div>
+    <div id="storeList"></div>
+    <p class="store-note">※ 診断結果に近い順に、いま店にある日本酒をお出ししています。当日の在庫状況によってはご用意できない場合もございますので、スタッフにお気軽にお声がけください。</p>
+
+    <div class="sec">お店でこう頼むと、あなた好みが出てきます</div>
     <div class="order-card">
       <p id="orderPhrase" class="order-phrase"></p>
       <p class="order-note">この一言で、あなた好みに近いお酒が出やすくなります。<br><span style="font-size:11px;">※ お店によって在庫や提案力は異なります。</span></p>
@@ -238,11 +252,6 @@ body{
 
     <div class="sec">三角チャート上の、あなたの位置</div>
     <div class="chart-card"><div id="chart"></div></div>
-
-    <div class="sec">今日飲めるおすすめ</div>
-    <div id="recList"></div>
-    <button class="more-btn" id="moreBtn" onclick="showMore()">もっと見る</button>
-    <p style="font-size:12px;color:var(--sumi-soft);margin:8px 2px 0;line-height:1.75;">本日の在庫と連動していない事もございます、スタッフにご相談下さい。</p>
 
     <div class="sec">合う料理</div>
     <div id="pairing" class="pairing"></div>
@@ -256,10 +265,10 @@ body{
     </div>
     <p class="share-hint">スマホの場合は画像つき共有が起動します。<br>PCの場合は画像を保存してXに添付してください。</p>
 
-    <div class="onsite">結果をスタッフにお見せ頂けたらここに入っている以外のお酒のおすすめもある時がございます。</div>
-
     <button class="btn btn-ghost" onclick="restart()" style="margin-top:22px;">もう一度、診断する</button>
-    <div class="foot">© SAKE story ／ 橋野元樹　v4</div>
+
+    <p class="story-note">この占いのもとになった『日本酒三角チャート』は、東京・五反田の日本酒バー SAKE story の店主が、20年間カウンターで「とりあえず辛口で」と言われ続けた末にたどり着いた、ひとつの答えなんです。<br>→ <a href="https://sake-story.com/" target="_blank" rel="noopener">SAKE story</a></p>
+    <div class="foot">© SAKE story ／ 橋野元樹　v10.6</div>
   </section>
 
 </div>
@@ -267,27 +276,30 @@ body{
 /* =============================================
    設定（ここを編集すれば内容を変えられます）
    ============================================= */
-/* 銘柄（BRANDS） ── 座標はすっきりX / フルーティーY / しっかりZ ＝ 各0〜10 */
-const BRANDS = [
-  {name:"〆張鶴",    x:10, y:0, z:0},
-  {name:"サビ猫",    x:8,  y:2, z:0},
-  {name:"酒場",      x:6,  y:4, z:0},
-  {name:"K",         x:7,  y:0, z:2},
-  {name:"天賦",      x:4,  y:6, z:0},
-  {name:"会津錦",    x:4,  y:2, z:2},
-  {name:"夏やご",    x:4,  y:0, z:4},
-  {name:"無為信",    x:2,  y:2, z:4},
-  {name:"LOHA酒",    x:2,  y:4, z:2},
-  {name:"鍋島",      x:1,  y:8, z:0, famous:true},
-  {name:"木曽路",    x:2,  y:0, z:6},
-  {name:"喜正",      x:2,  y:2, z:4},
-  {name:"やうえもん",x:0,  y:4, z:4},
-  {name:"嘉久泉",    x:0,  y:6, z:2},
-  {name:"Classic",   x:0,  y:2, z:6},
-  {name:"松の寿",    x:0,  y:4, z:4},
-  {name:"会津誉",    x:0,  y:6, z:4},
-  {name:"新政",      x:3,  y:8, z:0, famous:true},
-  {name:"十四代",    x:2,  y:8, z:2, famous:true},
+/* 店の銘柄（STORE_SAKE） ── SAKE story 店内の19銘柄。
+   座標はすっきりX / フルーティーY / しっかりZ ＝ 各0〜10。
+   元栓「銘柄座標マスター_v2.2.json」の in_store:true と1対1で一致（正典＝元栓、これは写し）。
+   comment：橋野さん本人の一言コメント欄。空文字なら自動生成の理由文を表示する。 */
+const STORE_SAKE = [
+  {name:"〆張鶴（張鶴）",         x:9.5, y:1,  z:1,  comment:""},
+  {name:"サビ猫",                x:8,   y:2,  z:1,  comment:""},
+  {name:"酒場",                  x:7,   y:3,  z:1,  comment:""},
+  {name:"K",                     x:1,   y:7,  z:6,  comment:""},
+  {name:"天賦",                  x:4,   y:6,  z:1,  comment:""},
+  {name:"無為信",                x:5,   y:4,  z:5,  comment:""},
+  {name:"LOHA酒",                x:2,   y:10, z:3,  comment:""},
+  {name:"鍋島",                  x:4,   y:8,  z:1,  comment:""},
+  {name:"木曽路",                x:1,   y:1,  z:10, comment:""},
+  {name:"喜正",                  x:4,   y:2,  z:7,  comment:""},
+  {name:"やうえもん（弥右衛門）", x:4,   y:6,  z:2,  comment:""},
+  {name:"松の寿",                x:3,   y:4,  z:4,  comment:""},
+  {name:"新政",                  x:6,   y:8,  z:1,  comment:""},
+  {name:"十四代",                x:5,   y:8,  z:2,  comment:""},
+  {name:"天明",                  x:6,   y:4,  z:2,  comment:""},
+  {name:"ロ万",                  x:4,   y:6,  z:4,  comment:""},
+  {name:"奈良萬",                x:2,   y:8,  z:2,  comment:""},
+  {name:"磐城壽",                x:2,   y:2,  z:8,  comment:""},
+  {name:"わかむすめ",            x:1,   y:8,  z:3,  comment:""},
 ];
 
 /* タイプ（TYPES） ── 27タイプ・スプレッドシートと1対1対応 */
@@ -484,102 +496,83 @@ const TYPES = [
    catImage:"cat_27.png"}
 ];
 
+
+/* ── v10.6：占い版の全国市販酒リスト（RECS3）は撤去。
+   店内版は STORE_SAKE から診断座標に近い順で提示する（下の compute / renderResult 参照）── */
+
 /* 質問（QUESTIONS） ── 将来13問への拡張可 */
 const QUESTIONS = [
-  {tag:"一杯目のこと", kind:"axis",
-   text:"まず一杯目に飲むなら、どれがうれしい？",
+  {tag:"「辛口」のこと",
+   text:"もし「辛口ください」と頼むとしたら、期待するのは？",
    opts:[
-     {label:"軽くて、すっと入る一杯",           v:"x"},
-     {label:"香りがよくて、気分が上がる一杯",   v:"y"},
-     {label:"味わいがあって、満足感のある一杯", v:"z"},
+     {label:"すっきりドライで、キレのある感じ",         sc:{x:3,y:0,z:0}},
+     {label:"飲み口はフルーティーでも、キレの良い感じ", sc:{x:2,y:2,z:0}},
+     {label:"濃くて、飲みごたえのある感じ",             sc:{x:0,y:0,z:2}},
+     {label:"「辛口」って正直よくわからない",           sc:{x:1,y:1,z:0}},
    ]},
-  {tag:"「辛口」について", kind:"axis",
-   text:"「辛口が好き」——それ、どんな意味に近いですか？",
+  {tag:"口の中のこと",
+   text:"日本酒を飲んでいる時の、口の中の理想的な感じは？",
    opts:[
-     {label:"すっきりドライで、キレがある感じ",     v:"x"},
-     {label:"甘くない、大人っぽい味",               v:"x"},
-     {label:"しっかり濃くて、飲みごたえがある感じ", v:"z"},
-     {label:"正直、なんとなく言ってるかも",         v:""},
+     {label:"すっと入って、スパッと消える",                 sc:{x:3,y:0,z:0}},
+     {label:"優しく入って、サラッと引く感じ",               sc:{x:2,y:1,z:0}},
+     {label:"バランス良く味わえ、余韻も少し感じられる",     sc:{x:0,y:0,z:2}},
+     {label:"味に厚みを感じ、余韻もしっかり感じられる",     sc:{x:0,y:0,z:3}},
    ]},
-  {tag:"お店での頼み方", kind:"axis",
-   text:"お店で日本酒を頼むとき、近いのはどれ？",
+  {tag:"真夏の午後",
+   text:"真夏の午後、一番飲みたいのは？",
    opts:[
-     {label:"迷って、つい「辛口で」と言ってしまう",         v:"x"},
-     {label:"「辛口で」と言いつつ、甘めや華やかも飲んでみたい", v:"y"},
-     {label:"濃いめ・旨味系をちゃんと選びたい",             v:"z"},
+     {label:"シュワシュワの炭酸系", sc:{x:2,y:0,z:0}},
+     {label:"ジュース",             sc:{x:0,y:2,z:0}},
+     {label:"アイスコーヒー",       sc:{x:0,y:0,z:2}},
+     {label:"この中にはない",       sc:{x:0,y:0,z:0}},
    ]},
-  {tag:"失敗しないために", kind:"penalty",
-   text:"お酒で「これだけは避けたいな」と感じるのは？",
+  {tag:"お米の旨味",
+   text:"お米の旨味をしっかり感じる、ふくよかな味わいは？",
    opts:[
-     {label:"薄くて、物足りない感じ",           v:"+z"},
-     {label:"甘すぎて、ジュースみたいな感じ",   v:"y*S"},
-     {label:"重くて、お酒くさい感じ",           v:"z*S"},
-     {label:"特にないかも",                     v:""},
+     {label:"それが一番の楽しみ",   sc:{x:0,y:0,z:3}},
+     {label:"けっこう好き",         sc:{x:0,y:0,z:2}},
+     {label:"ときどきなら",         sc:{x:0,y:0,z:1}},
+     {label:"軽やかなほうが好き",   sc:{x:2,y:0,z:0}},
    ]},
-  {tag:"後味のこと", kind:"penalty",
-   text:"飲んだあとの後味、どちらが気になりますか？",
+  {tag:"甘みのこと",
+   text:"日本酒を飲むとき、甘みはどうだとうれしい？",
    opts:[
-     {label:"甘さがしつこく残る感じ", v:"y*M"},
-     {label:"辛くてぴりっとする感じ", v:"x*M"},
+     {label:"甘みはごちそう。ジューシーに感じたい", sc:{x:0,y:3,z:0}},
+     {label:"ほんのり甘いくらいがちょうどいい",     sc:{x:0,y:2,z:0}},
+     {label:"甘みより旨味が大事",                   sc:{x:1,y:0,z:1}},
+     {label:"甘くないほうがいい",                   sc:{x:2,y:0,z:0}},
    ]},
-  {tag:"食べ物のこと", kind:"penalty",
-   text:"苦手な食べ物に近いのは？",
+  {tag:"ラーメンのこと",
+   text:"ラーメンを食べるとしたら、どれが一番にきますか？",
    opts:[
-     {label:"味の薄い、淡白なもの",     v:"+z"},
-     {label:"甘ったるいもの",           v:"y*M"},
-     {label:"クセの強い、発酵系のもの", v:"z*M"},
-     {label:"特にないかも",             v:""},
+     {label:"さっぱりした塩",       sc:{x:3,y:0,z:0}},
+     {label:"だしの効いた醤油",     sc:{x:2,y:0,z:0}},
+     {label:"コクのある味噌",       sc:{x:0,y:0,z:2}},
+     {label:"こってり濃厚な豚骨",   sc:{x:0,y:0,z:3}},
    ]},
-  {tag:"外食のこと", kind:"penalty",
-   text:"外食で「これは頼まないな」というドリンクは？",
+  {tag:"合わせる料理",
+   text:"日本酒を飲むとき、一緒に食べたいのは？",
    opts:[
-     {label:"薄めのサワーやハイボール",   v:"+z"},
-     {label:"甘いカクテルやサワー",       v:"y*M"},
-     {label:"重ための赤ワイン",           v:"z*M"},
-     {label:"特にないかも",               v:""},
+     {label:"白身魚のお刺身、塩で食べる天ぷら",     sc:{x:2,y:0,z:0}},
+     {label:"フルーツ、生ハムメロン、甘めの味つけ", sc:{x:0,y:3,z:0}},
+     {label:"煮込み、燻製、熟成チーズ",             sc:{x:0,y:0,z:2}},
+     {label:"カルパッチョ、洋風の前菜",             sc:{x:1,y:2,z:0}},
    ]},
-  {tag:"香りのこと", kind:"penalty",
-   text:"香りで「ちょっと苦手」なのは？",
+  {tag:"失敗しないために",
+   text:"お酒で「これだけは避けたい」のは？",
    opts:[
-     {label:"香りがなさすぎるもの",         v:"+y"},
-     {label:"香水のような、強すぎる香り",   v:"y*M"},
-     {label:"熟成したような、深い香り",     v:"z*M"},
-     {label:"特にないかも",                 v:""},
+     {label:"薄くて物足りない感じ",           sc:{x:-2,y:0,z:0}},
+     {label:"甘すぎてジュースみたいな感じ",   sc:{x:0,y:-2,z:0}},
+     {label:"重くて、お酒くさい感じ",         sc:{x:0,y:0,z:-2}},
+     {label:"特にないかも",                   sc:{x:0,y:0,z:0}},
    ]},
-  {tag:"飲み方のこと", kind:"axis",
-   text:"飲むなら、どんな感じがいい？",
+  {tag:"香り・後味のこと",
+   text:"香りや後味で「ちょっと苦手」なのは？",
    opts:[
-     {label:"冷やして、すっきり飲みたい",       v:"x"},
-     {label:"ワイングラスで、香りを楽しみたい", v:"y"},
-     {label:"少し温度を上げて、旨味を感じたい", v:"z"},
-   ]},
-  {tag:"合わせる料理", kind:"axis",
-   text:"惹かれるのは、どれ？",
-   opts:[
-     {label:"白身魚のお刺身、塩で食べる天ぷら",     v:"x"},
-     {label:"フルーツ、生ハムメロン、甘めの味つけ", v:"y"},
-     {label:"煮込み、味噌、燻製、熟成チーズ",       v:"z"},
-   ]},
-  {tag:"飲むときの気分", kind:"axis",
-   text:"今夜の気分は？",
-   opts:[
-     {label:"軽やかに、すいすい飲みたい",     v:"x"},
-     {label:"うっとり、香りに浸りたい",       v:"y"},
-     {label:"じっくり、腰を据えて味わいたい", v:"z"},
-   ]},
-  {tag:"理想の一杯", kind:"axis",
-   text:"ひとことで言うと？",
-   opts:[
-     {label:"透明感と、キレ",   v:"x"},
-     {label:"華やかさと、甘み", v:"y"},
-     {label:"コクと、旨味",     v:"z"},
-   ]},
-  {tag:"最後に", kind:"cap",
-   text:"日本酒は、どのくらい飲みますか？",
-   opts:[
-     {label:"ほぼ初めて／あまり飲まない", v:6},
-     {label:"ときどき飲む",               v:8},
-     {label:"大好きで、よく飲む",         v:10},
+     {label:"香水みたいな、強すぎる香り",   sc:{x:-1,y:-1,z:0}},
+     {label:"熟成したような、深すぎる香り", sc:{x:0,y:0,z:-2}},
+     {label:"何も残らない、あっさりしすぎ", sc:{x:-2,y:0,z:0}},
+     {label:"特にないかも",                 sc:{x:0,y:0,z:0}},
    ]},
 ];
 
@@ -611,48 +604,40 @@ function renderQ(){
   q.opts.forEach(o=>{
     const b=document.createElement("button");
     b.className="opt"; b.textContent=o.label;
-    b.onclick=()=>choose(o.v);
+    b.onclick=()=>choose(o.sc);
     box.appendChild(b);
   });
+  sprinkleCats();
   window.scrollTo({top:0,behavior:"smooth"});
 }
 
-function choose(v){
-  answers[qi]={kind:QUESTIONS[qi].kind, mode:QUESTIONS[qi].mode||"zero", v:v};
+function choose(sc){
+  answers[qi]={sc:sc};
   if(qi<QUESTIONS.length-1){ qi++; renderQ(); }
   else{ compute(); show("sc-result"); renderResult(); }
 }
 
-/* ==== 調整用設定（公開後にここだけ変えれば全体調整できます） ==== */
-const CONFIG = { PENALTY_STRONG:0.2, PENALTY_MILD:0.5, BODY_BONUS:1.5, BONUS_MAX:1.5 };
+/* ==== v10.6 診断エンジン（複合配点方式）====
+   ・各選択肢が複数軸に同時加点できる sc:{x,y,z} 形式（負値＝嫌い減点）
+   ・軸ごとに「合計点（下限0）÷ DIV × 10」で0〜10座標へ（上限10）
+   ・DIVは理論満点ではなく実効満点。全262,144通りの自動検証で
+     27タイプ全到達を確認済み（2026-07-11）。値を変える時は再検証すること */
+const DIV = { x:10, y:7, z:10 };
 
 function compute(){
-  const axisQs=QUESTIONS.filter(q=>q.kind==="axis");
-  let raw={x:0,y:0,z:0};
-  answers.forEach(a=>{ if(a.kind==="axis"&&a.v) raw[a.v]++; });
-  let sc={
-    x:raw.x/axisQs.length*10,
-    y:raw.y/axisQs.length*10,
-    z:raw.z/axisQs.length*10,
-  };
-  /* 苦手補正（乗算）とボーナス（薄い苦手→Z上げ 等）
-     ※ボーナスは軸ごとに累計BONUS_MAXまで。「薄いのが嫌い」を複数回選んでも
-       しっかり軸へ過剰に引っ張られないようにする（2026-07-04修正） */
-  const bonusUsed={x:0,y:0,z:0};
+  let s={x:0,y:0,z:0};
   answers.forEach(a=>{
-    if(a.kind!=="penalty"||!a.v) return;
-    if(a.v[0]==="+"){ const ax=a.v[1];
-      const add=Math.max(0, Math.min(CONFIG.BODY_BONUS, CONFIG.BONUS_MAX-bonusUsed[ax]));
-      sc[ax]=Math.min(10, sc[ax]+add); bonusUsed[ax]+=add; return; }
-    const [ax,f]=a.v.split("*");
-    const factor = f==="S"?CONFIG.PENALTY_STRONG:CONFIG.PENALTY_MILD;
-    sc[ax]=sc[ax]*factor;
+    if(!a.sc) return;
+    s.x+=a.sc.x||0; s.y+=a.sc.y||0; s.z+=a.sc.z||0;
   });
-  sc.x=Math.round(sc.x); sc.y=Math.round(sc.y); sc.z=Math.round(sc.z);
-  /* 経験cap */
-  const capA=answers.find(a=>a.kind==="cap");
-  const cap=capA?capA.v:10;
-  sc.x=Math.min(sc.x,cap); sc.y=Math.min(sc.y,cap); sc.z=Math.min(sc.z,cap);
+  /* 嫌い減点後の下限0 */
+  s.x=Math.max(0,s.x); s.y=Math.max(0,s.y); s.z=Math.max(0,s.z);
+  /* 正規化：0〜10座標（上限10） */
+  let sc={
+    x:Math.min(10,Math.round(s.x/DIV.x*10)),
+    y:Math.min(10,Math.round(s.y/DIV.y*10)),
+    z:Math.min(10,Math.round(s.z/DIV.z*10)),
+  };
   if(sc.x+sc.y+sc.z===0) sc={x:2,y:2,z:2};
   /* 27タイプ判定（低1.5/中5/高8.5の代表座標に最近傍） */
   let type=TYPES[0],best=1e9;
@@ -660,15 +645,14 @@ function compute(){
     const d=(LV[t.lv[0]]-sc.x)**2+(LV[t.lv[1]]-sc.y)**2+(LV[t.lv[2]]-sc.z)**2;
     if(d<best){best=d;type=t;}
   });
-  /* 銘柄ランキング（チャートと同じ座標系）。有名銘柄は別枠 */
-  const base=1;
-  const wx=sc.x+base, wy=sc.y+base, wz=sc.z+base;
-  const ranked=BRANDS.map(b=>({...b,
-    d:Math.sqrt((b.x+base-wx)**2+(b.y+base-wy)**2+(b.z+base-wz)**2)
+  /* 店の銘柄ランキング（店内19銘柄のみ）。
+     ユーザー座標 (sc.x, sc.y, sc.z) と各銘柄の3次元ユークリッド距離を計算し、近い順に並べる。
+     チャート描画も同じ ranked を使うので、表示位置とランキングが一致する。 */
+  const ranked=STORE_SAKE.map(b=>({...b,
+    d:Math.sqrt((b.x-sc.x)**2+(b.y-sc.y)**2+(b.z-sc.z)**2)
   })).sort((a,b)=>a.d-b.d);
-  const recToday=ranked.filter(b=>!b.famous).slice(0,5);
-  const recFamous=ranked.filter(b=>b.famous).slice(0,3);
-  result={X:sc.x,Y:sc.y,Z:sc.z,type,ranked,recToday,recFamous,orderPhrase:type.orderPhrase};
+  const recStore=ranked.slice(0,5);  /* 近い順の上位5本 */
+  result={X:sc.x,Y:sc.y,Z:sc.z,type,ranked,recStore,orderPhrase:type.orderPhrase};
 }
 
 /* =============================================
@@ -684,40 +668,71 @@ function renderResult(){
   document.getElementById("oneLiner").textContent=t.oneLiner;
   document.getElementById("empathy").textContent=t.empathy;
   document.getElementById("sakeRelation").textContent=t.sakeRelation;
+  /* 店の一杯：診断座標に近い順の上位5本を、順位・銘柄名・理由文で表示 */
+  document.getElementById("storeList").innerHTML=r.recStore.map((b,i)=>
+    '<div class="rec'+(i===0?" top1":"")+'">'
+      +'<span class="rec-rank">'+(i+1)+'位</span>'
+      +'<span class="rec-body"><span class="rec-name">'+b.name+'</span>'
+      +'<span class="rec-reason">'+reasonFor(b,r.X,r.Y,r.Z)+'</span></span>'
+    +'</div>').join("");
   document.getElementById("orderPhrase").textContent="「"+t.orderPhrase+"」";
   setScore("sX","bX",r.X);
   setScore("sY","bY",r.Y);
   setScore("sZ","bZ",r.Z);
   document.getElementById("chart").innerHTML=buildChart(r);
-  /* 今日飲めるおすすめ：TOP3表示・「もっと見る」で5位まで */
-  renderRecs(3);
   /* 合う料理 */
   document.getElementById("pairing").innerHTML=t.pairing.map(p=>"<span>"+p+"</span>").join("");
-  /* シェアカード事前生成 */
+  /* シェアカード事前生成（猫画像の読み込み完了後に確定） */
   const drawAndPrepare=()=>{
-    drawCard(result);
-    const cv=document.getElementById("shareCanvas");
-    if(cv&&cv.toBlob){cv.toBlob(b=>{cardBlob=b;cardFile=b?new File([b],"sake-result.png",{type:"image/png"}):null;},"image/png");}
+    drawCard(result,()=>{
+      const cv=document.getElementById("shareCanvas");
+      if(cv&&cv.toBlob){cv.toBlob(b=>{cardBlob=b;cardFile=b?new File([b],"sake-result.png",{type:"image/png"}):null;},"image/png");}
+    });
   };
   if(document.fonts&&document.fonts.ready){document.fonts.ready.then(()=>setTimeout(drawAndPrepare,200));}
   else{setTimeout(drawAndPrepare,600);}
   window.scrollTo({top:0,behavior:"smooth"});
+  /* 診断結果を店舗ログへ送信（集計用・個人情報は含みません） */
+  try{
+    fetch("https://script.google.com/macros/s/AKfycbwS9zjjwtMRThBfWD5bhTrP9A8bVKF9ZZlJSdqO02qLIbNBh59OrBNWDkMQBCUuIzMP/exec",{
+      method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain;charset=utf-8"},
+      body:JSON.stringify({typeNumber:t.no,typeName:t.name,sukkiri:r.X,fruity:r.Y,shikkari:r.Z,lang:document.documentElement.lang||"ja"})
+    }).catch(function(){});
+  }catch(e){}
 }
 
-function renderRecs(n){
-  const r=result;
-  const rl=document.getElementById("recList"); rl.innerHTML="";
-  r.recToday.slice(0,n).forEach((b,i)=>{
-    const d=document.createElement("div");
-    d.className="rec"+(i===0?" top1":"");
-    d.innerHTML='<span class="rec-rank">'+(i+1)+'位</span>'+
-                '<span class="rec-name">'+b.name+'</span>'+
-                '<span class="rec-coord">す'+b.x+'・フ'+b.y+'・し'+b.z+'</span>';
-    rl.appendChild(d);
-  });
-  document.getElementById("moreBtn").style.display = n>=5?"none":"block";
+/* 各銘柄の理由文。
+   ・橋野さん本人のコメント（comment）があれば、それを最優先で表示する。
+   ・無ければ、ユーザーと銘柄で最も強く重なる軸（共通軸）から自動生成する（仮の文章）。
+   ※将来、19銘柄に橋野さんが一言ずつ comment を書き加えれば、そのまま置き換わる。 */
+function reasonFor(b,X,Y,Z){
+  if(b.comment&&b.comment.trim()) return b.comment.trim();
+  /* すっきりX / フルーティーY / しっかりZ の各軸で、ユーザーと銘柄の“重なりの強さ”を測る（共通軸）*/
+  const shared={x:Math.min(X,b.x), y:Math.min(Y,b.y), z:Math.min(Z,b.z)};
+  const max=Math.max(shared.x,shared.y,shared.z);
+  /* どの軸も突出しない＝中間タイプ */
+  if(max<3) return "どの味にも寄りすぎない、穏やかな一本。あなたの好みに、すっと馴染むと思います。";
+  /* 主軸（あなたと最も響き合う方向）*/
+  const primary = shared.x===max ? "x" : (shared.y===max ? "y" : "z");
+  const head = primary==="x" ? "すっきりした飲み口が好きなあなたに。"
+             : primary==="y" ? "華やかな香りが好きなあなたへ。"
+             :                  "旨みやコクを楽しみたいあなたに。";
+  /* 副軸（この銘柄ならではの、もうひとつの表情）。主軸以外で銘柄が3以上持つ軸を拾う */
+  const other=[["x",b.x],["y",b.y],["z",b.z]].filter(a=>a[0]!==primary&&a[1]>=3)
+    .sort((a,b)=>b[1]-a[1]);
+  const tailBase = primary==="x" ? "雑味のない、透明感のある一杯なんです。"
+                 : primary==="y" ? "果実のように香る、寄り添う一杯だと思います。"
+                 :                  "飲みごたえのある、腰の据わった一杯です。";
+  if(other.length){
+    const [sec,val]=other[0];
+    const deg = val>=6 ? "しっかり" : "ほんのり";  /* 副軸の強さで言い回しを変える */
+    const nuance = sec==="x" ? `${deg}としたキレも隠れていて、後口はすっと引きます。`
+                 : sec==="y" ? `奥に${deg}と華やかな香りもあって、飲むほど楽しくなります。`
+                 :             `米の旨みも${deg}と乗っていて、料理にもよく合います。`;
+    return head + nuance;
+  }
+  return head + tailBase;
 }
-function showMore(){ renderRecs(5); }
 
 function setScore(vi,bi,v){
   if(!document.getElementById(vi)) return;
@@ -781,7 +796,7 @@ function buildChart(r){
   s+='</g>';
   /* 銘柄ドット */
   s+='<g>';
-  BRANDS.forEach(b=>{const p=pos(b.x,b.y,b.z);const lab=labeled.has(b.name);
+  STORE_SAKE.forEach(b=>{const p=pos(b.x,b.y,b.z);const lab=labeled.has(b.name);
     s+='<circle cx="'+p.x.toFixed(1)+'" cy="'+p.y.toFixed(1)+'" r="'+(lab?3.2:1.8)+'" fill="'+(lab?"#B23A2E":"#CBBB9E")+'"/>';});
   s+='</g>';
   /* 銘柄ラベル（重なり回避） */
@@ -825,164 +840,98 @@ function buildChart(r){
 /* =============================================
    送信・シェア
    ============================================= */
-function drawCard(r){
+function drawCard(r,done){
   const cv=document.getElementById("shareCanvas");
-  if(!cv)return;
+  if(!cv){done&&done();return;}
   const ctx=cv.getContext("2d");
   const W=800,H=1000;
-  ctx.clearRect(0,0,W,H);
 
-  /* 背景：和紙クリーム */
-  ctx.fillStyle="#F5EFE0";
-  ctx.fillRect(0,0,W,H);
+  const render=(catImg)=>{
+    ctx.clearRect(0,0,W,H);
+    /* 背景：和紙クリーム */
+    ctx.fillStyle="#F5EFE0"; ctx.fillRect(0,0,W,H);
+    /* 上下の朱帯 */
+    ctx.fillStyle="#B23A2E"; ctx.fillRect(0,0,W,8); ctx.fillRect(0,H-8,W,8);
+    /* 内側の細い枠線 */
+    ctx.strokeStyle="#DDD3BB"; ctx.lineWidth=1;
+    ctx.beginPath(); ctx.moveTo(40,40); ctx.lineTo(40,H-40); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(W-40,40); ctx.lineTo(W-40,H-40); ctx.stroke();
 
-  /* 上部の朱帯 */
-  ctx.fillStyle="#B23A2E";
-  ctx.fillRect(0,0,W,8);
-
-  /* 下部の朱帯 */
-  ctx.fillStyle="#B23A2E";
-  ctx.fillRect(0,H-8,W,8);
-
-  /* 縦線の装飾 */
-  ctx.strokeStyle="#DDD3BB";
-  ctx.lineWidth=1;
-  ctx.beginPath(); ctx.moveTo(40,40); ctx.lineTo(40,H-40); ctx.stroke();
-  ctx.beginPath(); ctx.moveTo(W-40,40); ctx.lineTo(W-40,H-40); ctx.stroke();
-
-  /* SAKE story */
-  ctx.fillStyle="#5B5247";
-  ctx.font="500 28px 'Noto Serif JP',serif";
-  ctx.textAlign="center";
-  ctx.letterSpacing="8px";
-  ctx.fillText("五反田　SAKEstory",W/2,80);
-
-  /* 区切り線 */
-  ctx.strokeStyle="#DDD3BB";
-  ctx.lineWidth=1;
-  ctx.beginPath(); ctx.moveTo(W/2-60,100); ctx.lineTo(W/2+60,100); ctx.stroke();
-
-  /* 診断タイトル */
-  ctx.fillStyle="#B23A2E";
-  ctx.font="400 22px 'Noto Serif JP',serif";
-  ctx.letterSpacing="4px";
-  ctx.fillText("日本酒　好み診断",W/2,145);
-
-  /* タイプ名 */
-  ctx.fillStyle="#2C2620";
-  ctx.font="700 58px 'Noto Serif JP',serif";
-  ctx.letterSpacing="2px";
-  const name=r.type.name;
-  /* 長い名前は少し小さく */
-  if(name.length>8) ctx.font="700 44px 'Noto Serif JP',serif";
-  ctx.fillText(name,W/2,240);
-
-  /* 一言コピー（前半のみ・短く） */
-  ctx.fillStyle="#5B5247";
-  ctx.font="400 22px 'Noto Serif JP',serif";
-  ctx.letterSpacing="1px";
-  const copy=r.type.oneLiner||"";
-  /* 30文字以内に切る */
-  const copyShort = copy.length>30 ? copy.slice(0,29)+"…" : copy;
-  ctx.fillText(copyShort,W/2,295);
-
-  /* 区切り */
-  ctx.strokeStyle="#DDD3BB";
-  ctx.lineWidth=1;
-  ctx.beginPath(); ctx.moveTo(W/2-80,325); ctx.lineTo(W/2+80,325); ctx.stroke();
-
-  /* スコア3軸 */
-  const scores=[
-    {label:"すっきり", val:r.X, color:"#6E8FA3"},
-    {label:"フルーティー",val:r.Y, color:"#C46B7E"},
-    {label:"しっかり",  val:r.Z, color:"#C0893C"},
-  ];
-  const colW=W/3;
-  scores.forEach((sc,i)=>{
-    const cx=colW*i+colW/2;
-    /* ラベル */
-    ctx.fillStyle="#5B5247";
-    ctx.font="400 20px 'Noto Serif JP',serif";
     ctx.textAlign="center";
-    ctx.letterSpacing="1px";
-    ctx.fillText(sc.label,cx,375);
-    /* スコア数字 */
-    ctx.fillStyle=sc.color;
-    ctx.font="700 64px 'Noto Serif JP',serif";
-    ctx.fillText(sc.val,cx,455);
-    /* /10 */
-    ctx.fillStyle="#A09080";
-    ctx.font="400 20px 'Noto Serif JP',serif";
-    ctx.fillText("/10",cx,480);
-    /* バー背景 */
-    const bx=cx-70,by=495,bw=140,bh=6;
-    ctx.fillStyle="#DDD3BB";
-    ctx.beginPath(); ctx.roundRect(bx,by,bw,bh,3); ctx.fill();
-    /* バー */
-    ctx.fillStyle=sc.color;
-    ctx.beginPath(); ctx.roundRect(bx,by,bw*(sc.val/10),bh,3); ctx.fill();
-  });
+    /* 屋号 */
+    ctx.fillStyle="#5B5247"; ctx.font="500 22px 'Noto Serif JP',serif"; ctx.letterSpacing="6px";
+    ctx.fillText("五反田　SAKE story",W/2,54);
+    /* タイトル */
+    ctx.fillStyle="#B23A2E"; ctx.font="400 20px 'Noto Serif JP',serif"; ctx.letterSpacing="3px";
+    ctx.fillText("日本酒　三角チャート診断",W/2,92);
 
-  /* おすすめ銘柄 */
-  ctx.fillStyle="#5B5247";
-  ctx.font="400 19px 'Noto Serif JP',serif";
-  ctx.textAlign="center";
-  ctx.letterSpacing="3px";
-  ctx.fillText("おすすめ",W/2,560);
+    /* 主役：猫（大きな円） */
+    const cx=W/2, cy=318, rad=182;
+    ctx.save();
+    ctx.beginPath(); ctx.arc(cx,cy,rad,0,Math.PI*2); ctx.closePath(); ctx.clip();
+    if(catImg){
+      const iw=catImg.naturalWidth||catImg.width, ih=catImg.naturalHeight||catImg.height;
+      const scale=Math.max((rad*2)/iw,(rad*2)/ih);
+      const dw=iw*scale, dh=ih*scale;
+      ctx.drawImage(catImg, cx-dw/2, cy-dh/2, dw, dh);
+    }else{
+      ctx.fillStyle="#EAE1CC"; ctx.fillRect(cx-rad,cy-rad,rad*2,rad*2);
+      ctx.fillStyle="#B23A2E"; ctx.font="700 60px 'Noto Serif JP',serif"; ctx.letterSpacing="2px";
+      ctx.fillText("SAKE",cx,cy+20);
+    }
+    ctx.restore();
+    /* 円の縁取り */
+    ctx.strokeStyle="#C9705F"; ctx.lineWidth=3;
+    ctx.beginPath(); ctx.arc(cx,cy,rad,0,Math.PI*2); ctx.stroke();
 
-  ctx.strokeStyle="#DDD3BB";
-  ctx.lineWidth=1;
-  ctx.beginPath(); ctx.moveTo(W/2-40,578); ctx.lineTo(W/2+40,578); ctx.stroke();
+    /* タイプ名（二つ名） */
+    ctx.fillStyle="#2C2620"; ctx.letterSpacing="2px";
+    const name=r.type.name;
+    const nameSize = name.length>10 ? 40 : (name.length>8 ? 46 : 54);
+    ctx.font="700 "+nameSize+"px 'Noto Serif JP',serif";
+    ctx.fillText(name,W/2,572);
 
-  const top3=r.recToday.slice(0,3);
-  top3.forEach((b,i)=>{
-    const y=625+i*62;
-    /* 順位丸 */
-    ctx.fillStyle= i===0 ? "#B23A2E" : "#DDD3BB";
-    ctx.beginPath(); ctx.arc(W/2-130,y-14,18,0,Math.PI*2); ctx.fill();
-    ctx.fillStyle= i===0 ? "#fff" : "#5B5247";
-    ctx.font="700 18px 'Noto Serif JP',serif";
+    /* ズバリ一言 */
+    ctx.fillStyle="#5B5247"; ctx.font="400 22px 'Noto Serif JP',serif"; ctx.letterSpacing="1px";
+    const copy=r.type.oneLiner||"";
+    const copyShort = copy.length>26 ? copy.slice(0,25)+"…" : copy;
+    ctx.fillText(copyShort,W/2,622);
+
+    /* 小さな三角チャート */
+    const top={x:W/2,y:672}, bl={x:300,y:842}, br={x:500,y:842};
+    const base=1, sum=(r.X+base)+(r.Y+base)+(r.Z+base);
+    const mePos={
+      x:((r.X+base)*top.x+(r.Y+base)*br.x+(r.Z+base)*bl.x)/sum,
+      y:((r.X+base)*top.y+(r.Y+base)*br.y+(r.Z+base)*bl.y)/sum
+    };
+    ctx.strokeStyle="#2C2620"; ctx.lineWidth=1.4; ctx.beginPath();
+    ctx.moveTo(top.x,top.y); ctx.lineTo(br.x,br.y); ctx.lineTo(bl.x,bl.y); ctx.closePath(); ctx.stroke();
+    const dot=(pt,c)=>{ctx.fillStyle=c;ctx.beginPath();ctx.arc(pt.x,pt.y,6,0,Math.PI*2);ctx.fill();};
+    dot(top,"#6E8FA3"); dot(br,"#C46B7E"); dot(bl,"#C0893C");
+    ctx.fillStyle="#5B5247"; ctx.font="400 16px 'Noto Serif JP',serif"; ctx.letterSpacing="0px";
+    ctx.textAlign="center"; ctx.fillText("すっきり",top.x,top.y-14);
+    ctx.textAlign="end";    ctx.fillText("しっかり",bl.x-6,bl.y+22);
+    ctx.textAlign="start";  ctx.fillText("フルーティー",br.x+6,br.y+22);
+    /* あなた */
+    ctx.fillStyle="#2C2620"; ctx.beginPath(); ctx.arc(mePos.x,mePos.y,7,0,Math.PI*2); ctx.fill();
+    ctx.strokeStyle="#2C2620"; ctx.lineWidth=1.2; ctx.setLineDash([3,3]);
+    ctx.beginPath(); ctx.arc(mePos.x,mePos.y,12,0,Math.PI*2); ctx.stroke(); ctx.setLineDash([]);
+
+    /* 下部：CTA・URL・ハッシュタグ */
     ctx.textAlign="center";
-    ctx.letterSpacing="0px";
-    ctx.fillText(i+1,W/2-130,y-8);
-    /* 銘柄名 */
-    ctx.fillStyle="#2C2620";
-    ctx.font= i===0 ? "700 30px 'Noto Serif JP',serif" : "500 26px 'Noto Serif JP',serif";
+    ctx.fillStyle="#B23A2E"; ctx.font="500 17px 'Noto Serif JP',serif"; ctx.letterSpacing="2px";
+    ctx.fillText("あなたはどのタイプ？",W/2,905);
+    ctx.fillStyle="#5B5247"; ctx.font="400 15px 'Noto Sans JP',sans-serif"; ctx.letterSpacing="0px";
+    ctx.fillText("sakestory.github.io/sake-triangle-chart-demo",W/2,938);
+    ctx.fillText("#SAKEstory  #日本酒三角チャート",W/2,966);
     ctx.textAlign="left";
-    ctx.letterSpacing="1px";
-    ctx.fillText(b.name,W/2-100,y);
-  });
+    done&&done();
+  };
 
-  /* タグ */
-  /* 他のお店で頼むなら */
-  ctx.fillStyle="#B23A2E";
-  ctx.font="500 17px 'Noto Serif JP',serif";
-  ctx.textAlign="center";
-  ctx.letterSpacing="1px";
-  ctx.fillText("他のお店で頼むなら",W/2,H-160);
-
-  ctx.fillStyle="#2C2620";
-  ctx.font="600 19px 'Noto Serif JP',serif";
-  const op=r.orderPhrase||"";
-  const opShort = op.length>22 ? op.slice(0,21)+"…" : op;
-  ctx.fillText("「"+opShort+"」",W/2,H-120);
-
-  ctx.fillStyle="#5B5247";
-  ctx.font="500 17px 'Noto Serif JP',serif";
-  ctx.textAlign="center";
-  ctx.letterSpacing="2px";
-  ctx.fillText("五反田　SAKEstory",W/2,H-78);
-
-  ctx.fillStyle="#A09080";
-  ctx.font="400 15px 'Noto Sans JP',sans-serif";
-  ctx.letterSpacing="0px";
-  ctx.fillText("sakestory.github.io/sake-triangle-chart-demo",W/2,H-52);
-
-  ctx.font="400 15px 'Noto Sans JP',sans-serif";
-  ctx.letterSpacing="1px";
-  ctx.fillText("#SAKEstory  #日本酒三角チャート",W/2,H-28);
-
-  ctx.textAlign="left";
+  const img=new Image();
+  img.onload=()=>render(img);
+  img.onerror=()=>render(null);
+  img.src=r.type.catImage;
 }
 
 function saveAndShare(){
@@ -990,7 +939,7 @@ function saveAndShare(){
   const r=result;
   const shareText=
     "私の日本酒タイプは「"+r.type.name+"」でした。\n\n"+
-    "他のお店で頼むなら、\n"+
+    "お店ではこう頼みます、\n"+
     "「"+r.orderPhrase+"」\n\n"+
     "すっきり"+r.X+"／フルーティー"+r.Y+"／しっかり"+r.Z+"\n\n"+
     "あなたはどのタイプ？\n"+
@@ -1019,19 +968,20 @@ function saveAndShare(){
 
 function downloadCard(){
   if(!result) return;
-  drawCard(result);
-  const cv=document.getElementById("shareCanvas");
-  const a=document.createElement("a");
-  a.download="sake-shindan-result.png";
-  a.href=cv.toDataURL("image/png");
-  a.click();
+  drawCard(result,()=>{
+    const cv=document.getElementById("shareCanvas");
+    const a=document.createElement("a");
+    a.download="sake-shindan-result.png";
+    a.href=cv.toDataURL("image/png");
+    a.click();
+  });
 }
 
 function shareX(){
   const r=result;
   const text=
     "私の日本酒タイプは「"+r.type.name+"」でした。\n\n"+
-    "他のお店で頼むなら、\n"+
+    "お店ではこう頼みます、\n"+
     "「"+r.orderPhrase+"」\n\n"+
     "すっきり"+r.X+"／フルーティー"+r.Y+"／しっかり"+r.Z+"\n\n"+
     "あなたはどのタイプ？\n"+
@@ -1045,7 +995,40 @@ function restart(){ show("sc-start"); window.scrollTo({top:0,behavior:"smooth"})
 function show(id){
   document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
   document.getElementById(id).classList.add("active");
+  sprinkleCats();
 }
+
+/* =============================================
+   猫の透かし背景（各画面3〜5匹・ごく薄く・操作を邪魔しない飾り）
+   ============================================= */
+function sprinkleCats(){
+  const bg=document.getElementById("catBg"); if(!bg) return;
+  bg.innerHTML="";
+  const vw=window.innerWidth, vh=window.innerHeight;
+  const n=3+Math.floor(Math.random()*3);
+  const used={};
+  for(let i=0;i<n;i++){
+    let idx,guard=0;
+    do{ idx=1+Math.floor(Math.random()*27); guard++; }while(used[idx]&&guard<20);
+    used[idx]=1;
+    const size=80+Math.floor(Math.random()*181);
+    const op=(0.04+Math.random()*0.04).toFixed(3);
+    const left=Math.random()*Math.max(0,vw-size);
+    let top;
+    if(size>170){ top = Math.random()<0.5 ? Math.random()*(vh*0.16) : vh*0.74+Math.random()*Math.max(0,vh*0.22-size*0.3); }
+    else { top = Math.random()*Math.max(0,vh-size); }
+    top=Math.max(0,Math.min(top,vh-size*0.4));
+    const img=document.createElement("img");
+    img.src="cat_"+String(idx).padStart(2,"0")+".png";
+    img.alt=""; img.setAttribute("aria-hidden","true");
+    img.style.cssText="width:"+size+"px;left:"+Math.round(left)+"px;top:"+Math.round(top)+"px;opacity:"+op+";";
+    img.onerror=function(){ this.remove(); };
+    bg.appendChild(img);
+  }
+}
+let _catTimer=null;
+window.addEventListener("resize",()=>{ clearTimeout(_catTimer); _catTimer=setTimeout(sprinkleCats,300); });
+sprinkleCats();
 </script>
 </body>
 </html>
