@@ -220,7 +220,7 @@ body{
     </div>
 
     <button class="btn btn-primary" onclick="startQuiz()">診断を始める</button>
-    <div class="foot">v11.0</div>
+    <div class="foot">v11.1</div>
   </section>
 
   <!-- ===== 質問 ===== -->
@@ -287,7 +287,7 @@ body{
     <button class="btn btn-ghost" onclick="restart()" style="margin-top:22px;">もう一度、診断する</button>
 
     <p class="story-note">この診断のもとになった『日本酒三角チャート』は、東京・五反田の日本酒バー SAKE story の店主が、20年間カウンターで「とりあえず辛口で」と言われ続けた末にたどり着いた、ひとつの答えなんです。<br>→ <a href="https://sake-story.com/" target="_blank" rel="noopener">SAKE story</a></p>
-    <div class="foot">© SAKE story ／ 橋野元樹　v11.0</div>
+    <div class="foot">© SAKE story ／ 橋野元樹　v11.1</div>
   </section>
 
 </div>
@@ -1110,27 +1110,37 @@ function show(id){
 /* =============================================
    猫の透かし背景（各画面3〜5匹・ごく薄く・操作を邪魔しない飾り）
    ============================================= */
+/* v11.1: 透かし猫は5〜7匹・120〜400px。置き場所が他の猫と重なる場合は置き直す（重なり禁止） */
 function sprinkleCats(){
   const bg=document.getElementById("catBg"); if(!bg) return;
   bg.innerHTML="";
   const vw=window.innerWidth, vh=window.innerHeight;
   const n=5+Math.floor(Math.random()*3);
-  const used={};
+  const used={}, placed=[];
+  const hit=function(a,b){return !(a.l>b.r||a.r<b.l||a.t>b.b||a.b<b.t);};
   for(let i=0;i<n;i++){
     let idx,guard=0;
     do{ idx=1+Math.floor(Math.random()*27); guard++; }while(used[idx]&&guard<20);
     used[idx]=1;
-    const size=120+Math.floor(Math.random()*281);
+    let size=120+Math.floor(Math.random()*281);
     const op=(0.05+Math.random()*0.05).toFixed(3);
-    const left=Math.random()*Math.max(0,vw-size);
-    let top;
-    if(size>170){ top = Math.random()<0.5 ? Math.random()*(vh*0.16) : vh*0.74+Math.random()*Math.max(0,vh*0.22-size*0.3); }
-    else { top = Math.random()*Math.max(0,vh-size); }
-    top=Math.max(0,Math.min(top,vh-size*0.4));
+    let box=null;
+    for(let tr2=0;tr2<30&&!box;tr2++){
+      if(tr2===15&&size>200) size=Math.round(size*0.7);
+      const left=Math.random()*Math.max(0,vw-size);
+      let top;
+      if(size>170){ top = Math.random()<0.5 ? Math.random()*(vh*0.16) : vh*0.74+Math.random()*Math.max(0,vh*0.22-size*0.3); }
+      else { top = Math.random()*Math.max(0,vh-size); }
+      top=Math.max(0,Math.min(top,vh-size*0.4));
+      const b={l:left,t:top,r:left+size,b:top+size};
+      if(!placed.some(function(q){return hit(b,q);})) box=b;
+    }
+    if(!box) continue;
+    placed.push(box);
     const img=document.createElement("img");
     img.src="cat_"+String(idx).padStart(2,"0")+".png";
     img.alt=""; img.setAttribute("aria-hidden","true");
-    img.style.cssText="width:"+size+"px;left:"+Math.round(left)+"px;top:"+Math.round(top)+"px;opacity:"+op+";";
+    img.style.cssText="width:"+size+"px;left:"+Math.round(box.l)+"px;top:"+Math.round(box.t)+"px;opacity:"+op+";";
     img.onerror=function(){ this.remove(); };
     bg.appendChild(img);
   }
