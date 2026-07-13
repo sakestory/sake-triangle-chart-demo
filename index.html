@@ -220,7 +220,7 @@ body{
     </div>
 
     <button class="btn btn-primary" onclick="startQuiz()">診断を始める</button>
-    <div class="foot">v11.1</div>
+    <div class="foot">v11.2</div>
   </section>
 
   <!-- ===== 質問 ===== -->
@@ -287,7 +287,7 @@ body{
     <button class="btn btn-ghost" onclick="restart()" style="margin-top:22px;">もう一度、診断する</button>
 
     <p class="story-note">この診断のもとになった『日本酒三角チャート』は、東京・五反田の日本酒バー SAKE story の店主が、20年間カウンターで「とりあえず辛口で」と言われ続けた末にたどり着いた、ひとつの答えなんです。<br>→ <a href="https://sake-story.com/" target="_blank" rel="noopener">SAKE story</a></p>
-    <div class="foot">© SAKE story ／ 橋野元樹　v11.1</div>
+    <div class="foot">© SAKE story ／ 橋野元樹　v11.2</div>
   </section>
 
 </div>
@@ -870,7 +870,7 @@ function buildChart(r){
     ["start",7,17],["start",7,-10],["end",-7,17],["end",-7,-10],
     ["start",7,30],["end",-7,30],["middle",0,30],["middle",0,-24],
     ["start",22,4],["end",-22,4],["start",22,17],["end",-22,17]];
-  const meAx=me.x>200?"start":"end",meOx=me.x>200?19:-19,meW=3*13+4;
+  const meAx=me.x>200?"start":"end",meOx=me.x>200?22:-22,meW=3*13+4;
   const meLB=meAx==="start"?{l:me.x+meOx,r:me.x+meOx+meW,t:me.y-9,b:me.y+6}
                             :{l:me.x+meOx-meW,r:me.x+meOx,t:me.y-9,b:me.y+6};
   const placed=[{l:164,r:236,t:28,b:48},{l:294,r:378,t:330,b:352},{l:28,r:100,t:330,b:352},
@@ -935,7 +935,8 @@ function buildChart(r){
   s+='<g>';
   /* v11.0: 円の大きさ＝味わいの総量。位置（方向）×大きさ（強さ）で3軸の情報を保つ */
   const power=(r.X+r.Y+r.Z)/30;
-  const rOut=(7+power*9).toFixed(1), rIn=(3+power*4).toFixed(1);
+  const rOut=(6+power*12).toFixed(1), rIn=(2.5+power*5.5).toFixed(1);  /* v11.2: 幅を拡大（総量が一目で分かるように） */
+  s+='<circle cx="'+me.x.toFixed(1)+'" cy="'+me.y.toFixed(1)+'" r="'+rOut+'" fill="#2C2620" opacity="0.07"/>';
   s+='<circle cx="'+me.x.toFixed(1)+'" cy="'+me.y.toFixed(1)+'" r="'+rOut+'" fill="none" stroke="#2C2620" stroke-width="1.3" stroke-dasharray="3 3"/>';
   s+='<circle cx="'+me.x.toFixed(1)+'" cy="'+me.y.toFixed(1)+'" r="'+rIn+'" fill="#2C2620"/>';
   s+='<text x="'+(me.x+meOx).toFixed(1)+'" y="'+(me.y+4).toFixed(1)+'" text-anchor="'+meAx+'" font-family="serif" font-size="13" font-weight="700" fill="#2C2620">あなた</text>';
@@ -1021,9 +1022,10 @@ function drawCard(r,done){
     ctx.textAlign="start";  ctx.fillText("フルーティー",br.x+6,br.y+22);
     /* あなた */
     const pw=(r.X+r.Y+r.Z)/30;  /* v11.0: シェア画像も円の大きさ＝総量 */
-    ctx.fillStyle="#2C2620"; ctx.beginPath(); ctx.arc(mePos.x,mePos.y,4+pw*6,0,Math.PI*2); ctx.fill();
+    ctx.globalAlpha=0.08; ctx.fillStyle="#2C2620"; ctx.beginPath(); ctx.arc(mePos.x,mePos.y,7+pw*12,0,Math.PI*2); ctx.fill(); ctx.globalAlpha=1;
+    ctx.fillStyle="#2C2620"; ctx.beginPath(); ctx.arc(mePos.x,mePos.y,3+pw*8,0,Math.PI*2); ctx.fill();
     ctx.strokeStyle="#2C2620"; ctx.lineWidth=1.2; ctx.setLineDash([3,3]);
-    ctx.beginPath(); ctx.arc(mePos.x,mePos.y,9+pw*9,0,Math.PI*2); ctx.stroke(); ctx.setLineDash([]);
+    ctx.beginPath(); ctx.arc(mePos.x,mePos.y,7+pw*12,0,Math.PI*2); ctx.stroke(); ctx.setLineDash([]);
 
     /* 下部：CTA・URL・ハッシュタグ */
     ctx.textAlign="center";
