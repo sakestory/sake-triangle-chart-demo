@@ -1,7 +1,9 @@
-name: Deploy to Lolipop (/shindan) via FTPS
+name: Deploy to Lolipop (/shindan) via SFTP
 
 # main へ push されたら、診断サイトの本番ファイル(28個)だけを
-# ロリポップの /shindan へ FTPS でアップロードする（アップロードのみ・削除なし）。
+# ロリポップの /shindan へ SFTP(SSH) でアップロードする（アップロードのみ・削除なし）。
+# FTPS ではなく SFTP を使う理由：FTPアクセス制限(.ftpaccess)が有効なため
+# FTP系は許可IP以外から操作不可。SSH経由なら制限を維持したままデプロイできる。
 on:
   push:
     branches: [ main ]
@@ -45,28 +47,28 @@ jobs:
       - name: lftp を導入
         run: sudo apt-get update && sudo apt-get install -y lftp
 
-      - name: FTPS でアップロード（アップロードのみ・削除しない）
+      # SFTP(SSH)方式：ロリポップの「FTPアクセス制限」(.ftpaccess)の影響を受けない。
+      # .ftpaccess は無傷のまま＝wp等のFTP保護を維持しつつデプロイできる。
+      - name: SFTP でアップロード（アップロードのみ・削除しない）
         env:
-          FTP_SERVER: ${{ secrets.FTP_SERVER }}
-          FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
-          FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_PORT: ${{ secrets.SSH_PORT }}
+          SSH_USERNAME: ${{ secrets.SSH_USERNAME }}
+          SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
         run: |
           set -euo pipefail
-          : "${FTP_SERVER:?FTP_SERVER secret が未設定です}"
-          : "${FTP_USERNAME:?FTP_USERNAME secret が未設定です}"
-          : "${FTP_PASSWORD:?FTP_PASSWORD secret が未設定です}"
+          : "${SSH_HOST:?SSH_HOST secret が未設定です}"
+          : "${SSH_PORT:?SSH_PORT secret が未設定です}"
+          : "${SSH_USERNAME:?SSH_USERNAME secret が未設定です}"
+          : "${SSH_PASSWORD:?SSH_PASSWORD secret が未設定です}"
           # コマンドは stdin(heredoc) で渡し、パスワードを argv やログに残さない。
           # set -x はしない。GitHub Actions は secret 値をログ上で自動マスクする。
           lftp <<LFTP
           set cmd:fail-exit true
-          set ftp:ssl-force true
-          set ftp:ssl-protect-data true
-          # 証明書検証：no=接続の身元を検証しない（共有ホスティングで一般的／確実に動く）。
-          # yes に変えると FTP認証情報を中間者攻撃から守れる。初回成功後に yes へ切替推奨。
-          set ssl:verify-certificate no
+          set sftp:auto-confirm yes
           set net:max-retries 2
           set net:timeout 25
-          open -u "${FTP_USERNAME}","${FTP_PASSWORD}" "ftp://${FTP_SERVER}"
+          open -u "${SSH_USERNAME}","${SSH_PASSWORD}" "sftp://${SSH_HOST}:${SSH_PORT}"
           # 公開フォルダが未作成なら作る（既にあればエラーになるが無視して続行）
           set cmd:fail-exit false
           mkdir -p "${REMOTE_DIR}"
