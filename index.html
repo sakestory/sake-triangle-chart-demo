@@ -1137,10 +1137,14 @@ function drawCard(r,done){
       .sort(function(a,b){return a.d-b.d;})[0];};
     const dia=nearMark("◇"), maru=nearMark("◎");
     ctx.fillStyle="#B23A2E";ctx.font="600 19px 'Noto Sans JP',sans-serif";ctx.letterSpacing="1px";
-    ctx.fillText("お家で飲むなら、この二本",455,318);
-    ctx.fillStyle="#6F5428";ctx.font="700 36px 'Noto Serif JP',serif";ctx.letterSpacing="0px";
-    if(dia) ctx.fillText("◇ "+dia.n,455,358);
-    if(maru) ctx.fillText("◎ "+maru.n,455,402);
+    ctx.fillText("お家で飲むなら、この二本",455,322);
+    /* ◇と◎を横並び1行で。銘柄名の長さに合わせて52pxを上限に幅495へ自動フィット */
+    const pair=[dia?"◇ "+dia.n:"",maru?"◎ "+maru.n:""].filter(Boolean).join("　");
+    ctx.fillStyle="#6F5428";ctx.letterSpacing="0px";
+    let pfs=52; ctx.font="700 "+pfs+"px 'Noto Serif JP',serif";
+    const pw=ctx.measureText(pair).width;
+    if(pw>495){pfs=Math.floor(52*495/pw); ctx.font="700 "+pfs+"px 'Noto Serif JP',serif";}
+    ctx.fillText(pair,455,382);
     ctx.fillStyle="#5B5247";ctx.font="500 21px 'Noto Sans JP',sans-serif";
     wrap("お店で頼むなら「"+r.type.orderPhrase+"」",455,440,495,32,3);
 
