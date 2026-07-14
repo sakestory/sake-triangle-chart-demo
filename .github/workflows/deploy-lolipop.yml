@@ -24,8 +24,10 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     env:
-      # ★ロリポップ側の公開ディレクトリ。shindan.sake-story.com が指すフォルダ。
-      REMOTE_DIR: /shindan
+      # ★ロリポップのSSHホーム直下にある Web公開エリア（=FTPで見えるルート）
+      REMOTE_PARENT: web
+      # ★その中の、shindan.sake-story.com が指すフォルダ
+      REMOTE_DIR: shindan
     steps:
       - name: リポジトリを取得
         uses: actions/checkout@v4
@@ -69,9 +71,12 @@ jobs:
           set net:max-retries 2
           set net:timeout 25
           open -u "${SSH_USERNAME}","${SSH_PASSWORD}" "sftp://${SSH_HOST}:${SSH_PORT}"
+          # Web公開エリア(web/)に移動。無ければここで失敗させる＝誤った場所への
+          # サイレントアップロードを防ぐ安全弁。
+          cd "${REMOTE_PARENT}"
           # 公開フォルダが未作成なら作る（既にあればエラーになるが無視して続行）
           set cmd:fail-exit false
-          mkdir -p "${REMOTE_DIR}"
+          mkdir "${REMOTE_DIR}"
           set cmd:fail-exit true
           # --reverse=アップロード / --delete は付けない（対象外ファイルを消さない）
           mirror --reverse --verbose --no-perms --no-symlinks deploy "${REMOTE_DIR}"
