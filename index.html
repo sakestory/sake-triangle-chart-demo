@@ -823,7 +823,7 @@ function renderResult(){
      旧setScore呼び出しは表示先の要素が存在せず空振りしていたため削除 */
   document.getElementById("chart").innerHTML=buildUnifiedChart(r);
   document.getElementById("chartScores").innerHTML="すっきり "+r.X+"　／　フルーティー "+r.Y+"　／　しっかり "+r.Z
-    +'<br><span class="chart-note">中心が0、外側が10です。3方向の長さが、それぞれの点数を表します。<br>※フルーティーは、香りと果実の甘やかさの軸です（日本酒の「甘口・辛口」表示とは別もの）。</span>';
+    +'<br><span class="chart-note">中心が0、外側が10です。3方向の長さが、それぞれの点数を表します。</span>';
   /* シェアカード事前生成（猫画像の読み込み完了後に確定） */
   const drawAndPrepare=()=>{
     drawCard(result,()=>{
@@ -1095,7 +1095,7 @@ function drawCard(r,done){
     ctx.fillText("SAKE story",W/2,90);
 
     /* 酒猫。左上に置き、右側の分析文と対話する配置。 */
-    const cx=250, cy=255, rad=165;
+    const cx=245, cy=235, rad=180;
     ctx.save();
     ctx.beginPath(); ctx.arc(cx,cy,rad,0,Math.PI*2); ctx.closePath(); ctx.clip();
     if(catImg){
@@ -1115,11 +1115,11 @@ function drawCard(r,done){
 
     const name=(TYPE_EXTRA[r.type.no]||{}).cat||r.type.name;
     ctx.fillStyle="#5B5247";ctx.font="500 19px 'Noto Serif JP',serif";ctx.letterSpacing="2px";
-    ctx.fillText("あなたの酒猫は",250,452);
+    ctx.fillText("あなたの酒猫は",245,447);
     ctx.fillStyle="#2C2620";ctx.font="700 "+(name.length>10?38:44)+"px 'Noto Serif JP',serif";ctx.letterSpacing="1px";
-    ctx.fillText(name,250,500);
+    ctx.fillText(name,245,493);
     ctx.fillStyle="#7B7163";ctx.font="400 21px 'Noto Serif JP',serif";ctx.letterSpacing="0px";
-    ctx.fillText("〜"+r.type.name+"〜",250,532);
+    ctx.fillText("〜"+r.type.name+"〜",245,525);
 
     /* 分析文は3〜4行に整え、シェアを見た人にも診断の深さが伝わるようにする。 */
     const wrap=function(text,x,y,maxWidth,lineHeight,maxLines){
@@ -1131,8 +1131,18 @@ function drawCard(r,done){
     ctx.fillText("あなたの日本酒の好み",455,150);
     ctx.fillStyle="#2C2620";ctx.font="500 27px 'Noto Serif JP',serif";ctx.letterSpacing="0px";
     wrap(TASTE_MESSAGE[r.type.no]||"",455,192,495,42,5);
+    /* 好みに近い全国銘柄：◇(なかなか出会えない)と◎(酒屋・オンライン)を1本ずつ */
+    const nearMark=function(mk){return NATL_SAKE.filter(function(b){return b.mark===mk;})
+      .map(function(b){return{n:b.name,d:Math.sqrt(Math.pow(b.x-r.X,2)+Math.pow(b.y-r.Y,2)+Math.pow(b.z-r.Z,2))};})
+      .sort(function(a,b){return a.d-b.d;})[0];};
+    const dia=nearMark("◇"), maru=nearMark("◎");
+    ctx.fillStyle="#B23A2E";ctx.font="600 19px 'Noto Sans JP',sans-serif";ctx.letterSpacing="1px";
+    ctx.fillText("お家で飲むなら、この二本",455,318);
+    ctx.fillStyle="#6F5428";ctx.font="700 36px 'Noto Serif JP',serif";ctx.letterSpacing="0px";
+    if(dia) ctx.fillText("◇ "+dia.n,455,358);
+    if(maru) ctx.fillText("◎ "+maru.n,455,402);
     ctx.fillStyle="#5B5247";ctx.font="500 21px 'Noto Sans JP',sans-serif";
-    wrap("お店で頼むなら「"+r.type.orderPhrase+"」",455,412,495,32,3);
+    wrap("お店で頼むなら「"+r.type.orderPhrase+"」",455,440,495,32,3);
 
     /* 大きな本チャートに、絶対点数の歪んだ三角形も重ねる。 */
     const top={x:W/2,y:545}, bl={x:295,y:850}, br={x:705,y:850};
