@@ -1201,10 +1201,14 @@ function saveAndShare(){
   if(!result) return;
   const r=result;
   /* 酒猫名だけで終わらず、味わい分析とお店で使える注文語まで渡す。 */
+  const natl2=natlTop2(r,[r.recStore[0].name,r.recStore[1].name]);
   const shareText=
     "日本酒三角チャート診断で、私の酒猫は「"+((TYPE_EXTRA[r.type.no]||{}).cat||"")+"」でした🍶\n"+
     "〜"+r.type.name+"〜\n\n"+
-    (TASTE_MESSAGE[r.type.no]||"")+"\n\n"+
+    "【診断で近かった店内銘柄】\n"+
+    "「"+r.recStore[0].name+"」「"+r.recStore[1].name+"」\n"+
+    "【お家で飲むなら】\n"+
+    "「"+natl2[0].name+"」「"+natl2[1].name+"」\n\n"+
     "あなたはどの酒猫？\n"+
     "https://shindan.sake-story.com/\n"+
     "#日本酒三角チャート";
@@ -1242,10 +1246,14 @@ function downloadCard(){
 
 function shareX(){
   const r=result;
+  const natl2=natlTop2(r,[r.recStore[0].name,r.recStore[1].name]);
   const text=
     "日本酒三角チャート診断で、私の酒猫は「"+((TYPE_EXTRA[r.type.no]||{}).cat||"")+"」でした🍶\n"+
     "〜"+r.type.name+"〜\n\n"+
-    (TASTE_MESSAGE[r.type.no]||"")+"\n\n"+
+    "【診断で近かった店内銘柄】\n"+
+    "「"+r.recStore[0].name+"」「"+r.recStore[1].name+"」\n"+
+    "【お家で飲むなら】\n"+
+    "「"+natl2[0].name+"」「"+natl2[1].name+"」\n\n"+
     "あなたはどの酒猫？\n"+
     "https://shindan.sake-story.com/\n"+
     "#日本酒三角チャート";
