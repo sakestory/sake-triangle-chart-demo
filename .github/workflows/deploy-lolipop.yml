@@ -67,6 +67,10 @@ jobs:
           set net:max-retries 2
           set net:timeout 25
           open -u "${FTP_USERNAME}","${FTP_PASSWORD}" "ftp://${FTP_SERVER}"
+          # 公開フォルダが未作成なら作る（既にあればエラーになるが無視して続行）
+          set cmd:fail-exit false
+          mkdir -p "${REMOTE_DIR}"
+          set cmd:fail-exit true
           # --reverse=アップロード / --delete は付けない（対象外ファイルを消さない）
           mirror --reverse --verbose --no-perms --no-symlinks deploy "${REMOTE_DIR}"
           bye
