@@ -1174,11 +1174,11 @@ function drawCard(r,done){
     cardItems.forEach(function(v){v.p=pos2(v.b.x,v.b.y,v.b.z);});
     cardItems.sort(function(a,b){return a.p.x-b.p.x;});
     const cardRows=[585,655,725,795];
-    const drawCardSide=function(list,side){list.sort(function(a,b){return a.p.y-b.p.y;}).forEach(function(v,i){const y=cardRows[i],edge=side==="left"?265:735,labelX=side==="left"?48:952;ctx.strokeStyle=v.color;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(v.p.x,v.p.y);ctx.lineTo(edge,y);ctx.lineTo(side==="left"?245:755,y);ctx.stroke();ctx.fillStyle=v.color;ctx.beginPath();ctx.arc(v.p.x,v.p.y,5,0,Math.PI*2);ctx.fill();ctx.font="600 18px 'Noto Sans JP',sans-serif";ctx.textAlign=side==="left"?"left":"right";ctx.fillText(v.label,labelX,y+5);});};
+    const drawCardSide=function(list,side){list.sort(function(a,b){return a.p.y-b.p.y;}).forEach(function(v,i){const y=cardRows[i],edge=side==="left"?265:735,labelX=side==="left"?40:960;ctx.strokeStyle=v.color;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(v.p.x,v.p.y);ctx.lineTo(edge,y);ctx.lineTo(side==="left"?245:755,y);ctx.stroke();ctx.fillStyle=v.color;ctx.beginPath();ctx.arc(v.p.x,v.p.y,5,0,Math.PI*2);ctx.fill();ctx.font="600 30px 'Noto Sans JP',sans-serif";var tw=ctx.measureText(v.label).width;var lfs=tw>200?Math.max(16,Math.floor(30*200/tw)):30;ctx.font="600 "+lfs+"px 'Noto Sans JP',sans-serif";ctx.textAlign=side==="left"?"left":"right";ctx.fillText(v.label,labelX,y+Math.round(lfs*0.35));});};
     drawCardSide(cardItems.slice(0,4),"left");drawCardSide(cardItems.slice(4),"right");
     ctx.fillStyle="#FFFDF7";ctx.strokeStyle="#2C2620";ctx.lineWidth=2.2;ctx.beginPath();ctx.arc(mePos.x,mePos.y,12,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.fillStyle="#2C2620";ctx.beginPath();ctx.arc(mePos.x,mePos.y,4,0,Math.PI*2);ctx.fill();
     ctx.fillStyle="#5B5247";ctx.font="500 16px 'Noto Sans JP',sans-serif";ctx.textAlign="center";
-    ctx.fillText("赤＝診断で近かった銘柄　茶＝お家で飲むなら　白黒＝あなた",W/2,905);
+    ctx.fillText("赤＝診断で近かったお店で飲める銘柄　茶＝その他のおすすめ銘柄　白黒＝あなたの診断結果の中心",W/2,905);
     ctx.fillStyle="#B23A2E";ctx.font="600 23px 'Noto Serif JP',serif";ctx.letterSpacing="2px";
     ctx.fillText("あなたはどの酒猫？",W/2,938);
     ctx.fillStyle="#5B5247";ctx.font="500 18px 'Noto Sans JP',sans-serif";ctx.letterSpacing="0px";
