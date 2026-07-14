@@ -1089,13 +1089,13 @@ function drawCard(r,done){
     ctx.strokeRect(30,30,W-60,H-60);
 
     ctx.textAlign="center";
-    ctx.fillStyle="#B23A2E"; ctx.font="600 22px 'Noto Serif JP',serif"; ctx.letterSpacing="3px";
-    ctx.fillText("日本酒三角チャート®",W/2,58);
-    ctx.fillStyle="#5B5247"; ctx.font="500 16px 'Noto Sans JP',sans-serif"; ctx.letterSpacing="4px";
-    ctx.fillText("SAKE story",W/2,86);
+    ctx.fillStyle="#B23A2E"; ctx.font="600 26px 'Noto Serif JP',serif"; ctx.letterSpacing="3px";
+    ctx.fillText("日本酒三角チャート®",W/2,60);
+    ctx.fillStyle="#5B5247"; ctx.font="500 17px 'Noto Sans JP',sans-serif"; ctx.letterSpacing="4px";
+    ctx.fillText("SAKE story",W/2,90);
 
     /* 酒猫。左上に置き、右側の分析文と対話する配置。 */
-    const cx=270, cy=245, rad=126;
+    const cx=250, cy=255, rad=165;
     ctx.save();
     ctx.beginPath(); ctx.arc(cx,cy,rad,0,Math.PI*2); ctx.closePath(); ctx.clip();
     if(catImg){
@@ -1105,7 +1105,7 @@ function drawCard(r,done){
       ctx.drawImage(catImg, cx-dw/2, cy-dh/2, dw, dh);
     }else{
       ctx.fillStyle="#EAE1CC"; ctx.fillRect(cx-rad,cy-rad,rad*2,rad*2);
-      ctx.fillStyle="#B23A2E"; ctx.font="700 42px 'Noto Serif JP',serif"; ctx.letterSpacing="2px";
+      ctx.fillStyle="#B23A2E"; ctx.font="700 54px 'Noto Serif JP',serif"; ctx.letterSpacing="2px";
       ctx.fillText("SAKE",cx,cy+20);
     }
     ctx.restore();
@@ -1114,12 +1114,12 @@ function drawCard(r,done){
     ctx.beginPath(); ctx.arc(cx,cy,rad,0,Math.PI*2); ctx.stroke();
 
     const name=(TYPE_EXTRA[r.type.no]||{}).cat||r.type.name;
-    ctx.fillStyle="#5B5247";ctx.font="500 15px 'Noto Serif JP',serif";ctx.letterSpacing="2px";
-    ctx.fillText("あなたの酒猫は",270,394);
-    ctx.fillStyle="#2C2620";ctx.font="700 "+(name.length>10?31:36)+"px 'Noto Serif JP',serif";ctx.letterSpacing="1px";
-    ctx.fillText(name,270,438);
-    ctx.fillStyle="#7B7163";ctx.font="400 17px 'Noto Serif JP',serif";ctx.letterSpacing="0px";
-    ctx.fillText("〜"+r.type.name+"〜",270,470);
+    ctx.fillStyle="#5B5247";ctx.font="500 19px 'Noto Serif JP',serif";ctx.letterSpacing="2px";
+    ctx.fillText("あなたの酒猫は",250,452);
+    ctx.fillStyle="#2C2620";ctx.font="700 "+(name.length>10?38:44)+"px 'Noto Serif JP',serif";ctx.letterSpacing="1px";
+    ctx.fillText(name,250,500);
+    ctx.fillStyle="#7B7163";ctx.font="400 21px 'Noto Serif JP',serif";ctx.letterSpacing="0px";
+    ctx.fillText("〜"+r.type.name+"〜",250,532);
 
     /* 分析文は3〜4行に整え、シェアを見た人にも診断の深さが伝わるようにする。 */
     const wrap=function(text,x,y,maxWidth,lineHeight,maxLines){
@@ -1127,15 +1127,15 @@ function drawCard(r,done){
       if(lines.length>maxLines){lines=lines.slice(0,maxLines);lines[maxLines-1]=lines[maxLines-1].replace(/[。、]$/,'')+'…';}
       lines.forEach(function(v,i){ctx.fillText(v,x,y+i*lineHeight);});return lines.length;
     };
-    ctx.textAlign="left";ctx.fillStyle="#B23A2E";ctx.font="600 16px 'Noto Sans JP',sans-serif";ctx.letterSpacing="1px";
-    ctx.fillText("あなたの日本酒の好み",455,145);
-    ctx.fillStyle="#2C2620";ctx.font="500 22px 'Noto Serif JP',serif";ctx.letterSpacing="0px";
-    wrap(TASTE_MESSAGE[r.type.no]||"",455,185,480,36,5);
-    ctx.fillStyle="#5B5247";ctx.font="500 17px 'Noto Sans JP',sans-serif";
-    wrap("お店で頼むなら「"+r.type.orderPhrase+"」",455,385,480,27,3);
+    ctx.textAlign="left";ctx.fillStyle="#B23A2E";ctx.font="600 21px 'Noto Sans JP',sans-serif";ctx.letterSpacing="1px";
+    ctx.fillText("あなたの日本酒の好み",455,150);
+    ctx.fillStyle="#2C2620";ctx.font="500 27px 'Noto Serif JP',serif";ctx.letterSpacing="0px";
+    wrap(TASTE_MESSAGE[r.type.no]||"",455,192,495,42,5);
+    ctx.fillStyle="#5B5247";ctx.font="500 21px 'Noto Sans JP',sans-serif";
+    wrap("お店で頼むなら「"+r.type.orderPhrase+"」",455,412,495,32,3);
 
     /* 大きな本チャートに、絶対点数の歪んだ三角形も重ねる。 */
-    const top={x:W/2,y:505}, bl={x:300,y:815}, br={x:700,y:815};
+    const top={x:W/2,y:545}, bl={x:295,y:850}, br={x:705,y:850};
     ctx.strokeStyle="#2C2620"; ctx.lineWidth=2.2; ctx.beginPath();
     ctx.moveTo(top.x,top.y); ctx.lineTo(br.x,br.y); ctx.lineTo(bl.x,bl.y); ctx.closePath(); ctx.stroke();
     const center={x:(top.x+bl.x+br.x)/3,y:(top.y+bl.y+br.y)/3};
@@ -1145,32 +1145,32 @@ function drawCard(r,done){
     /* 結果画面と同じく、丸は赤い三角形の重心に置く。 */
     const mePos={x:(scorePts[0].x+scorePts[1].x+scorePts[2].x)/3,y:(scorePts[0].y+scorePts[1].y+scorePts[2].y)/3};
     ctx.fillStyle="rgba(178,58,46,.12)";ctx.strokeStyle="#B23A2E";ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(scorePts[0].x,scorePts[0].y);ctx.lineTo(scorePts[1].x,scorePts[1].y);ctx.lineTo(scorePts[2].x,scorePts[2].y);ctx.closePath();ctx.fill();ctx.stroke();
-    const dot=(pt,c)=>{ctx.fillStyle=c;ctx.beginPath();ctx.arc(pt.x,pt.y,8,0,Math.PI*2);ctx.fill();};
+    const dot=(pt,c)=>{ctx.fillStyle=c;ctx.beginPath();ctx.arc(pt.x,pt.y,9,0,Math.PI*2);ctx.fill();};
     dot(top,"#6E8FA3"); dot(br,"#C46B7E"); dot(bl,"#C0893C");
-    ctx.fillStyle="#2C2620"; ctx.font="600 18px 'Noto Serif JP',serif"; ctx.letterSpacing="0px";
-    ctx.textAlign="center"; ctx.fillText("すっきり",top.x,top.y-14);
-    ctx.textAlign="end";    ctx.fillText("しっかり",bl.x-8,bl.y+26);
-    ctx.textAlign="start";  ctx.fillText("フルーティー",br.x+8,br.y+26);
+    ctx.fillStyle="#2C2620"; ctx.font="600 22px 'Noto Serif JP',serif"; ctx.letterSpacing="0px";
+    ctx.textAlign="center"; ctx.fillText("すっきり",top.x,top.y-16);
+    ctx.textAlign="end";    ctx.fillText("しっかり",bl.x-8,bl.y+30);
+    ctx.textAlign="start";  ctx.fillText("フルーティー",br.x+8,br.y+30);
     const pos2=function(x,y,z){const s2=x+y+z||1;return{x:(x*top.x+y*br.x+z*bl.x)/s2,y:(x*top.y+y*br.y+z*bl.y)/s2};};
-    STORE_SAKE.forEach(function(b){const p=pos2(b.x,b.y,b.z);ctx.fillStyle="#CBBB9E";ctx.beginPath();ctx.arc(p.x,p.y,2.5,0,Math.PI*2);ctx.fill();});
+    STORE_SAKE.forEach(function(b){const p=pos2(b.x,b.y,b.z);ctx.fillStyle="#CBBB9E";ctx.beginPath();ctx.arc(p.x,p.y,3,0,Math.PI*2);ctx.fill();});
     const home3=homeTop3(r,r.recStore.map(function(b){return b.name;}));
     /* 店内5本＋お家3本を左右4本ずつ枠外へ整列。点から名前まで必ず引き出し線で結ぶ。 */
     const cardItems=r.recStore.slice(0,5).map(function(b){return{b:b,label:b.name,color:"#B23A2E"};})
       .concat(home3.map(function(b){return{b:b,label:b.mark+" "+b.name,color:"#6F5428"};}));
     cardItems.forEach(function(v){v.p=pos2(v.b.x,v.b.y,v.b.z);});
     cardItems.sort(function(a,b){return a.p.x-b.p.x;});
-    const cardRows=[555,625,695,765];
-    const drawCardSide=function(list,side){list.sort(function(a,b){return a.p.y-b.p.y;}).forEach(function(v,i){const y=cardRows[i],edge=side==="left"?265:735,labelX=side==="left"?48:952;ctx.strokeStyle=v.color;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(v.p.x,v.p.y);ctx.lineTo(edge,y);ctx.lineTo(side==="left"?245:755,y);ctx.stroke();ctx.fillStyle=v.color;ctx.beginPath();ctx.arc(v.p.x,v.p.y,5,0,Math.PI*2);ctx.fill();ctx.font="600 15px 'Noto Sans JP',sans-serif";ctx.textAlign=side==="left"?"left":"right";ctx.fillText(v.label,labelX,y+5);});};
+    const cardRows=[585,655,725,795];
+    const drawCardSide=function(list,side){list.sort(function(a,b){return a.p.y-b.p.y;}).forEach(function(v,i){const y=cardRows[i],edge=side==="left"?265:735,labelX=side==="left"?48:952;ctx.strokeStyle=v.color;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(v.p.x,v.p.y);ctx.lineTo(edge,y);ctx.lineTo(side==="left"?245:755,y);ctx.stroke();ctx.fillStyle=v.color;ctx.beginPath();ctx.arc(v.p.x,v.p.y,5,0,Math.PI*2);ctx.fill();ctx.font="600 18px 'Noto Sans JP',sans-serif";ctx.textAlign=side==="left"?"left":"right";ctx.fillText(v.label,labelX,y+5);});};
     drawCardSide(cardItems.slice(0,4),"left");drawCardSide(cardItems.slice(4),"right");
-    ctx.fillStyle="#FFFDF7";ctx.strokeStyle="#2C2620";ctx.lineWidth=2.2;ctx.beginPath();ctx.arc(mePos.x,mePos.y,10,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.fillStyle="#2C2620";ctx.beginPath();ctx.arc(mePos.x,mePos.y,3.2,0,Math.PI*2);ctx.fill();
-    ctx.fillStyle="#5B5247";ctx.font="500 14px 'Noto Sans JP',sans-serif";ctx.textAlign="center";
-    ctx.fillText("赤＝診断で近かった銘柄　茶＝お家で飲むなら　白黒＝あなた",W/2,870);
-    ctx.fillStyle="#B23A2E";ctx.font="600 18px 'Noto Serif JP',serif";ctx.letterSpacing="2px";
-    ctx.fillText("あなたはどの酒猫？",W/2,910);
-    ctx.fillStyle="#5B5247";ctx.font="400 14px 'Noto Sans JP',sans-serif";ctx.letterSpacing="0px";
-    ctx.fillText("shindan.sake-story.com　#日本酒三角チャート",W/2,942);
-    ctx.fillStyle="#7B7163";ctx.font="400 13px 'Noto Serif JP',serif";
-    ctx.fillText("© SAKE story　日本酒三角チャート®",W/2,972);
+    ctx.fillStyle="#FFFDF7";ctx.strokeStyle="#2C2620";ctx.lineWidth=2.2;ctx.beginPath();ctx.arc(mePos.x,mePos.y,12,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.fillStyle="#2C2620";ctx.beginPath();ctx.arc(mePos.x,mePos.y,4,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle="#5B5247";ctx.font="500 16px 'Noto Sans JP',sans-serif";ctx.textAlign="center";
+    ctx.fillText("赤＝診断で近かった銘柄　茶＝お家で飲むなら　白黒＝あなた",W/2,905);
+    ctx.fillStyle="#B23A2E";ctx.font="600 23px 'Noto Serif JP',serif";ctx.letterSpacing="2px";
+    ctx.fillText("あなたはどの酒猫？",W/2,938);
+    ctx.fillStyle="#5B5247";ctx.font="500 18px 'Noto Sans JP',sans-serif";ctx.letterSpacing="0px";
+    ctx.fillText("shindan.sake-story.com　#日本酒三角チャート",W/2,966);
+    ctx.fillStyle="#7B7163";ctx.font="400 12px 'Noto Serif JP',serif";
+    ctx.fillText("© SAKE story　日本酒三角チャート®",W/2,986);
     ctx.textAlign="left";
     done&&done();
   };
@@ -1185,16 +1185,10 @@ function saveAndShare(){
   if(!result) return;
   const r=result;
   /* 酒猫名だけで終わらず、味わい分析とお店で使える注文語まで渡す。 */
-  const natl2=natlTop2(r,[r.recStore[0].name,r.recStore[1].name]);
   const shareText=
-    "私の酒猫は「"+((TYPE_EXTRA[r.type.no]||{}).cat||"")+"」🍶\n"+
+    "日本酒三角チャート診断で、私の酒猫は「"+((TYPE_EXTRA[r.type.no]||{}).cat||"")+"」でした🍶\n"+
     "〜"+r.type.name+"〜\n\n"+
-    (TASTE_MESSAGE[r.type.no]||"")+"\n"+
-    "お店で頼むなら「"+r.type.orderPhrase+"」\n\n"+
-    "【診断で近かった銘柄】\n"+
-    "「"+r.recStore[0].name+"」「"+r.recStore[1].name+"」\n"+
-    "【お家で飲むなら】\n"+
-    "「"+natl2[0].name+"」「"+natl2[1].name+"」\n\n"+
+    (TASTE_MESSAGE[r.type.no]||"")+"\n\n"+
     "あなたはどの酒猫？\n"+
     "https://shindan.sake-story.com/\n"+
     "#日本酒三角チャート";
@@ -1232,16 +1226,10 @@ function downloadCard(){
 
 function shareX(){
   const r=result;
-  const natl2=natlTop2(r,[r.recStore[0].name,r.recStore[1].name]);
   const text=
-    "私の酒猫は「"+((TYPE_EXTRA[r.type.no]||{}).cat||"")+"」🍶\n"+
+    "日本酒三角チャート診断で、私の酒猫は「"+((TYPE_EXTRA[r.type.no]||{}).cat||"")+"」でした🍶\n"+
     "〜"+r.type.name+"〜\n\n"+
-    (TASTE_MESSAGE[r.type.no]||"")+"\n"+
-    "お店で頼むなら「"+r.type.orderPhrase+"」\n\n"+
-    "【診断で近かった銘柄】\n"+
-    "「"+r.recStore[0].name+"」「"+r.recStore[1].name+"」\n"+
-    "【お家で飲むなら】\n"+
-    "「"+natl2[0].name+"」「"+natl2[1].name+"」\n\n"+
+    (TASTE_MESSAGE[r.type.no]||"")+"\n\n"+
     "あなたはどの酒猫？\n"+
     "https://shindan.sake-story.com/\n"+
     "#日本酒三角チャート";
