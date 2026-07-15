@@ -732,7 +732,7 @@ function buildShareText(r){
     +(TASTE_MESSAGE[r.type.no]||"")+"\n\n"
     +"あなたはどの酒猫？\n"
     +"https://shindan.sake-story.com/\n"
-    +"#日本酒 #日本酒三角チャート";
+    +"#日本酒三角チャート";
 }
 function reasonForEn(b,X,Y,Z,i){
   i=i||0;
@@ -809,7 +809,7 @@ function sendLog(payload){
   }catch(e){}
 }
 /* 訪問計測：ページを開いた時に1回送信（category="visit"。シートのcategory列で診断と区別） */
-sendLog({typeNumber:"",typeName:"",sukkiri:"",fruity:"",shikkari:"",lang:document.documentElement.lang||"ja",category:"visit"});
+sendLog({typeNumber:"",typeName:(document.referrer||"(direct)")+(location.search?" "+location.search:""),sukkiri:"",fruity:"",shikkari:"",lang:document.documentElement.lang||"ja",category:"visit"});
 
 function startQuiz(){
   answers=[]; qi=0;
