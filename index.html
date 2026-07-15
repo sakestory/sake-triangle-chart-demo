@@ -642,6 +642,162 @@ const QUESTIONS = [
 let answers=[], qi=0, result=null;
 let cardBlob=null, cardFile=null;  /* シェア画像の事前生成用 */
 
+/* =============================================
+   英語版（EN）── ?lang=en で切替。JAデータは不変、表示時のみ差し替え
+   ============================================= */
+const LANG=(function(){try{return new URLSearchParams(location.search).get("lang")==="en"?"en":"ja";}catch(e){return "ja";}})();
+document.documentElement.lang=LANG;
+const EN_QUESTIONS=[
+ {tag:"About “Dry”",text:"If you ordered a “dry” sake, what are you hoping for?",opts:["Clean and dry, with a crisp finish","Fruity on the palate, but with a sharp finish","Rich and full-bodied","Honestly, I’m not sure what “dry” means"]},
+ {tag:"In Your Mouth",text:"When you sip sake, what’s the ideal feeling in your mouth?",opts:["Slides in smoothly, vanishes instantly","Gentle entry, fades away lightly","Well-balanced, with a touch of lingering finish","Full-flavored, with a long, satisfying finish"]},
+ {tag:"A Midsummer Afternoon",text:"On a hot summer afternoon, what do you crave most?",opts:["Something fizzy and sparkling","Fruit juice","Iced coffee","None of these"]},
+ {tag:"The Umami of Rice",text:"How do you feel about rich, full flavors with deep rice umami?",opts:["That’s what I live for","I quite like it","Once in a while","I prefer something lighter"]},
+ {tag:"About Sweetness",text:"How much sweetness do you like in your sake?",opts:["Sweetness is a treat — make it juicy","Just a hint of sweetness is perfect","Umami matters more than sweetness","I’d rather skip the sweetness"]},
+ {tag:"About Ramen",text:"If you were having ramen, which would you pick first?",opts:["Light shio (salt)","Shoyu with rich dashi","Hearty miso","Rich, creamy tonkotsu"]},
+ {tag:"Food Pairing",text:"What would you most like to eat with your sake?",opts:["White fish sashimi, tempura with salt","Fruit, prosciutto with melon, sweeter dishes","Braised dishes, smoked food, aged cheese","Carpaccio, Western-style appetizers"]},
+ {tag:"Avoiding a Miss",text:"Which of these would you most want to avoid in a drink?",opts:["Thin and underwhelming","So sweet it’s basically juice","Heavy and boozy","Nothing in particular"]},
+ {tag:"Aroma & Finish",text:"Any aromas or finishes you’re not so fond of?",opts:["Perfume-like, overpowering aroma","Deep, aged, funky notes","So light it leaves nothing behind","Nothing in particular"]}
+];
+const EN_TYPE={
+ 1:{cat:"Crisp Flash Cat",name:"Dry-Sake Graduate",ord:"Something crisp and dry, easy on the sweetness, please."},
+ 2:{cat:"Single Blossom Cat",name:"A Whisper of Bloom",ord:"Something crisp with just a hint of floral aroma, please."},
+ 3:{cat:"Sunny Spot Cat",name:"Sparkling Soda Spirit",ord:"Something light with plenty of aroma, please."},
+ 4:{cat:"Silver-Smoke Cat",name:"The Quiet Ace",ord:"Crisp, but with a little umami underneath, please."},
+ 5:{cat:"Balance Cat",name:"Tuner of the Breeze",ord:"Something crisp-leaning and well-balanced, please."},
+ 6:{cat:"Two-Sword Cat",name:"Sharp Edge, Deep Heart",ord:"Something with real umami but a crisp finish, please."},
+ 7:{cat:"Gentle Breeze Cat",name:"Light & Easy",ord:"Something light and easy to drink, please."},
+ 8:{cat:"Master Cat",name:"Master of Just Right",ord:"Something light with a little aroma, please."},
+ 9:{cat:"Best Supporting Cat",name:"The Art of Table Sake",ord:"Something with both crispness and umami that pairs well with food, please."},
+ 10:{cat:"Aroma-First Cat",name:"Deep Breath at the Glass",ord:"Something fruity and aromatic, please."},
+ 11:{cat:"Baby-Faced Sharp Cat",name:"Sweet Face, Clean Finish",ord:"Something bright and fruity, but with a clean finish, please."},
+ 12:{cat:"Secretly Serious Cat",name:"Depth Behind the Bouquet",ord:"Something fruity with a bit of umami too, please."},
+ 13:{cat:"Treat-Yourself Cat",name:"Rich & Dreamy",ord:"Something with a gorgeous aroma and rich flavor, please."},
+ 14:{cat:"Greedy-but-Right Cat",name:"When in Doubt, Both",ord:"Something aromatic and well-balanced, please."},
+ 15:{cat:"Fluffy Healing Cat",name:"The Gentle-Sweet Party",ord:"Something gently sweet and easy to drink, please."},
+ 16:{cat:"Wherever-the-Wind Cat",name:"Free Spirit, Mood-Led",ord:"Something balanced that goes with any dish, please."},
+ 17:{cat:"Easy Stroll Cat",name:"Collector of Quiet Joys",ord:"Something with a nice balance of sweetness and umami, please."},
+ 18:{cat:"Bottomless Sake Cat",name:"Sweet Door, Deep Room",ord:"Something aromatic with solid umami underneath, please."},
+ 19:{cat:"Deep-End Sake Cat",name:"Umami, All the Way",ord:"Something with solid rice umami and richness, please."},
+ 20:{cat:"Speaks-with-Its-Back Cat",name:"Knows Good Sake, Says Little",ord:"Something with umami but not too heavy, please."},
+ 21:{cat:"Rabbit-Hole Entrance Cat",name:"One Level Deeper",ord:"Something aromatic with solid umami too, please."},
+ 22:{cat:"Nightcap Devotee Cat",name:"Tonight, the Usual",ord:"Something with mellow umami I could drink every night, please."},
+ 23:{cat:"Dead-Center Cat",name:"Sniper of the Sweet Spot",ord:"Something right between crisp and umami-rich, please."},
+ 24:{cat:"Cool-Blooded Fire Cat",name:"Rich Yet Refreshing",ord:"Something with solid umami and aroma too, please."},
+ 25:{cat:"Want-It-All Sake Cat",name:"The Everything Bowl",ord:"Something rich in flavor with a beautiful finish, please."},
+ 26:{cat:"Elegant Sake Cat",name:"Elegance, Advanced Class",ord:"Something aromatic and crisp, with body underneath, please."},
+ 27:{cat:"Pure Potential Cat",name:"A Blank Cup",ord:"Something easy to drink and not too intense, please."}
+};
+const EN_TASTE={
+ 1:"A light, quick finish with modest aroma and sweetness. A sharp, refreshing glass suits you.",
+ 2:"A light finish with a gently fragrant lift. A clean glass with a small splash of color suits you.",
+ 3:"A light finish with a vivid, cheerful aroma. Something bright and easy-drinking suits you.",
+ 4:"A light, quick finish with a touch of rice umami. Sharp yet satisfying suits you.",
+ 5:"Lightness at the center, with aroma and umami in balance. A glass that stays close to your meal suits you.",
+ 6:"A clean finish over solid umami. Substantial but never heavy suits you.",
+ 7:"Modest aroma and body, with an easy, gliding lightness. The first glass you reach for suits you.",
+ 8:"Nothing too strong — light, aromatic, and softly savory. A glass that fits everyday meals suits you.",
+ 9:"A light finish with balanced aroma and umami. A glass that widens the flavors of a meal suits you.",
+ 10:"Aroma over lightness. A glass whose sweet fragrance can be savored slowly suits you.",
+ 11:"You love a lively aroma, but the finish must cut clean. Bright and light at once suits you.",
+ 12:"Behind the bright bouquet, you want substance. A glass that reveals more with every sip suits you.",
+ 13:"You won’t give up the bouquet or the deep umami. A lavish, reward-like glass suits you.",
+ 14:"You want both the bouquet and food-friendliness. Bright and savory in balance suits you.",
+ 15:"Rather than a sharp cut, you want soft sweetness to sink into. A glass that settles gently suits you.",
+ 16:"Not leaning into lightness, aroma, or umami — that’s your comfort zone. A glass you can pick by mood suits you.",
+ 17:"Not flashy aromas but a gently spreading warmth. A calm glass that invites one more sip suits you.",
+ 18:"Enter through gentle sweetness; umami spreads afterward. A glass that deepens as you drink suits you.",
+ 19:"Rice umami and depth over aroma, savored slowly. A glass worth exploring at different temperatures suits you.",
+ 20:"Modest aroma, solid umami. A calm glass whose second pour beats the first suits you.",
+ 21:"Both bouquet and umami, with a touch of lightness kept. A generous, substantial glass suits you.",
+ 22:"Calm umami over flashy aroma. A familiar, welcoming glass you’d pour nightly suits you.",
+ 23:"Not too rich, not too light, aroma in check. A glass that sits comfortably beside a meal suits you.",
+ 24:"You want real umami, but a finish that doesn’t sit heavy. Richness and freshness together suit you.",
+ 25:"Lightness, bouquet, and solid umami — you want it all. A generous glass that delivers on every front suits you.",
+ 26:"A light finish and a bright bouquet, with real thickness of flavor. An elegant, satisfying glass suits you.",
+ 27:"No fixed preferences yet — the perfect time to try everything. Start wherever your curiosity points."
+};
+const ROMAJI={"〆張鶴":"Shimeharitsuru","サビ猫ロック":"Sabineko Rock","酒場の純大":"Sakaba no Jundai","K":"K","天賦":"Tenbu","無為信":"Muishin","LOHA酒":"LOHA-shu","鍋島":"Nabeshima","木曽路":"Kisoji","喜正":"Kisho","弥右衛門":"Yauemon","松の寿":"Matsunokotobuki","新政":"Aramasa","十四代":"Juyondai","天明":"Tenmei","ロ万":"Roman","奈良萬":"Naraman","磐城壽夏酒":"Iwaki Kotobuki Summer","わかむすめ":"Wakamusume","夏やご":"Natsu Yago","田酒":"Denshu","飛露喜":"Hiroki","而今":"Jikon","赤武":"Akabu","寫樂":"Sharaku","みむろ杉":"Mimurosugi","作":"Zaku","風の森":"Kaze no Mori","仙禽":"Senkin","光栄菊":"Koeigiku","産土":"Ubusuna","獺祭":"Dassai","黒龍":"Kokuryu","醸し人九平次":"Kamoshibito Kuheiji","磯自慢":"Isojiman","開運":"Kaiun","伯楽星":"Hakurakusei","日高見":"Hitakami","陸奥八仙":"Mutsu Hassen","豊盃":"Houhai","楯野川":"Tatenokawa","くどき上手":"Kudoki Jozu","出羽桜":"Dewazakura","一白水成":"Ippaku Suisei","山本":"Yamamoto","ゆきの美人":"Yuki no Bijin","雪の茅舎":"Yuki no Bosha","天狗舞":"Tengumai","菊姫":"Kikuhime","手取川":"Tedorigawa","加賀鳶":"Kagatobi","黒帯":"Kuroobi","川鶴":"Kawatsuru","満寿泉":"Masuizumi","勝駒":"Kachikoma","羽根屋":"Haneya","立山":"Tateyama","久保田":"Kubota","八海山":"Hakkaisan","越乃寒梅":"Koshi no Kanbai","鶴齢":"Kakurei","村祐":"Murayu","加茂錦":"Kamo Nishiki","至":"Itaru","あべ":"Abe","たかちよ":"Takachiyo","真澄":"Masumi","信州亀齢":"Shinshu Kirei","王祿":"Oroku","七本鎗":"Shichihon-yari","不老泉":"Furosen","澤屋まつもと":"Sawaya Matsumoto","玉川":"Tamagawa","秋鹿":"Akishika","群馬泉":"Gunma Izumi","奥播磨":"Okuharima","花巴":"Hanatomoe","悦・凱陣":"Yorokobi Gaijin","紀土":"Kid","屋守":"Okunokami","花陽浴":"Hanaabi","寒菊":"Kankiku","木戸泉":"Kidoizumi","一ノ蔵":"Ichinokura","萩の鶴":"Hagi no Tsuru","浦霞":"Urakasumi","南部美人":"Nanbu Bijin","大七":"Daishichi","奥の松":"Okunomatsu","上喜元":"Jokigen","飛良泉":"Hiraizumi","義侠":"Gikyo","るみ子の酒":"Rumiko no Sake","残響":"Zankyo","会津娘":"Aizu Musume","会津中将":"Aizu Chujo","泉川":"Izumikawa","山の井":"Yamanoi","国権":"Kokken","名倉山":"Nagurayama","末廣":"Suehiro","榮川":"Eisen","一歩己":"Ibuki","廣戸川":"Hirotogawa","風が吹く":"Kaze ga Fuku","大和屋善内":"Yamatoya Zennai","上善如水":"Jozen Mizunogotoshi","麒麟山":"Kirinzan","越乃景虎":"Koshi no Kagetora","菊水":"Kikusui","雪中梅":"Setchubai","吉乃川":"Yoshinogawa","越の寒中梅":"Koshi no Kanchubai","刈穂":"Kariho","墨廼江":"Suminoe","菊水ふなぐち":"Kikusui Funaguchi","金鶴":"Kintsuru","菊正宗樽酒":"Kiku-Masamune Taruzake","白鹿":"Hakushika","剣菱":"Kenbishi","菊正宗金P":"Kiku-Masamune Gold","大関":"Ozeki","白鶴":"Hakutsuru","月桂冠":"Gekkeikan","松竹梅":"Sho Chiku Bai","黄桜":"Kizakura","賀茂鶴":"Kamotsuru","白壁蔵":"Shirakabegura","福寿":"Fukuju","三千櫻":"Michizakura","銀盤":"Ginban","菊正宗銀P":"Kiku-Masamune Silver","白牡丹":"Hakubotan","大関 金冠":"Ozeki Kinkan","大関 銀冠":"Ozeki Ginkan"};
+function bn(name){return LANG==="en"?(ROMAJI[name]||name):name;}
+function buildShareText(r){
+  if(LANG==="en"){
+    return "My Sake Cat is “"+((EN_TYPE[r.type.no]||{}).cat||"")+"” — Sake Triangle Chart Quiz 🍶\n"
+      +"“"+((EN_TYPE[r.type.no]||{}).name||"")+"”\n\n"
+      +(EN_TASTE[r.type.no]||"")+"\n\n"
+      +"Which Sake Cat are you?\n"
+      +"https://shindan.sake-story.com/?lang=en\n"
+      +"#sake #SakeTriangleChart";
+  }
+  return "日本酒三角チャート診断で、私の酒猫は「"+((TYPE_EXTRA[r.type.no]||{}).cat||"")+"」でした🍶\n"
+    +"〜"+r.type.name+"〜\n\n"
+    +(TASTE_MESSAGE[r.type.no]||"")+"\n\n"
+    +"あなたはどの酒猫？\n"
+    +"https://shindan.sake-story.com/\n"
+    +"#日本酒 #日本酒三角チャート";
+}
+function reasonForEn(b,X,Y,Z,i){
+  i=i||0;
+  const shared={x:Math.min(X,b.x),y:Math.min(Y,b.y),z:Math.min(Z,b.z)};
+  const max=Math.max(shared.x,shared.y,shared.z);
+  if(max<3){
+    const mids=["A calm, balanced bottle that should settle right into your taste.","Balance over flash — the kind you grow fonder of sip by sip.","An honest, easygoing sake. A safe, happy pick when in doubt."];
+    return mids[i%mids.length];
+  }
+  const primary=shared.x===max?"x":(shared.y===max?"y":"z");
+  const heads={x:["For your love of crisp, clean sake.","If you want a sharp finish, don’t miss this one.","Clear and clean — right in your lane."],
+               y:["For your love of bright aromas.","If juicy, fruity sake is your thing, try this too.","Its lively bouquet sings to your taste."],
+               z:["For your love of umami and depth.","To savor the rice itself, this is a fine companion.","Steady and full-bodied — it answers your taste."]};
+  const head=heads[primary][i%3];
+  const other=[["x",b.x],["y",b.y],["z",b.z]].filter(function(a){return a[0]!==primary&&a[1]>=3;}).sort(function(a,b2){return b2[1]-a[1];});
+  const tail=primary==="x"?" A transparent, no-noise glass.":primary==="y"?" A fragrant, fruit-like glass.":" A satisfying, well-grounded glass.";
+  if(other.length){
+    const sec=other[0][0], deg=other[0][1]>=6?"plenty of":"a hint of";
+    const nu=sec==="x"?(" With "+deg+" crispness behind it — the finish slips away clean."):sec==="y"?(" With "+deg+" floral aroma in the back — it gets more fun as you go."):(" With "+deg+" rice umami on board — great with food, too.");
+    return head+nu;
+  }
+  return head+tail;
+}
+function applyEnUI(){
+  if(LANG!=="en")return;
+  const map={
+    "日本酒三角チャート診断":"Sake Triangle Chart Quiz",
+    "好きな日本酒と、あなたの“酒猫”が見つかる":"Find your favorite sake — and your Sake Cat",
+    "簡単な質問に答えると独自開発の三角チャートであなたの日本酒の好みの傾向を診断し、135銘柄からおすすめ提案します。":"Answer a few quick questions and our original Triangle Chart will map your sake preferences — then recommend bottles from 135 labels.",
+    "日本酒居酒屋 SAKE storyの店内では、店内メニューから診断結果に近い日本酒をご案内します。Webでの診断では、店内以外のお酒も含め、135種からあなたにおすすめのお酒をご案内します。":"At SAKE story, our sake izakaya in Gotanda, Tokyo, we serve bottles from our menu that match your result. Online, we recommend from all 135 labels — including ones beyond our shelves.",
+    "⏱ 約2分でわかる":"⏱ About 2 minutes","9問で診断":"9 questions","三角チャートで見える化":"Mapped on the Triangle Chart",
+    "診断を始める":"Start the Quiz","← ひとつ戻る":"← Back",
+    "すっきり":"Crisp","フルーティー":"Fruity","しっかり":"Rich",
+    "あなたの酒猫は":"Your Sake Cat is...",
+    "あなたの味わい傾向":"Your Flavor Profile","あなたの味わいと近い銘柄":"Labels Close to Your Taste",
+    "あなたに近い、店の一杯":"Your Matches on Our Menu","お家で飲むなら":"To Drink at Home",
+    "◇ なかなか出会えないかも　／　◎ 酒屋・オンラインで探しやすい　／　★ スーパー・コンビニで見つけやすい":"◇ Rare finds / ◎ Easy at sake shops & online / ★ Easy at supermarkets & convenience stores",
+    "日本酒は各銘柄にも多様な味わいがあります。作者の独断で各銘柄の代表的なお酒を基に結果に反映しています。":"Every label has many expressions. Results reflect each brand’s representative style, chosen at the author’s discretion.",
+    "シェア用カード":"Share Card","画像つきでシェア":"Share with Image","画像を保存":"Save Image","もう一度、診断する":"Take the Quiz Again"
+  };
+  document.querySelectorAll(".wrap *").forEach(function(el){
+    if(el.children.length)return;
+    const k=(el.textContent||"").trim();
+    if(map[k]!==undefined)el.textContent=map[k];
+  });
+  const hint=document.querySelector(".share-hint");
+  if(hint)hint.innerHTML="On mobile, this opens image sharing.<br>On PC, save the image and attach it to your post.";
+  const story=document.querySelector(".story-note");
+  if(story)story.innerHTML='The Sake Triangle Chart behind this quiz is one bartender’s answer after 20 years of hearing “just give me something dry” — at SAKE story, a sake izakaya in Gotanda, Tokyo.<br>→ <a href="https://sake-story.com/" target="_blank" rel="noopener">SAKE story</a>';
+}
+applyEnUI();
+/* 言語トグル（右上固定） */
+(function(){
+  const b=document.createElement("button");
+  b.id="langToggle";
+  b.textContent=LANG==="en"?"日本語":"English";
+  b.setAttribute("style","position:fixed;top:10px;right:10px;z-index:60;font-family:var(--sans);font-size:12.5px;padding:6px 14px;border-radius:999px;border:1px solid var(--line);background:var(--card);color:var(--sumi-soft);cursor:pointer;box-shadow:0 1px 5px rgba(0,0,0,.08);");
+  b.onclick=function(){
+    const u=new URL(location.href);
+    if(LANG==="en"){u.searchParams.delete("lang");}else{u.searchParams.set("lang","en");}
+    location.href=u.toString();
+  };
+  document.body.appendChild(b);
+})();
+
 /* ==== 集計送信（訪問・診断とも同じスプレッドシートへ）。ローカル/テスト実行時は送らない ==== */
 const LOG_URL="https://script.google.com/macros/s/AKfycbxKxuJHkFBw0kW_GKFCg009aqqsOs5wgO1ZnFYXlZrykFOTP9fo5T1hVPzgDpgSVlHt/exec";
 function isTestRun(){return location.protocol==="file:"||location.hostname==="localhost"||location.hostname==="127.0.0.1"||new URLSearchParams(location.search).get("test")==="1";}
@@ -670,15 +826,16 @@ function prevQ(){
 
 function renderQ(){
   const q=QUESTIONS[qi];
+  const eq=(LANG==="en"&&EN_QUESTIONS[qi])?EN_QUESTIONS[qi]:null;
   const total=QUESTIONS.length;
   document.getElementById("qNum").textContent=(qi+1)+" / "+total;
   document.getElementById("qFill").style.width=(qi/total*100)+"%";
-  document.getElementById("qTag").textContent=q.tag;
-  document.getElementById("qText").textContent=q.text;
+  document.getElementById("qTag").textContent=eq?eq.tag:q.tag;
+  document.getElementById("qText").textContent=eq?eq.text:q.text;
   const box=document.getElementById("qOpts"); box.innerHTML="";
-  q.opts.forEach(o=>{
+  q.opts.forEach((o,oi)=>{
     const b=document.createElement("button");
-    b.className="opt"; b.textContent=o.label;
+    b.className="opt"; b.textContent=(eq&&eq.opts[oi])?eq.opts[oi]:o.label;
     /* 「ひとつ戻る」で戻ってきた時、前に選んだ選択肢を薄く点灯させる */
     if(answers[qi]&&answers[qi].sc===o.sc) b.classList.add("opt-selected");
     b.onclick=()=>choose(o.sc);
@@ -815,28 +972,31 @@ function renderResult(){
   /* v11.3.11：①酒猫名＋二つ名 ②タイプ固定の統合味わい文＋お店での頼み方。
      旧味覚あるある・動的チェック・中心文・苦手方向は重複を避けて非表示。データと生成関数は保持。 */
   const ex=TYPE_EXTRA[t.no]||{};
-  document.getElementById("resName").textContent=ex.cat||t.name;
-  document.getElementById("oneLiner").textContent=t.name;
-  const tasteBase=TASTE_MESSAGE[t.no]||"";
+  const en=LANG==="en"?(EN_TYPE[t.no]||{}):null;
+  document.getElementById("resName").textContent=en?(en.cat||t.name):(ex.cat||t.name);
+  document.getElementById("oneLiner").textContent=en?(en.name||t.name):t.name;
+  const tasteBase=en?(EN_TASTE[t.no]||""):(TASTE_MESSAGE[t.no]||"");
   document.getElementById("tasteMessage").textContent=
-    tasteBase+" お店で頼むなら、「"+t.orderPhrase+"」と伝えてみてください。";
+    en?(tasteBase+" At a sake bar, just say: \u201c"+en.ord+"\u201d")
+      :(tasteBase+" お店で頼むなら、「"+t.orderPhrase+"」と伝えてみてください。");
   /* 店の一杯：診断座標に近い順の上位5本を、順位・銘柄名・理由文で表示 */
   document.getElementById("storeList").innerHTML=r.recStore.map((b,i)=>
     '<div class="rec'+(i===0?" top1":"")+'">'
-      +'<span class="rec-rank">'+(i+1)+'位</span>'
-      +'<span class="rec-body"><span class="rec-name">'+b.name+'</span>'
+      +'<span class="rec-rank">'+(LANG==="en"?("#"+(i+1)):((i+1)+"位"))+'</span>'
+      +'<span class="rec-body"><span class="rec-name">'+bn(b.name)+'</span>'
       +'<span class="rec-reason">'+reasonFor(b,r.X,r.Y,r.Z,i)+'</span></span>'
     +'</div>').join("");
   const home=homeTop3(r,r.recStore.map(function(b){return b.name;}));
   document.getElementById("homeList").innerHTML=home.map(function(b){
-    return '<div class="home-rec"><span class="home-mark">'+b.mark+'</span><span class="home-name">'+b.name+'</span></div>';
+    return '<div class="home-rec"><span class="home-mark">'+b.mark+'</span><span class="home-name">'+bn(b.name)+'</span></div>';
   }).join("");
   /* v11.0：注文フレーズ欄は店内版では非表示（確定版①の店内版並び）。公開版で復活予定 */
   /* v10.8: スコア数値の表示欄は設けない方針（三角チャート上の位置が数値の役目を担う）。
      旧setScore呼び出しは表示先の要素が存在せず空振りしていたため削除 */
   document.getElementById("chart").innerHTML=buildUnifiedChart(r);
-  document.getElementById("chartScores").innerHTML="すっきり "+r.X+"　／　フルーティー "+r.Y+"　／　しっかり "+r.Z
-    +'<br><span class="chart-note">中心が0、外側が10です。3方向の長さが、それぞれの点数を表します。</span>';
+  document.getElementById("chartScores").innerHTML=(LANG==="en"
+    ?("Crisp "+r.X+" / Fruity "+r.Y+" / Rich "+r.Z+'<br><span class="chart-note">Center is 0, edge is 10. Each direction shows your score.</span>')
+    :("すっきり "+r.X+"　／　フルーティー "+r.Y+"　／　しっかり "+r.Z+'<br><span class="chart-note">中心が0、外側が10です。3方向の長さが、それぞれの点数を表します。</span>'));
   /* シェアカード事前生成（猫画像の読み込み完了後に確定） */
   const drawAndPrepare=()=>{
     drawCard(result,()=>{
@@ -856,6 +1016,7 @@ function renderResult(){
    ・無ければ、ユーザーと銘柄で最も強く重なる軸（共通軸）から自動生成する（仮の文章）。
    ※将来、19銘柄に橋野さんが一言ずつ comment を書き加えれば、そのまま置き換わる。 */
 function reasonFor(b,X,Y,Z,i){
+  if(LANG==="en") return reasonForEn(b,X,Y,Z,i);
   if(b.comment&&b.comment.trim()) return b.comment.trim();
   i=i||0;
   /* すっきりX / フルーティーY / しっかりZ の各軸で、ユーザーと銘柄の"重なりの強さ"を測る（共通軸）*/
@@ -1054,8 +1215,8 @@ function buildUnifiedChart(r){
   const me={x:(score[0].x+score[1].x+score[2].x)/3,y:(score[0].y+score[1].y+score[2].y)/3};
   const home=homeTop3(r,r.recStore.map(function(b){return b.name;}));
   const esc=function(v){return String(v).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");};
-  const items=r.recStore.slice(0,5).map(function(b){return{b:b,label:b.name,color:"#B23A2E",kind:"store"};})
-    .concat(home.map(function(b){return{b:b,label:b.mark+" "+b.name,color:"#6F5428",kind:"home"};}));
+  const items=r.recStore.slice(0,5).map(function(b){return{b:b,label:bn(b.name),color:"#B23A2E",kind:"store"};})
+    .concat(home.map(function(b){return{b:b,label:b.mark+" "+bn(b.name),color:"#6F5428",kind:"home"};}));
   items.forEach(function(v){v.p=pos(v.b.x,v.b.y,v.b.z);});
   items.sort(function(a,b){return a.p.x-b.p.x;});
   const left=items.slice(0,4).sort(function(a,b){return a.p.y-b.p.y;});
@@ -1067,14 +1228,14 @@ function buildUnifiedChart(r){
   [0.25,0.5,0.75].forEach(function(f){const a=toward(top,f),b=toward(br,f),c=toward(bl,f);s+='<polygon points="'+a.x+','+a.y+' '+b.x+','+b.y+' '+c.x+','+c.y+'"/>';});
   s+='</g><polygon points="'+top.x+','+top.y+' '+br.x+','+br.y+' '+bl.x+','+bl.y+'" fill="none" stroke="#2C2620" stroke-width="1.7"/>';
   s+='<polygon points="'+score.map(function(p){return p.x.toFixed(1)+','+p.y.toFixed(1);}).join(' ')+'" fill="#B23A2E" fill-opacity="0.13" stroke="#B23A2E" stroke-width="2.4" stroke-linejoin="round"/>';
-  s+='<g font-family="serif" font-weight="600" fill="#2C2620"><circle cx="'+top.x+'" cy="'+top.y+'" r="7" fill="#6E8FA3"/><text x="'+top.x+'" y="35" text-anchor="middle" font-size="16">すっきり</text><circle cx="'+br.x+'" cy="'+br.y+'" r="7" fill="#C46B7E"/><text x="'+(br.x+6)+'" y="376" text-anchor="start" font-size="16">フルーティー</text><circle cx="'+bl.x+'" cy="'+bl.y+'" r="7" fill="#C0893C"/><text x="'+(bl.x-6)+'" y="376" text-anchor="end" font-size="16">しっかり</text></g>';
+  s+='<g font-family="serif" font-weight="600" fill="#2C2620"><circle cx="'+top.x+'" cy="'+top.y+'" r="7" fill="#6E8FA3"/><text x="'+top.x+'" y="35" text-anchor="middle" font-size="16">'+(LANG==="en"?"Crisp":"すっきり")+'</text><circle cx="'+br.x+'" cy="'+br.y+'" r="7" fill="#C46B7E"/><text x="'+(br.x+6)+'" y="376" text-anchor="start" font-size="16">'+(LANG==="en"?"Fruity":"フルーティー")+'</text><circle cx="'+bl.x+'" cy="'+bl.y+'" r="7" fill="#C0893C"/><text x="'+(bl.x-6)+'" y="376" text-anchor="end" font-size="16">'+(LANG==="en"?"Rich":"しっかり")+'</text></g>';
   s+='<g fill="#CBBB9E">';STORE_SAKE.forEach(function(b){const p=pos(b.x,b.y,b.z);s+='<circle cx="'+p.x.toFixed(1)+'" cy="'+p.y.toFixed(1)+'" r="2.2"/>';});s+='</g>';
   /* ラベルは名前の長さに応じて自動フィット（上限20px）。全角=1、半角/記号=0.55で幅を見積もる */
   const uw=function(t){let u=0;for(const ch of t){u+=ch.charCodeAt(0)<0x2E80?0.55:1;}return u;};
   const drawSide=function(list,side){list.forEach(function(v,i){const y=rows[i],edge=side==="left"?128:392,labelX=side==="left"?10:510,anchor=side==="left"?"start":"end";const lfs=Math.min(20,Math.max(12,Math.floor(108/uw(v.label))));s+='<polyline points="'+v.p.x.toFixed(1)+','+v.p.y.toFixed(1)+' '+edge+','+y+' '+(side==="left"?118:402)+','+y+'" fill="none" stroke="'+v.color+'" stroke-width="0.8"/><circle cx="'+v.p.x.toFixed(1)+'" cy="'+v.p.y.toFixed(1)+'" r="5" fill="'+v.color+'"/><text x="'+labelX+'" y="'+(y+6)+'" text-anchor="'+anchor+'" font-family="serif" font-size="'+lfs+'" font-weight="600" fill="'+v.color+'">'+esc(v.label)+'</text>';});};
   drawSide(left,"left");drawSide(right,"right");
-  s+='<g><circle cx="'+me.x.toFixed(1)+'" cy="'+me.y.toFixed(1)+'" r="9" fill="#FFFDF7" stroke="#2C2620" stroke-width="2.2"/><circle cx="'+me.x.toFixed(1)+'" cy="'+me.y.toFixed(1)+'" r="3" fill="#2C2620"/><text x="'+(me.x+13).toFixed(1)+'" y="'+(me.y+4).toFixed(1)+'" font-family="serif" font-size="15" font-weight="700" fill="#2C2620" stroke="#FFFDF7" stroke-width="3" paint-order="stroke">あなた</text></g>';
-  s+='<text x="260" y="412" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#7B7163">面＝3軸の点数　白黒＝あなた　赤＝店内おすすめ　茶＝お家候補</text></svg>';
+  s+='<g><circle cx="'+me.x.toFixed(1)+'" cy="'+me.y.toFixed(1)+'" r="9" fill="#FFFDF7" stroke="#2C2620" stroke-width="2.2"/><circle cx="'+me.x.toFixed(1)+'" cy="'+me.y.toFixed(1)+'" r="3" fill="#2C2620"/><text x="'+(me.x+13).toFixed(1)+'" y="'+(me.y+4).toFixed(1)+'" font-family="serif" font-size="15" font-weight="700" fill="#2C2620" stroke="#FFFDF7" stroke-width="3" paint-order="stroke">'+(LANG==="en"?"You":"あなた")+'</text></g>';
+  s+='<text x="260" y="412" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#7B7163">'+(LANG==="en"?"Shape = your 3 scores / B&amp;W = you / Red = our menu / Brown = home picks":"面＝3軸の点数　白黒＝あなた　赤＝店内おすすめ　茶＝お家候補")+'</text></svg>';
   return s;
 }
 
@@ -1120,40 +1281,45 @@ function drawCard(r,done){
     ctx.strokeStyle="#C9705F"; ctx.lineWidth=3;
     ctx.beginPath(); ctx.arc(cx,cy,rad,0,Math.PI*2); ctx.stroke();
 
-    const name=(TYPE_EXTRA[r.type.no]||{}).cat||r.type.name;
+    const name=LANG==="en"?((EN_TYPE[r.type.no]||{}).cat||r.type.name):((TYPE_EXTRA[r.type.no]||{}).cat||r.type.name);
+    const tname=LANG==="en"?((EN_TYPE[r.type.no]||{}).name||r.type.name):r.type.name;
     ctx.fillStyle="#5B5247";ctx.font="500 19px 'Noto Serif JP',serif";ctx.letterSpacing="2px";
-    ctx.fillText("あなたの酒猫は",245,447);
-    ctx.fillStyle="#2C2620";ctx.font="700 "+(name.length>10?38:44)+"px 'Noto Serif JP',serif";ctx.letterSpacing="1px";
+    ctx.fillText(LANG==="en"?"Your Sake Cat is...":"あなたの酒猫は",245,447);
+    ctx.fillStyle="#2C2620";let nfs=(name.length>10?38:44);ctx.font="700 "+nfs+"px 'Noto Serif JP',serif";ctx.letterSpacing="1px";
+    const nw=ctx.measureText(name).width;
+    if(nw>400){nfs=Math.max(22,Math.floor(nfs*400/nw));ctx.font="700 "+nfs+"px 'Noto Serif JP',serif";}
     ctx.fillText(name,245,493);
     ctx.fillStyle="#7B7163";ctx.font="400 21px 'Noto Serif JP',serif";ctx.letterSpacing="0px";
-    ctx.fillText("〜"+r.type.name+"〜",245,525);
+    ctx.fillText(LANG==="en"?("\u201c"+tname+"\u201d"):("〜"+tname+"〜"),245,525);
 
     /* 分析文は3〜4行に整え、シェアを見た人にも診断の深さが伝わるようにする。 */
     const wrap=function(text,x,y,maxWidth,lineHeight,maxLines){
-      let line="",lines=[];for(const ch of text){const test=line+ch;if(ctx.measureText(test).width>maxWidth&&line){lines.push(line);line=ch;}else line=test;}if(line)lines.push(line);
+      /* 英語は単語単位、日本語は1文字単位で折り返す */
+      let line="",lines=[];const toks=LANG==="en"?text.split(/(?<= )/):[...text];
+      for(const ch of toks){const test=line+ch;if(ctx.measureText(test).width>maxWidth&&line){lines.push(line);line=ch;}else line=test;}if(line)lines.push(line);
       if(lines.length>maxLines){lines=lines.slice(0,maxLines);lines[maxLines-1]=lines[maxLines-1].replace(/[。、]$/,'')+'…';}
       lines.forEach(function(v,i){ctx.fillText(v,x,y+i*lineHeight);});return lines.length;
     };
     ctx.textAlign="left";ctx.fillStyle="#B23A2E";ctx.font="600 21px 'Noto Sans JP',sans-serif";ctx.letterSpacing="1px";
-    ctx.fillText("あなたの日本酒の好み",455,150);
+    ctx.fillText(LANG==="en"?"Your Flavor Profile":"あなたの日本酒の好み",455,150);
     ctx.fillStyle="#2C2620";ctx.font="500 27px 'Noto Serif JP',serif";ctx.letterSpacing="0px";
-    wrap(TASTE_MESSAGE[r.type.no]||"",455,192,495,42,5);
+    wrap(LANG==="en"?(EN_TASTE[r.type.no]||""):(TASTE_MESSAGE[r.type.no]||""),455,192,495,42,5);
     /* 好みに近い全国銘柄：◇(なかなか出会えない)と◎(酒屋・オンライン)を1本ずつ */
     const nearMark=function(mk){return NATL_SAKE.filter(function(b){return b.mark===mk;})
       .map(function(b){return{n:b.name,d:Math.sqrt(Math.pow(b.x-r.X,2)+Math.pow(b.y-r.Y,2)+Math.pow(b.z-r.Z,2))};})
       .sort(function(a,b){return a.d-b.d;})[0];};
     const dia=nearMark("◇"), maru=nearMark("◎");
     ctx.fillStyle="#B23A2E";ctx.font="600 19px 'Noto Sans JP',sans-serif";ctx.letterSpacing="1px";
-    ctx.fillText("お家で飲むなら、この二本",455,322);
+    ctx.fillText(LANG==="en"?"For home \u2014 these two":"お家で飲むなら、この二本",455,322);
     /* ◇と◎を横並び1行で。銘柄名の長さに合わせて52pxを上限に幅495へ自動フィット */
-    const pair=[dia?"◇ "+dia.n:"",maru?"◎ "+maru.n:""].filter(Boolean).join("　");
+    const pair=[dia?"◇ "+bn(dia.n):"",maru?"◎ "+bn(maru.n):""].filter(Boolean).join("　");
     ctx.fillStyle="#6F5428";ctx.letterSpacing="0px";
     let pfs=52; ctx.font="700 "+pfs+"px 'Noto Serif JP',serif";
     const pw=ctx.measureText(pair).width;
     if(pw>495){pfs=Math.floor(52*495/pw); ctx.font="700 "+pfs+"px 'Noto Serif JP',serif";}
     ctx.fillText(pair,455,382);
     ctx.fillStyle="#5B5247";ctx.font="500 21px 'Noto Sans JP',sans-serif";
-    wrap("お店で頼むなら「"+r.type.orderPhrase+"」",455,440,495,32,3);
+    wrap(LANG==="en"?("At a sake bar: \u201c"+((EN_TYPE[r.type.no]||{}).ord||"")+"\u201d"):("お店で頼むなら「"+r.type.orderPhrase+"」"),455,440,495,32,3);
 
     /* 大きな本チャートに、絶対点数の歪んだ三角形も重ねる。 */
     const top={x:W/2,y:545}, bl={x:295,y:850}, br={x:705,y:850};
@@ -1169,15 +1335,15 @@ function drawCard(r,done){
     const dot=(pt,c)=>{ctx.fillStyle=c;ctx.beginPath();ctx.arc(pt.x,pt.y,9,0,Math.PI*2);ctx.fill();};
     dot(top,"#6E8FA3"); dot(br,"#C46B7E"); dot(bl,"#C0893C");
     ctx.fillStyle="#2C2620"; ctx.font="600 22px 'Noto Serif JP',serif"; ctx.letterSpacing="0px";
-    ctx.textAlign="center"; ctx.fillText("すっきり",top.x,top.y-16);
-    ctx.textAlign="end";    ctx.fillText("しっかり",bl.x-8,bl.y+30);
-    ctx.textAlign="start";  ctx.fillText("フルーティー",br.x+8,br.y+30);
+    ctx.textAlign="center"; ctx.fillText(LANG==="en"?"Crisp":"すっきり",top.x,top.y-16);
+    ctx.textAlign="end";    ctx.fillText(LANG==="en"?"Rich":"しっかり",bl.x-8,bl.y+30);
+    ctx.textAlign="start";  ctx.fillText(LANG==="en"?"Fruity":"フルーティー",br.x+8,br.y+30);
     const pos2=function(x,y,z){const s2=x+y+z||1;return{x:(x*top.x+y*br.x+z*bl.x)/s2,y:(x*top.y+y*br.y+z*bl.y)/s2};};
     STORE_SAKE.forEach(function(b){const p=pos2(b.x,b.y,b.z);ctx.fillStyle="#CBBB9E";ctx.beginPath();ctx.arc(p.x,p.y,3,0,Math.PI*2);ctx.fill();});
     const home3=homeTop3(r,r.recStore.map(function(b){return b.name;}));
     /* 店内5本＋お家3本を左右4本ずつ枠外へ整列。点から名前まで必ず引き出し線で結ぶ。 */
-    const cardItems=r.recStore.slice(0,5).map(function(b){return{b:b,label:b.name,color:"#B23A2E"};})
-      .concat(home3.map(function(b){return{b:b,label:b.mark+" "+b.name,color:"#6F5428"};}));
+    const cardItems=r.recStore.slice(0,5).map(function(b){return{b:b,label:bn(b.name),color:"#B23A2E"};})
+      .concat(home3.map(function(b){return{b:b,label:b.mark+" "+bn(b.name),color:"#6F5428"};}));
     cardItems.forEach(function(v){v.p=pos2(v.b.x,v.b.y,v.b.z);});
     cardItems.sort(function(a,b){return a.p.x-b.p.x;});
     const cardRows=[585,655,725,795];
@@ -1185,11 +1351,11 @@ function drawCard(r,done){
     drawCardSide(cardItems.slice(0,4),"left");drawCardSide(cardItems.slice(4),"right");
     ctx.fillStyle="#FFFDF7";ctx.strokeStyle="#2C2620";ctx.lineWidth=2.2;ctx.beginPath();ctx.arc(mePos.x,mePos.y,12,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.fillStyle="#2C2620";ctx.beginPath();ctx.arc(mePos.x,mePos.y,4,0,Math.PI*2);ctx.fill();
     ctx.fillStyle="#5B5247";ctx.font="500 16px 'Noto Sans JP',sans-serif";ctx.textAlign="center";
-    ctx.fillText("赤＝診断で近かったお店で飲める銘柄　茶＝その他のおすすめ銘柄　白黒＝あなたの診断結果の中心",W/2,905);
+    ctx.fillText(LANG==="en"?"Red = our menu picks near you / Brown = other picks / B&W = your result center":"赤＝診断で近かったお店で飲める銘柄　茶＝その他のおすすめ銘柄　白黒＝あなたの診断結果の中心",W/2,905);
     ctx.fillStyle="#B23A2E";ctx.font="600 23px 'Noto Serif JP',serif";ctx.letterSpacing="2px";
-    ctx.fillText("あなたはどの酒猫？",W/2,938);
+    ctx.fillText(LANG==="en"?"Which Sake Cat are you?":"あなたはどの酒猫？",W/2,938);
     ctx.fillStyle="#5B5247";ctx.font="500 18px 'Noto Sans JP',sans-serif";ctx.letterSpacing="0px";
-    ctx.fillText("shindan.sake-story.com　#日本酒三角チャート",W/2,966);
+    ctx.fillText(LANG==="en"?"shindan.sake-story.com/?lang=en　#sake":"shindan.sake-story.com　#日本酒三角チャート",W/2,966);
     ctx.fillStyle="#7B7163";ctx.font="400 12px 'Noto Serif JP',serif";
     ctx.fillText("© SAKE story　日本酒三角チャート®",W/2,986);
     ctx.textAlign="left";
@@ -1206,13 +1372,7 @@ function saveAndShare(){
   if(!result) return;
   const r=result;
   /* 酒猫名だけで終わらず、味わい分析とお店で使える注文語まで渡す。 */
-  const shareText=
-    "日本酒三角チャート診断で、私の酒猫は「"+((TYPE_EXTRA[r.type.no]||{}).cat||"")+"」でした🍶\n"+
-    "〜"+r.type.name+"〜\n\n"+
-    (TASTE_MESSAGE[r.type.no]||"")+"\n\n"+
-    "あなたはどの酒猫？\n"+
-    "https://shindan.sake-story.com/\n"+
-    "#日本酒 #日本酒三角チャート";
+  const shareText=buildShareText(r);
 
   /* ① スマホ：事前に用意した画像ファイルを、押した瞬間そのまま共有
         （awaitを挟まないことで、スマホの「共有許可」の一瞬を逃さない） */
@@ -1247,13 +1407,7 @@ function downloadCard(){
 
 function shareX(){
   const r=result;
-  const text=
-    "日本酒三角チャート診断で、私の酒猫は「"+((TYPE_EXTRA[r.type.no]||{}).cat||"")+"」でした🍶\n"+
-    "〜"+r.type.name+"〜\n\n"+
-    (TASTE_MESSAGE[r.type.no]||"")+"\n\n"+
-    "あなたはどの酒猫？\n"+
-    "https://shindan.sake-story.com/\n"+
-    "#日本酒 #日本酒三角チャート";
+  const text=buildShareText(r);
   window.open("https://twitter.com/intent/tweet?text="+encodeURIComponent(text),"_blank");
 }
 
