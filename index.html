@@ -174,7 +174,8 @@ body{
 .maker-btn.primary{background:var(--shu);color:#FDFAF3;}
 .maker-btn.ghost{border:1.5px solid var(--line);color:var(--sumi-soft);background:none;font-weight:500;}
 .maker-note{font-size:11.5px;color:var(--sumi-soft);margin:12px 0 0;line-height:1.8;}
-.maker-teaser{font-family:var(--serif);font-size:13.5px;color:var(--shu);font-weight:700;margin:0 0 4px;letter-spacing:.04em;}
+.maker-btn-row{display:flex;gap:10px;margin-top:2px;}
+.maker-btn-row .maker-btn{flex:1;margin-top:0;padding:12px 6px;font-size:13.5px;}
 /* 猫の透かし背景 */
 #catBg{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:-1;}
 #catBg img{position:absolute;pointer-events:none;user-select:none;-webkit-user-drag:none;}
@@ -300,11 +301,12 @@ body{
 
     <p class="story-note">この診断のもとになった『日本酒三角チャート』は、東京・五反田の日本酒居酒屋 SAKE story の店主が、20年間カウンターで「とりあえず辛口で」と言われ続けた末にたどり着いた、ひとつの答えなんです。<br>→ <a href="https://sake-story.com/" target="_blank" rel="noopener">SAKE story</a></p>
     <div class="maker-card">
-      <div class="maker-title">この診断を作った人</div>
-      <p class="maker-desc">東京・五反田の日本酒居酒屋「SAKE story」店主・橋野元樹。<br>20年間カウンターで「とりあえず辛口」と言われ続けて、この診断を作りました。</p>
-      <p class="maker-teaser">🍺🍷 現在、ビール版・ワイン版なども製作中！続報は店主のXで。</p>
-      <a class="maker-btn primary" href="https://x.com/motorkey" target="_blank" rel="noopener">🍶 店主の独り言をのぞく（X）</a>
-      <a class="maker-btn ghost" href="https://sake-story.com/" target="_blank" rel="noopener">お店のことを見る</a>
+      <div class="maker-title">このアプリは、まだ育ちます</div>
+      <p class="maker-desc">銘柄や機能を増やしながら、随時バージョンアップしていきます。<br>🍺🍷 ビール版・ワイン版も製作中。<br>続報は、店主のXかInstagramでつぶやきます。</p>
+      <div class="maker-btn-row">
+        <a class="maker-btn ghost" href="https://x.com/motorkey" target="_blank" rel="noopener">X（@motorkey）</a>
+        <a class="maker-btn ghost" href="https://www.instagram.com/mr.sake_japan/" target="_blank" rel="noopener">Instagram</a>
+      </div>
       <p class="maker-note">※ほぼ独り言です。営業はしません。<br>#日本酒三角チャート で感想をポストすると、店主がこっそり見に行きます。</p>
     </div>
     <div class="foot">© SAKE story　日本酒三角チャート®　v11.3.15</div>
@@ -789,7 +791,7 @@ function applyEnUI(){
     "あなたに近い、店の一杯":"Your Matches on Our Menu","お家で飲むなら":"To Drink at Home",
     "◇ なかなか出会えないかも　／　◎ 酒屋・オンラインで探しやすい　／　★ スーパー・コンビニで見つけやすい":"◇ Rare finds / ◎ Easy at sake shops & online / ★ Easy at supermarkets & convenience stores",
     "日本酒は各銘柄にも多様な味わいがあります。作者の独断で各銘柄の代表的なお酒を基に結果に反映しています。":"Every label has many expressions. Results reflect each brand’s representative style, chosen at the author’s discretion.",
-    "シェア用カード":"Share Card","この診断を作った人":"The person behind this quiz","🍺🍷 現在、ビール版・ワイン版なども製作中！続報は店主のXで。":"🍺🍷 Beer & wine versions are in the works! Updates on the owner\u2019s X.","🍶 店主の独り言をのぞく（X）":"🍶 Peek at the owner\u2019s X (mostly musings)","お店のことを見る":"See the bar","画像つきでシェア":"Share with Image","画像を保存":"Save Image","もう一度、診断する":"Take the Quiz Again"
+    "シェア用カード":"Share Card","このアプリは、まだ育ちます":"This app keeps growing","X（@motorkey）":"X (@motorkey)","画像つきでシェア":"Share with Image","画像を保存":"Save Image","もう一度、診断する":"Take the Quiz Again"
   };
   document.querySelectorAll(".wrap *").forEach(function(el){
     if(el.children.length)return;
@@ -799,7 +801,7 @@ function applyEnUI(){
   const hint=document.querySelector(".share-hint");
   if(hint)hint.innerHTML="On mobile, this opens image sharing.<br>On PC, save the image and attach it to your post.";
   const md=document.querySelector(".maker-desc");
-  if(md)md.innerHTML="Motoki Hashino \u2014 owner of SAKE story, a sake izakaya in Gotanda, Tokyo.<br>After 20 years of hearing \u201cjust give me something dry,\u201d he built this quiz.";
+  if(md)md.innerHTML="We keep adding sake labels and features \u2014 beer &amp; wine versions are in the works.<br>The owner posts updates on X and Instagram.";
   const mn=document.querySelector(".maker-note");
   if(mn)mn.innerHTML="*Mostly musings \u2014 almost no sales talk.<br>Post your result with #SakeTriangleChart and the owner will quietly drop by.";
   const story=document.querySelector(".story-note");
