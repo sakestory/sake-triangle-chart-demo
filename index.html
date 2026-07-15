@@ -642,6 +642,19 @@ const QUESTIONS = [
 let answers=[], qi=0, result=null;
 let cardBlob=null, cardFile=null;  /* シェア画像の事前生成用 */
 
+/* ==== 集計送信（訪問・診断とも同じスプレッドシートへ）。ローカル/テスト実行時は送らない ==== */
+const LOG_URL="https://script.google.com/macros/s/AKfycbxKxuJHkFBw0kW_GKFCg009aqqsOs5wgO1ZnFYXlZrykFOTP9fo5T1hVPzgDpgSVlHt/exec";
+function isTestRun(){return location.protocol==="file:"||location.hostname==="localhost"||location.hostname==="127.0.0.1"||new URLSearchParams(location.search).get("test")==="1";}
+function sendLog(payload){
+  if(isTestRun())return;
+  try{
+    fetch(LOG_URL,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain;charset=utf-8"},
+      body:JSON.stringify(payload)}).catch(function(){});
+  }catch(e){}
+}
+/* 訪問計測：ページを開いた時に1回送信（category="visit"。シートのcategory列で診断と区別） */
+sendLog({typeNumber:"",typeName:"",sukkiri:"",fruity:"",shikkari:"",lang:document.documentElement.lang||"ja",category:"visit"});
+
 function startQuiz(){
   answers=[]; qi=0;
   show("sc-quiz");
@@ -834,16 +847,8 @@ function renderResult(){
   if(document.fonts&&document.fonts.ready){document.fonts.ready.then(()=>setTimeout(drawAndPrepare,200));}
   else{setTimeout(drawAndPrepare,600);}
   window.scrollTo({top:0,behavior:"smooth"});
-  /* 診断結果を店舗ログへ送信（集計用・個人情報は含みません） */
-  const isTestRun=location.protocol==="file:"||location.hostname==="localhost"||location.hostname==="127.0.0.1"||new URLSearchParams(location.search).get("test")==="1";
-  if(!isTestRun){
-    try{
-      fetch("https://script.google.com/macros/s/AKfycbxKxuJHkFBw0kW_GKFCg009aqqsOs5wgO1ZnFYXlZrykFOTP9fo5T1hVPzgDpgSVlHt/exec",{
-        method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain;charset=utf-8"},
-        body:JSON.stringify({typeNumber:t.no,typeName:t.name,sukkiri:r.X,fruity:r.Y,shikkari:r.Z,lang:document.documentElement.lang||"ja"})
-      }).catch(function(){});
-    }catch(e){}
-  }
+  /* 診断結果を店舗ログへ送信（集計用・個人情報は含みません）。category未指定→シート側で「診断」になる */
+  sendLog({typeNumber:t.no,typeName:t.name,sukkiri:r.X,fruity:r.Y,shikkari:r.Z,lang:document.documentElement.lang||"ja"});
 }
 
 /* 各銘柄の理由文。
