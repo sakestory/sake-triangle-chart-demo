@@ -838,7 +838,7 @@ function renderResult(){
   const isTestRun=location.protocol==="file:"||location.hostname==="localhost"||location.hostname==="127.0.0.1"||new URLSearchParams(location.search).get("test")==="1";
   if(!isTestRun){
     try{
-      fetch("https://script.google.com/macros/s/AKfycbwS9zjjwtMRThBfWD5bhTrP9A8bVKF9ZZlJSdqO02qLIbNBh59OrBNWDkMQBCUuIzMP/exec",{
+      fetch("https://script.google.com/macros/s/AKfycbxKxuJHkFBw0kW_GKFCg009aqqsOs5wgO1ZnFYXlZrykFOTP9fo5T1hVPzgDpgSVlHt/exec",{
         method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain;charset=utf-8"},
         body:JSON.stringify({typeNumber:t.no,typeName:t.name,sukkiri:r.X,fruity:r.Y,shikkari:r.Z,lang:document.documentElement.lang||"ja"})
       }).catch(function(){});
