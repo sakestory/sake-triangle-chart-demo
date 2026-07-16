@@ -1,6 +1,6 @@
 name: Deploy to Lolipop (/shindan) via SFTP
 
-# main へ push されたら、診断サイトの本番ファイル(28個)だけを
+# main へ push されたら、診断サイトの本番ファイル(29個)だけを
 # ロリポップの /shindan へ SFTP(SSH) でアップロードする（アップロードのみ・削除なし）。
 # FTPS ではなく SFTP を使う理由：FTPアクセス制限(.ftpaccess)が有効なため
 # FTP系は許可IP以外から操作不可。SSH経由なら制限を維持したままデプロイできる。
@@ -10,6 +10,7 @@ on:
     paths:
       - 'index.html'
       - 'cat_*.png'
+      - 'ogp.png'
   workflow_dispatch:   # 手動実行も可能（初回はこれで管理者が明示起動する想定）
 
 # 多重デプロイ防止（同時に1本だけ）
@@ -37,6 +38,7 @@ jobs:
           set -euo pipefail
           mkdir -p deploy
           cp index.html deploy/
+          cp ogp.png deploy/
           for n in $(seq -w 1 27); do
             cp "cat_${n}.png" deploy/
           done
@@ -44,7 +46,7 @@ jobs:
           find deploy -type f -printf '%f\n' | sort
           count=$(find deploy -type f | wc -l | tr -d ' ')
           echo "staged count: ${count}"
-          test "${count}" -eq 28   # 28個ちょうどでなければ失敗させる
+          test "${count}" -eq 29   # 28個ちょうどでなければ失敗させる
 
       - name: lftp を導入
         run: sudo apt-get update && sudo apt-get install -y lftp
