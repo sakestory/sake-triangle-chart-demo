@@ -184,6 +184,10 @@ body{
 .maker-btn.ghost{border:1.5px solid var(--line);color:var(--sumi-soft);background:none;font-weight:500;}
 .maker-note{font-size:11.5px;color:var(--sumi-soft);margin:12px 0 0;line-height:1.8;}
 .maker-teaser{font-family:var(--serif);font-size:13.5px;color:var(--shu);font-weight:700;margin:0 0 4px;letter-spacing:.04em;}
+.visit-gift{background:#FBF3E2;border:1.5px solid var(--shu);border-radius:14px;padding:16px 16px 14px;margin:18px 0 22px;}
+.visit-gift-title{font-family:var(--serif);font-weight:700;font-size:14.5px;color:var(--shu);margin-bottom:8px;}
+.visit-gift-body{font-size:13px;line-height:1.9;color:var(--sumi);margin:0 0 10px;}
+.visit-gift-map{display:inline-block;font-size:13px;color:var(--shu);text-decoration:underline;text-underline-offset:3px;}
 .x-follow{text-align:center;font-size:12px;margin:20px 0 0;}
 .x-follow a{color:var(--sumi-soft);text-decoration:underline;text-underline-offset:3px;}
 /* 猫の透かし背景 */
@@ -248,7 +252,7 @@ body{
     </div>
 
     <button class="btn btn-primary" onclick="startQuiz()">診断を始める</button>
-    <div class="foot">v11.4.1</div>
+    <div class="foot">v11.5</div>
   </section>
 
   <!-- ===== 質問 ===== -->
@@ -291,6 +295,11 @@ body{
 
     <div class="sec">あなたに近い、店の一杯</div>
     <div id="storeList"></div>
+    <div id="visitGift" class="visit-gift">
+      <div class="visit-gift-title">🧲 この結果画面を、お店で見せてください</div>
+      <p class="visit-gift-body">五反田の日本酒バー「SAKE story」でこの画面を見せていただいた方に、日本酒の蓋で作る<strong>「酒蓋マグネット」</strong>の作り方をお教えして、そのまま1つプレゼントします。さらに、お土産に<strong>朝倉山椒のポップコーン</strong>を少しだけお包みします。<br>診断で遊んでくださったことへの、ささやかなお礼です。※なくなり次第終了</p>
+      <a class="visit-gift-map" href="https://www.google.com/maps/search/?api=1&query=SAKE+story+%E4%BA%94%E5%8F%8D%E7%94%B0" target="_blank" rel="noopener">お店の場所を地図で見る</a>
+    </div>
     <div class="sec">お家で飲むなら</div>
     <div id="homeList" class="home-list"></div>
     <p class="home-note">◇ なかなか出会えないかも　／　◎ 酒屋・オンラインで探しやすい　／　★ スーパー・コンビニで見つけやすい</p>
@@ -329,7 +338,7 @@ body{
 
     <p class="story-note">この診断のもとになった『日本酒三角チャート』は、東京・五反田の日本酒居酒屋 SAKE story の店主が、20年間カウンターで「とりあえず辛口で」と言われ続けた末にたどり着いた、ひとつの答えなんです。<br>→ <a href="https://sake-story.com/" target="_blank" rel="noopener">SAKE story</a></p>
     <p class="x-follow"><a href="https://x.com/motorkey" target="_blank" rel="noopener">店主の独り言をフォロー（X）</a>　<a href="https://www.instagram.com/mr.sake_japan/" target="_blank" rel="noopener">Instagram</a></p>
-    <div class="foot">© SAKE story　日本酒三角チャート®　v11.4.1</div>
+    <div class="foot">© SAKE story　日本酒三角チャート®　v11.5</div>
   </section>
 
 </div>
@@ -891,6 +900,24 @@ function sendLog(payload){
       body:JSON.stringify(payload)}).catch(function(){});
   }catch(e){}
 }
+/* 離脱計測：診断の途中でページを離れた時、どの質問まで進んでいたかを1回だけ送る（category="drop"、typeName=q番号）。
+   既存の訪問・診断ログと同じ列構成の行として記録される。タブ切替後に戻って完走する人も混ざるため、傾向を見る用途。 */
+let dropSent=false, quizDone=false;
+function sendDrop(){
+  if(isTestRun()||dropSent||quizDone)return;
+  const qz=document.getElementById("sc-quiz");
+  if(!qz||!qz.classList.contains("active"))return;
+  dropSent=true;
+  const payload=JSON.stringify({typeNumber:"",typeName:"q"+(qi+1),sukkiri:"",fruity:"",shikkari:"",lang:document.documentElement.lang||"ja",category:"drop"});
+  try{
+    if(navigator.sendBeacon){navigator.sendBeacon(LOG_URL,payload);}
+    else{fetch(LOG_URL,{method:"POST",mode:"no-cors",keepalive:true,headers:{"Content-Type":"text/plain;charset=utf-8"},body:payload}).catch(function(){});}
+  }catch(e){}
+}
+try{
+  document.addEventListener("visibilitychange",function(){if(document.visibilityState==="hidden")sendDrop();});
+  window.addEventListener("pagehide",sendDrop);
+}catch(e){}
 /* 訪問計測：ページを開いた時に1回送信（category="visit"。シートのcategory列で診断と区別） */
 sendLog({typeNumber:"",typeName:(document.referrer||"(direct)")+(location.search?" "+location.search:""),sukkiri:"",fruity:"",shikkari:"",lang:document.documentElement.lang||"ja",category:"visit"});
 
@@ -931,7 +958,7 @@ function renderQ(){
 function choose(sc){
   answers[qi]={sc:sc};
   if(qi<QUESTIONS.length-1){ qi++; renderQ(); }
-  else{ compute(); show("sc-result"); renderResult(); }
+  else{ quizDone=true; compute(); show("sc-result"); renderResult(); }
 }
 
 /* ==== v10.8 診断エンジン（複合配点方式）====
@@ -1074,6 +1101,7 @@ function renderResult(){
     return '<div class="home-rec"><span class="home-mark">'+b.mark+'</span><span class="home-name">'+bn(b.name)+'</span></div>';
   }).join("");
   const crossSection=document.getElementById("crossDrinksSection");
+  const giftBox=document.getElementById("visitGift");if(giftBox)giftBox.hidden=(LANG==="en");
   const cross=CROSS_DRINKS[t.no];
   if(LANG==="en"||!cross){
     crossSection.hidden=true;
