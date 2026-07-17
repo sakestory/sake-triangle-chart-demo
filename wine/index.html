@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="robots" content="noindex"/><!-- 正式公開時にこのnoindex行を削除する -->
+<meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#f7f0e6">
+  <title>ワイン猫 三角チャート診断｜あなたに合うワインの入口</title>
+  <style>
+    :root{
+      --paper:#f7f0e6;
+      --paper-deep:#eadfd2;
+      --card:#fffaf4;
+      --ink:#3c2529;
+      --muted:#746168;
+      --accent:#781f36;
+      --accent-soft:#b35b72;
+      --leaf:#707243;
+      --line:#dcc9c8;
+      --shadow:0 14px 38px rgba(60,37,41,.11);
+      --serif:"Hiragino Mincho ProN","Yu Mincho",YuMincho,serif;
+      --sans:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;
+    }
+    *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+    html,body{margin:0;min-height:100%;background:var(--paper);color:var(--ink)}
+    body{font-family:var(--sans);line-height:1.8;background-image:radial-gradient(circle at 14% 5%,rgba(179,91,114,.09),transparent 28%),radial-gradient(circle at 88% 90%,rgba(112,114,67,.08),transparent 32%)}
+    button{font:inherit}
+    .wrap{width:min(100%,560px);margin:0 auto;padding:24px 20px 80px}
+    .screen{display:none}.screen.active{display:block;animation:up .35s ease both}
+    @keyframes up{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+    .brand{text-align:center;font-family:var(--serif);font-size:12px;letter-spacing:.28em;color:var(--muted);margin:4px 0 20px;text-indent:.28em}
+    .hero{text-align:center;padding:12px 0 8px}.eyebrow{font-family:var(--serif);color:var(--accent);font-size:12px;letter-spacing:.24em;text-indent:.24em}
+    h1{font-family:var(--serif);font-size:clamp(34px,10vw,50px);line-height:1.25;margin:8px 0 10px;letter-spacing:.03em}
+    .lead{font-size:14px;color:var(--muted);max-width:31em;margin:0 auto}
+    .hero-cats{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;max-width:390px;margin:24px auto 20px}
+    .cat-crop{aspect-ratio:1;border-radius:50%;background-repeat:no-repeat;background-size:100%;background-position:center;filter:drop-shadow(0 5px 8px rgba(60,37,41,.08))}
+    .cat-0{--x:0%}.cat-1{--x:50%}.cat-2{--x:100%}
+    .chips{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:18px 0 0}
+    .chip{border:1px solid var(--line);background:rgba(255,250,244,.75);border-radius:999px;padding:5px 12px;font-family:var(--serif);font-size:12px;color:var(--muted)}
+    .btn{display:block;width:100%;border:0;border-radius:999px;padding:17px 22px;cursor:pointer;font-family:var(--serif);font-weight:700;letter-spacing:.08em;transition:.15s transform,.15s opacity}
+    .btn:active{transform:scale(.985);opacity:.88}.btn-primary{background:var(--ink);color:var(--paper);box-shadow:0 9px 24px rgba(60,37,41,.22);margin-top:24px}.btn-ghost{background:transparent;color:var(--muted);border:1px solid var(--line);margin-top:11px}
+    .note{text-align:center;color:var(--muted);font-size:11px;margin:16px 8px 0}
+    .q-head{display:flex;align-items:center;gap:12px;margin:12px 0 28px}.q-count{font-family:var(--serif);font-size:12px;color:var(--muted);white-space:nowrap}.bar{height:4px;flex:1;background:var(--paper-deep);border-radius:9px;overflow:hidden}.bar span{display:block;height:100%;background:var(--accent);border-radius:9px;transition:width .3s ease}
+    .q-tag{display:inline-block;border:1px solid var(--accent-soft);color:var(--accent);font-family:var(--serif);font-size:11px;letter-spacing:.12em;border-radius:999px;padding:3px 12px;margin-bottom:12px}.q-text{font-family:var(--serif);font-size:clamp(21px,6vw,27px);line-height:1.55;margin:0 0 24px}
+    .option{width:100%;text-align:left;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:14px;padding:16px 18px;margin:0 0 11px;cursor:pointer;line-height:1.65;box-shadow:0 3px 12px rgba(60,37,41,.035);transition:.13s transform,.13s border-color,.13s background}.option:hover,.option:focus-visible{transform:translateX(3px);border-color:var(--accent-soft);background:#fff}.back{border:0;background:none;color:var(--muted);padding:10px 4px;cursor:pointer;font-size:13px}
+    .result{text-align:center}.result-cat{width:172px;margin:10px auto 4px;background-position:var(--x) 100%}.result-kicker{font-family:var(--serif);font-size:12px;color:var(--accent);letter-spacing:.18em;margin-top:8px}.result-cat-name{font-family:var(--serif);font-size:clamp(27px,8vw,38px);line-height:1.35;margin:4px 0 0}.result-style{font-family:var(--serif);font-size:18px;color:var(--accent);font-weight:700;margin-top:6px}.result-lead{font-family:var(--serif);font-size:16px;line-height:1.85;margin:18px auto 0;max-width:28em}
+    .card{text-align:left;background:var(--card);border:1px solid var(--line);border-radius:17px;padding:20px;margin-top:16px;box-shadow:var(--shadow)}.card h2{font-family:var(--serif);font-size:13px;color:var(--accent);letter-spacing:.13em;margin:0 0 8px}.card p{font-size:14px;margin:0;color:var(--ink)}.order{font-family:var(--serif);font-size:17px!important;line-height:1.75;padding-left:14px;border-left:3px solid var(--accent-soft)}
+    .chart-card{padding:12px 8px 10px;text-align:center}.chart-card h2{text-align:left;margin:6px 12px 0}.chart-card svg{display:block;width:100%;height:auto;margin:0 auto}.chart-note{font-size:11px!important;color:var(--muted)!important;margin:-3px 10px 8px!important}.sweetness{display:flex;align-items:center;justify-content:center;gap:9px;flex-wrap:wrap;margin:4px 8px 5px;font-size:12px;color:var(--muted)}.sweetness strong{font-family:var(--serif);color:var(--accent);border:1px solid var(--accent-soft);background:#fff;border-radius:999px;padding:3px 12px}
+    .pairings{display:flex;flex-wrap:wrap;gap:8px;margin-top:3px}.pairings span{font-size:13px;border:1px solid var(--line);border-radius:999px;background:#fff;padding:5px 12px}.next-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px}.next-item{background:#fff;border:1px solid var(--line);border-radius:13px;padding:12px 10px;text-align:center}.next-item strong{display:block;font-family:var(--serif);font-size:13px;color:var(--accent)}.next-item span{display:block;font-size:11px;color:var(--muted);margin-top:2px}.caution{font-size:11px!important;color:var(--muted)!important;line-height:1.75}.footer{text-align:center;font-family:var(--serif);font-size:11px;color:var(--muted);margin-top:38px;letter-spacing:.08em}
+    @media(max-width:380px){.wrap{padding-inline:16px}.option{padding:14px}.card{padding:17px}.result-cat{width:152px}}@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <div class="brand">酒猫シリーズ・試作版</div>
+    <section id="start" class="screen active">
+      <div class="hero">
+        <div class="eyebrow">WINE CAT</div><h1>ワイン猫診断</h1>
+        <p class="lead">赤・白・ロゼも、葡萄品種も、最初は分からなくて大丈夫。7つの質問から、あなたが入りやすいワインの方向を見つけます。</p>
+        <div class="hero-cats" aria-hidden="true"><div class="cat-crop" style="background-image:url('assets/cat_pinot.png')"></div><div class="cat-crop" style="background-image:url('assets/cat_chardonnay.png')"></div><div class="cat-crop" style="background-image:url('assets/cat_sparkling.png')"></div></div>
+        <div class="chips"><span class="chip">約1分</span><span class="chip">全7問</span><span class="chip">9タイプ</span><span class="chip">三角チャート</span></div>
+      </div>
+      <button class="btn btn-primary" type="button" onclick="startQuiz()">診断を始める</button>
+      <p class="note">7つの代表品種に、ロゼとスパークリングを加えた入口診断です。</p>
+    </section>
+
+    <section id="quiz" class="screen" aria-live="polite">
+      <div class="q-head"><span id="qCount" class="q-count"></span><div class="bar"><span id="progress"></span></div></div>
+      <div id="qTag" class="q-tag"></div><h2 id="qText" class="q-text"></h2><div id="options"></div>
+      <button id="backBtn" class="back" type="button" onclick="goBack()">← ひとつ前に戻る</button>
+    </section>
+
+    <section id="result" class="screen result" aria-live="polite">
+      <div id="resultCat" class="cat-crop result-cat cat-0" aria-hidden="true"></div>
+      <div class="result-kicker">あなたのワイン猫は</div><h2 id="resultCatName" class="result-cat-name"></h2><div id="resultStyle" class="result-style"></div><p id="resultLead" class="result-lead"></p>
+      <div class="card chart-card"><h2>このタイプの味わい三角チャート</h2><div id="tasteChart"></div><p class="chart-note">中心0／外側10。果実味は香りと味の印象で、甘さとは別です。</p><div class="sweetness"><span>甘口・辛口の目安</span><strong id="sweetness"></strong></div></div>
+      <div class="card"><h2>こんな味です</h2><p id="resultTaste"></p></div>
+      <div class="card"><h2>お店では、こう頼めます</h2><p id="resultOrder" class="order"></p></div>
+      <div class="card"><h2>苦手を外すヒント</h2><p id="resultAvoid"></p></div>
+      <div class="card"><h2>合わせやすい料理</h2><div id="resultPairings" class="pairings"></div></div>
+      <div class="card"><h2>次に試すなら</h2><div id="nextGrid" class="next-grid"></div></div>
+      <div class="card"><p class="caution">葡萄品種が同じでも、産地・造り手・熟成方法で味は変わります。この結果は、ワイン売り場やお店で相談するときの入口です。</p></div>
+      <button class="btn btn-primary" type="button" onclick="restart()">もう一度診断する</button>
+      <div class="footer">ワイン猫診断 v0.4　※お酒は20歳になってから</div>
+    </section>
+  </main>
+
+  <script id="app-data" type="application/json">
+  {
+    "axisLabels":["酸味","果実味","渋味・コク"],
+    "results":[
+      {"id":"sauvignon","cat":"青空すっきり猫","style":"ソーヴィニヨン・ブラン（白）","portrait":0,"axes":[9,6,2],"sweetness":"基本は辛口","lead":"軽やかな酸味と、風が抜けるような爽やかさを選ぶ猫です。","taste":"レモン、グレープフルーツ、青いハーブを思わせる香り。すっきり辛口の白が好きな人の、分かりやすい入口です。","order":"柑橘っぽく爽やかで、すっきり辛口の白をください。ソーヴィニヨン・ブランも気になります。","avoid":"酸味が鋭すぎるのが苦手なら、“酸は穏やかめ”と添えると外しにくいです。","pairings":["魚介","サラダ","山羊チーズ","塩味の前菜"]},
+      {"id":"chardonnay","cat":"黄金まろやか猫","style":"シャルドネ（白）","portrait":2,"axes":[6,6,7],"sweetness":"辛口が中心","lead":"白ワインにも、やわらかなコクと満足感がほしい猫です。","taste":"りんご、桃、バター、トーストなど、造り方で表情が大きく変わる代表品種。まろやかな白の入口に向きます。","order":"酸が尖りすぎず、まろやかで少しコクのあるシャルドネをください。","avoid":"樽の香りが強いと重く感じることがあります。最初は“樽は控えめ”と伝えると安心です。","pairings":["鶏料理","クリームソース","グラタン","白身魚"]},
+      {"id":"riesling","cat":"花香る猫","style":"リースリング（白）","portrait":1,"axes":[8,8,3],"sweetness":"辛口〜甘口まで幅広い","lead":"花や果実の香りを、ゆっくり嗅いでから飲みたい猫です。","taste":"白い花、桃、りんごを思わせる豊かな香りと、きれいな酸味。辛口から甘口まで幅があります。","order":"香りが華やかで、甘すぎないリースリングをください。","avoid":"甘さの幅が広い品種です。“辛口”または“ほんのり甘口”を必ず添えると選びやすくなります。","pairings":["アジア料理","豚肉","スパイス料理","フルーツ"]},
+      {"id":"pinot","cat":"赤い羽根猫","style":"ピノ・ノワール（赤）","portrait":0,"axes":[7,7,5],"sweetness":"基本は辛口","lead":"赤ワインでも、重さより香りと軽やかさを楽しみたい猫です。","taste":"いちご、さくらんぼ、紅茶のような香り。渋味は比較的穏やかで、赤ワイン初心者にも入りやすい品種です。","order":"重すぎず渋すぎない、香りのきれいなピノ・ノワールをください。","avoid":"産地によって酸味の強さが変わります。酸が苦手なら“果実味がやわらかいもの”と伝えてください。","pairings":["鶏料理","きのこ","生ハム","焼き魚"]},
+      {"id":"merlot","cat":"まろやか赤猫","style":"メルロー（赤）","portrait":2,"axes":[5,8,7],"sweetness":"基本は辛口","lead":"角のない渋味と、丸みのある果実味に安心する猫です。","taste":"プラムや黒い果実を思わせる香り。赤らしいコクはありつつ、渋味が比較的なめらかなものが多い品種です。","order":"渋味がやわらかく、まろやかな赤をください。メルローが気になります。","avoid":"濃厚なタイプもあるので、最初は“重すぎないメルロー”と伝えると安心です。","pairings":["ハンバーグ","豚肉","ミートソース","やわらかいチーズ"]},
+      {"id":"cabernet","cat":"どっしり王道猫","style":"カベルネ・ソーヴィニヨン（赤）","portrait":2,"axes":[6,8,9],"sweetness":"基本は辛口","lead":"しっかりした渋味とコクを、料理と一緒に堂々と楽しむ猫です。","taste":"カシスやブラックベリーの香り、はっきりした渋味、長い余韻。濃い赤ワインの代表的な入口です。","order":"果実味と渋味がしっかりした、王道のカベルネ・ソーヴィニヨンをください。","avoid":"渋味が強すぎると感じそうなら、“若すぎず、渋味が丸いもの”と伝えてください。","pairings":["ステーキ","焼肉","熟成チーズ","濃い煮込み"]},
+      {"id":"syrah","cat":"胡椒しっぽ猫","style":"シラー／シラーズ（赤）","portrait":1,"axes":[5,9,9],"sweetness":"基本は辛口","lead":"黒い果実に胡椒やハーブが重なる、少し野性的な香りを面白がる猫です。","taste":"ブラックベリー、黒胡椒、スモークを思わせる香り。濃さの中にスパイシーな個性があります。","order":"黒い果実と胡椒のような香りがある、スパイシーなシラーをください。","avoid":"濃さやアルコール感が強いものもあります。最初は“重すぎない”と添えるのがおすすめです。","pairings":["ラム肉","スパイス料理","炭火焼き","燻製"]},
+      {"id":"rose","cat":"夕焼けロゼ猫","style":"辛口ロゼ","portrait":0,"axes":[7,7,2],"sweetness":"今回は辛口タイプ","lead":"赤と白の間にある、気軽さと華やかさを自由に楽しむ猫です。","taste":"いちごや柑橘を思わせる香り。白の爽やかさと赤の果実味を少しずつ持ち、料理を選びにくい万能型です。","order":"甘くない、すっきりした辛口ロゼをください。","avoid":"ロゼは甘口もあるので、“辛口”を最初に伝えるとイメージ違いを防げます。","pairings":["前菜盛り合わせ","トマト料理","魚介","エスニック料理"]},
+      {"id":"sparkling","cat":"泡の祝杯猫","style":"辛口スパークリング","portrait":2,"axes":[9,5,2],"sweetness":"今回は辛口タイプ","lead":"迷ったときは、泡の軽快さで気分を開きたい猫です。","taste":"しゅわっとした泡、りんごや柑橘の爽やかさ。乾杯だけでなく、食事全体に合わせやすい入口です。","order":"甘くない、すっきり辛口のスパークリングをください。","avoid":"“スパークリング＝全部甘い”ではありません。辛口を示す“ブリュット”も目印になります。","pairings":["揚げ物","魚介","生ハム","軽いチーズ"]}
+    ],
+    "questions":[
+      {"tag":"最初の一口","text":"一口目にうれしいのは、どんな感じ？","options":[
+        {"label":"きゅっと爽やかで、口がさっぱり","scores":{"sauvignon":5,"sparkling":4,"rose":2}},
+        {"label":"角がなく、まろやか","scores":{"chardonnay":5,"merlot":2,"riesling":1}},
+        {"label":"花や果実の香りがふわっと広がる","scores":{"riesling":5,"rose":3,"syrah":1}},
+        {"label":"濃くて、余韻が長い","scores":{"cabernet":4,"syrah":4,"merlot":3,"chardonnay":1}}
+      ]},
+      {"tag":"好きな果実","text":"果物にたとえるなら、どれに惹かれますか？","options":[
+        {"label":"レモン、グレープフルーツ、青りんご","scores":{"sauvignon":5,"sparkling":3,"chardonnay":1}},
+        {"label":"桃、洋梨、白い花","scores":{"riesling":5,"chardonnay":2,"rose":2}},
+        {"label":"いちご、さくらんぼ","scores":{"pinot":5,"rose":4,"merlot":1}},
+        {"label":"プラム、カシス、ブラックベリー","scores":{"cabernet":5,"syrah":4,"merlot":3}}
+      ]},
+      {"tag":"飲みごたえ","text":"飲み物の重さは、どれが好み？","options":[
+        {"label":"軽く、すいすい飲める方が好き","scores":{"sauvignon":4,"sparkling":4,"rose":3,"pinot":2}},
+        {"label":"軽すぎず重すぎず、中くらい","scores":{"pinot":4,"merlot":4,"chardonnay":3}},
+        {"label":"コクがあり、しっかりした方が好き","scores":{"cabernet":5,"syrah":4,"chardonnay":3,"merlot":2}},
+        {"label":"まだ分からないので、親しみやすさ重視","scores":{"rose":4,"sparkling":4,"merlot":2,"riesling":2}}
+      ]},
+      {"tag":"渋味と酸味","text":"ワインらしい刺激、どこまで楽しめそう？","options":[
+        {"label":"渋味は少なく、爽やかな方がいい","scores":{"riesling":4,"sauvignon":3,"chardonnay":3,"rose":2}},
+        {"label":"やわらかな渋味なら心地いい","scores":{"pinot":4,"merlot":4,"chardonnay":1}},
+        {"label":"赤らしい渋味をしっかり感じたい","scores":{"cabernet":5,"syrah":4,"merlot":2}},
+        {"label":"渋味より、泡や酸味の刺激が好き","scores":{"sparkling":5,"sauvignon":3,"rose":2}}
+      ]},
+      {"tag":"料理との相性","text":"一緒に食べるなら、今はどれ？","options":[
+        {"label":"魚介、サラダ、さっぱりした前菜","scores":{"sauvignon":5,"sparkling":3,"rose":2}},
+        {"label":"鶏料理、クリームソース、グラタン","scores":{"chardonnay":5,"riesling":2,"pinot":2}},
+        {"label":"生ハム、トマト料理、きのこ","scores":{"pinot":4,"merlot":4,"rose":2}},
+        {"label":"ステーキ、焼肉、スパイス料理","scores":{"cabernet":5,"syrah":5,"merlot":2}}
+      ]},
+      {"tag":"好きな香り","text":"グラスから香るなら、どれがうれしい？","options":[
+        {"label":"ハーブや石のような、涼しい香り","scores":{"sauvignon":5,"pinot":2,"sparkling":1}},
+        {"label":"バターやトーストのような香ばしさ","scores":{"chardonnay":5,"cabernet":2,"merlot":1}},
+        {"label":"花や蜂蜜のような華やかさ","scores":{"riesling":5,"rose":3,"chardonnay":1}},
+        {"label":"黒胡椒やスモークのようなスパイス感","scores":{"syrah":5,"cabernet":3,"pinot":1}}
+      ]},
+      {"tag":"飲みたい場面","text":"今日のワイン、どんな時間に寄り添ってほしい？","options":[
+        {"label":"乾杯して、気分を明るくしたい","scores":{"sparkling":5,"rose":2,"chardonnay":1}},
+        {"label":"昼下がりや外で、気軽に飲みたい","scores":{"rose":5,"sauvignon":3,"riesling":2}},
+        {"label":"静かな食事に、自然になじんでほしい","scores":{"pinot":4,"merlot":4,"chardonnay":2}},
+        {"label":"特別な夕食に、存在感がほしい","scores":{"cabernet":5,"syrah":4,"merlot":2}}
+      ]}
+    ]
+  }
+  </script>
+  <script>
+    const DATA=JSON.parse(document.getElementById('app-data').textContent);
+    const resultById=Object.fromEntries(DATA.results.map(r=>[r.id,r]));
+    const answers=[];let current=0;const screens=['start','quiz','result'];
+    function show(id){screens.forEach(s=>document.getElementById(s).classList.toggle('active',s===id));window.scrollTo({top:0,behavior:'smooth'})}
+    function startQuiz(){answers.length=0;current=0;show('quiz');renderQuestion()}
+    function renderQuestion(){const q=DATA.questions[current];document.getElementById('qCount').textContent=`${current+1} / ${DATA.questions.length}`;document.getElementById('progress').style.width=`${((current+1)/DATA.questions.length)*100}%`;document.getElementById('qTag').textContent=q.tag;document.getElementById('qText').textContent=q.text;const box=document.getElementById('options');box.innerHTML='';q.options.forEach((opt,index)=>{const b=document.createElement('button');b.type='button';b.className='option';b.textContent=opt.label;b.onclick=()=>choose(index);box.appendChild(b)});document.getElementById('backBtn').style.visibility=current===0?'hidden':'visible'}
+    function choose(index){answers[current]=index;if(current<DATA.questions.length-1){current++;renderQuestion();window.scrollTo({top:0,behavior:'smooth'})}else{renderResult()}}
+    function goBack(){if(current>0){current--;answers.length=current;renderQuestion()}}
+    function rankResults(){const rows=DATA.results.map((r,order)=>({id:r.id,score:0,hits:0,order}));answers.forEach((answer,qIndex)=>{const scores=DATA.questions[qIndex].options[answer].scores;rows.forEach(row=>{const n=scores[row.id]||0;row.score+=n;if(n>=4)row.hits++})});return rows.sort((a,b)=>b.score-a.score||b.hits-a.hits||a.order-b.order)}
+    function buildTasteChart(r){
+      const W=400,H=330,c={x:200,y:174},top={x:200,y:48},br={x:326,y:262},bl={x:74,y:262};
+      const toward=(p,f)=>({x:c.x+(p.x-c.x)*f,y:c.y+(p.y-c.y)*f});
+      const vertices=[top,br,bl];
+      const pts=vertices.map((p,i)=>toward(p,r.axes[i]/10));
+      const grid=[.25,.5,.75,1].map(f=>{const p=vertices.map(v=>toward(v,f));return `<polygon points="${p.map(x=>`${x.x},${x.y}`).join(' ')}"/>`}).join('');
+      const shape=pts.map(p=>`${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(' ');
+      const l=DATA.axisLabels,v=r.axes;
+      return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${l[0]}${v[0]}、${l[1]}${v[1]}、${l[2]}${v[2]}"><g fill="none" stroke="#dcc9c8" stroke-width="1">${grid}<line x1="200" y1="174" x2="200" y2="48"/><line x1="200" y1="174" x2="326" y2="262"/><line x1="200" y1="174" x2="74" y2="262"/></g><polygon points="${shape}" fill="#b35b72" fill-opacity=".2" stroke="#781f36" stroke-width="2.6"/><g font-family="serif" font-weight="700" fill="#3c2529" text-anchor="middle"><text x="200" y="24" font-size="15">${l[0]} ${v[0]}</text><text x="334" y="288" font-size="14">${l[2]} ${v[2]}</text><text x="66" y="288" font-size="14">${l[1]} ${v[1]}</text></g><text x="200" y="318" text-anchor="middle" font-size="11" fill="#746168">中心 0　／　外側 10</text></svg>`;
+    }
+    
+/* ==== 集計送信（日本酒診断と同じスプレッドシートへ。category列で区別）。ローカル/テスト実行時は送らない ==== */
+const LOG_URL="https://script.google.com/macros/s/AKfycbxKxuJHkFBw0kW_GKFCg009aqqsOs5wgO1ZnFYXlZrykFOTP9fo5T1hVPzgDpgSVlHt/exec";
+function isTestRun(){return location.protocol==="file:"||location.hostname==="localhost"||location.hostname==="127.0.0.1"||new URLSearchParams(location.search).get("test")==="1";}
+function sendLog(payload){
+  if(isTestRun())return;
+  try{
+    fetch(LOG_URL,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain;charset=utf-8"},
+      body:JSON.stringify(payload)}).catch(function(){});
+  }catch(e){}
+}
+sendLog({typeNumber:"",typeName:(document.referrer||"(direct)")+(location.search?" "+location.search:""),sukkiri:"",fruity:"",shikkari:"",lang:"ja",category:"wine_visit"});
+function renderResult(){const ranked=rankResults();const r=resultById[ranked[0].id];
+      sendLog({typeNumber:r.id,typeName:r.cat,sukkiri:r.axes[0],fruity:r.axes[1],shikkari:r.axes[2],lang:"ja",category:"wine"});const cat=document.getElementById('resultCat');cat.className='cat-crop result-cat';cat.style.backgroundImage=`url("assets/cat_${r.id}.png")`;document.getElementById('resultCatName').textContent=r.cat;document.getElementById('resultStyle').textContent=`おすすめ：${r.style}`;document.getElementById('resultLead').textContent=r.lead;document.getElementById('tasteChart').innerHTML=buildTasteChart(r);document.getElementById('sweetness').textContent=r.sweetness;document.getElementById('resultTaste').textContent=r.taste;document.getElementById('resultOrder').textContent=`「${r.order}」`;document.getElementById('resultAvoid').textContent=r.avoid;document.getElementById('resultPairings').innerHTML=r.pairings.map(x=>`<span>${x}</span>`).join('');document.getElementById('nextGrid').innerHTML=ranked.slice(1,3).map(x=>{const n=resultById[x.id];return `<div class="next-item"><strong>${n.style}</strong><span>${n.cat}</span></div>`}).join('');show('result')}
+    function restart(){answers.length=0;current=0;show('start')}
+  </script>
+</body>
+</html>

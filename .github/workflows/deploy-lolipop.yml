@@ -11,6 +11,8 @@ on:
       - 'index.html'
       - 'cat_*.png'
       - 'ogp.png'
+      - 'beer/**'
+      - 'wine/**'
   workflow_dispatch:   # 手動実行も可能（初回はこれで管理者が明示起動する想定）
 
 # 多重デプロイ防止（同時に1本だけ）
@@ -39,6 +41,8 @@ jobs:
           mkdir -p deploy
           cp index.html deploy/
           cp ogp.png deploy/
+          cp -R beer deploy/
+          cp -R wine deploy/
           for n in $(seq -w 1 27); do
             cp "cat_${n}.png" deploy/
           done
@@ -46,7 +50,7 @@ jobs:
           find deploy -type f -printf '%f\n' | sort
           count=$(find deploy -type f | wc -l | tr -d ' ')
           echo "staged count: ${count}"
-          test "${count}" -eq 29   # 28個ちょうどでなければ失敗させる
+          test "${count}" -eq 48   # 本体29 + beer10 + wine9   # 28個ちょうどでなければ失敗させる
 
       - name: lftp を導入
         run: sudo apt-get update && sudo apt-get install -y lftp

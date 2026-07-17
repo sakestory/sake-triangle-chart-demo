@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="robots" content="noindex"/><!-- 正式公開時にこのnoindex行を削除する -->
+<meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#f7f0df">
+  <title>ビール猫 三角チャート診断｜あなたに合うビールスタイル</title>
+  <style>
+    :root{
+      --paper:#f7f0df;
+      --paper-deep:#eee1c5;
+      --card:#fffaf0;
+      --ink:#432b1c;
+      --muted:#756453;
+      --accent:#a85a13;
+      --accent-soft:#d58a2f;
+      --line:#dec9a5;
+      --shadow:0 14px 38px rgba(67,43,28,.11);
+      --serif:"Hiragino Mincho ProN","Yu Mincho",YuMincho,serif;
+      --sans:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;
+    }
+    *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+    html,body{margin:0;min-height:100%;background:var(--paper);color:var(--ink)}
+    body{font-family:var(--sans);line-height:1.8;background-image:radial-gradient(circle at 12% 4%,rgba(213,138,47,.1),transparent 28%),radial-gradient(circle at 88% 88%,rgba(168,90,19,.08),transparent 30%)}
+    button{font:inherit}
+    .wrap{width:min(100%,560px);margin:0 auto;padding:24px 20px 80px}
+    .screen{display:none}
+    .screen.active{display:block;animation:up .35s ease both}
+    @keyframes up{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+    .brand{text-align:center;font-family:var(--serif);font-size:12px;letter-spacing:.28em;color:var(--muted);margin:4px 0 20px;text-indent:.28em}
+    .hero{text-align:center;padding:12px 0 8px}
+    .eyebrow{font-family:var(--serif);color:var(--accent);font-size:12px;letter-spacing:.24em;text-indent:.24em}
+    h1{font-family:var(--serif);font-size:clamp(34px,10vw,50px);line-height:1.25;margin:8px 0 10px;letter-spacing:.03em}
+    .lead{font-size:14px;color:var(--muted);max-width:31em;margin:0 auto}
+    .hero-cats{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;max-width:390px;margin:24px auto 20px}
+    .cat-crop{aspect-ratio:1;border-radius:50%;background-repeat:no-repeat;background-size:100%;background-position:center;filter:drop-shadow(0 5px 8px rgba(67,43,28,.08))}
+    .cat-0{--x:0%}.cat-1{--x:50%}.cat-2{--x:100%}
+    .chips{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:18px 0 0}
+    .chip{border:1px solid var(--line);background:rgba(255,250,240,.7);border-radius:999px;padding:5px 12px;font-family:var(--serif);font-size:12px;color:var(--muted)}
+    .btn{display:block;width:100%;border:0;border-radius:999px;padding:17px 22px;cursor:pointer;font-family:var(--serif);font-weight:700;letter-spacing:.08em;transition:.15s transform,.15s opacity}
+    .btn:active{transform:scale(.985);opacity:.88}
+    .btn-primary{background:var(--ink);color:var(--paper);box-shadow:0 9px 24px rgba(67,43,28,.22);margin-top:24px}
+    .btn-ghost{background:transparent;color:var(--muted);border:1px solid var(--line);margin-top:11px}
+    .note{text-align:center;color:var(--muted);font-size:11px;margin:16px 8px 0}
+    .q-head{display:flex;align-items:center;gap:12px;margin:12px 0 28px}
+    .q-count{font-family:var(--serif);font-size:12px;color:var(--muted);white-space:nowrap}
+    .bar{height:4px;flex:1;background:var(--paper-deep);border-radius:9px;overflow:hidden}
+    .bar span{display:block;height:100%;background:var(--accent);border-radius:9px;transition:width .3s ease}
+    .q-tag{display:inline-block;border:1px solid var(--accent-soft);color:var(--accent);font-family:var(--serif);font-size:11px;letter-spacing:.12em;border-radius:999px;padding:3px 12px;margin-bottom:12px}
+    .q-text{font-family:var(--serif);font-size:clamp(21px,6vw,27px);line-height:1.55;margin:0 0 24px}
+    .option{width:100%;text-align:left;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:14px;padding:16px 18px;margin:0 0 11px;cursor:pointer;line-height:1.65;box-shadow:0 3px 12px rgba(67,43,28,.035);transition:.13s transform,.13s border-color,.13s background}
+    .option:hover,.option:focus-visible{transform:translateX(3px);border-color:var(--accent-soft);background:#fff}
+    .back{border:0;background:none;color:var(--muted);padding:10px 4px;cursor:pointer;font-size:13px}
+    .result{text-align:center}
+    .result-cat{width:172px;margin:10px auto 4px;background-position:var(--x) 0%}
+    .result-kicker{font-family:var(--serif);font-size:12px;color:var(--accent);letter-spacing:.18em;margin-top:8px}
+    .result-cat-name{font-family:var(--serif);font-size:clamp(27px,8vw,38px);line-height:1.35;margin:4px 0 0}
+    .result-style{font-family:var(--serif);font-size:18px;color:var(--accent);font-weight:700;margin-top:6px}
+    .result-lead{font-family:var(--serif);font-size:16px;line-height:1.85;margin:18px auto 0;max-width:28em}
+    .card{text-align:left;background:var(--card);border:1px solid var(--line);border-radius:17px;padding:20px;margin-top:16px;box-shadow:var(--shadow)}
+    .card h2{font-family:var(--serif);font-size:13px;color:var(--accent);letter-spacing:.13em;margin:0 0 8px}
+    .card p{font-size:14px;margin:0;color:var(--ink)}
+    .chart-card{padding:12px 8px 8px;text-align:center}
+    .chart-card h2{text-align:left;margin:6px 12px 0}
+    .chart-card svg{display:block;width:100%;height:auto;margin:0 auto}
+    .chart-note{font-size:11px!important;color:var(--muted)!important;margin:-3px 10px 6px!important}
+    .pairings{display:flex;flex-wrap:wrap;gap:8px;margin-top:3px}
+    .pairings span{font-size:13px;border:1px solid var(--line);border-radius:999px;background:#fff;padding:5px 12px}
+    .next-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px}
+    .next-item{background:#fff;border:1px solid var(--line);border-radius:13px;padding:12px 10px;text-align:center}
+    .next-item strong{display:block;font-family:var(--serif);font-size:13px;color:var(--accent)}
+    .next-item span{display:block;font-size:11px;color:var(--muted);margin-top:2px}
+    .caution{font-size:11px!important;color:var(--muted)!important;line-height:1.75}
+    .footer{text-align:center;font-family:var(--serif);font-size:11px;color:var(--muted);margin-top:38px;letter-spacing:.08em}
+    @media(max-width:380px){.wrap{padding-inline:16px}.option{padding:14px}.card{padding:17px}.result-cat{width:152px}}
+    @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <div class="brand">酒猫シリーズ・試作版</div>
+
+    <section id="start" class="screen active">
+      <div class="hero">
+        <div class="eyebrow">BEER CAT</div>
+        <h1>ビール猫診断</h1>
+        <p class="lead">ビールに詳しくなくても大丈夫。7つの質問から、最初に試しやすいビールの種類と、あなたの“ビール猫”を見つけます。</p>
+        <div class="hero-cats" aria-hidden="true">
+          <div class="cat-crop" style="background-image:url('assets/cat_pale.png')"></div><div class="cat-crop" style="background-image:url('assets/cat_stout.png')"></div><div class="cat-crop" style="background-image:url('assets/cat_sour.png')"></div>
+        </div>
+        <div class="chips"><span class="chip">約1分</span><span class="chip">全7問</span><span class="chip">8タイプ</span><span class="chip">三角チャート</span></div>
+      </div>
+      <button class="btn btn-primary" type="button" onclick="startQuiz()">診断を始める</button>
+      <p class="note">銘柄ではなく、IPAやペールエールなど「種類の入口」を案内します。</p>
+    </section>
+
+    <section id="quiz" class="screen" aria-live="polite">
+      <div class="q-head"><span id="qCount" class="q-count"></span><div class="bar"><span id="progress"></span></div></div>
+      <div id="qTag" class="q-tag"></div>
+      <h2 id="qText" class="q-text"></h2>
+      <div id="options"></div>
+      <button id="backBtn" class="back" type="button" onclick="goBack()">← ひとつ前に戻る</button>
+    </section>
+
+    <section id="result" class="screen result" aria-live="polite">
+      <div id="resultCat" class="cat-crop result-cat cat-0" aria-hidden="true"></div>
+      <div class="result-kicker">あなたのビール猫は</div>
+      <h2 id="resultCatName" class="result-cat-name"></h2>
+      <div id="resultStyle" class="result-style"></div>
+      <p id="resultLead" class="result-lead"></p>
+
+      <div class="card chart-card"><h2>このタイプの味わい三角チャート</h2><div id="tasteChart"></div><p class="chart-note">中心0／外側10。面の広がりが、3つの味わいの強さを表します。</p></div>
+      <div class="card"><h2>こんな味です</h2><p id="resultTaste"></p></div>
+      <div class="card"><h2>知ると少し楽しいビールの話</h2><p id="resultTrivia"></p></div>
+      <div class="card"><h2>合わせやすい料理</h2><div id="resultPairings" class="pairings"></div></div>
+      <div class="card"><h2>次の一杯に試すなら</h2><div id="nextGrid" class="next-grid"></div></div>
+      <div class="card"><p class="caution">同じ種類でも、醸造所や商品によって苦味・甘さ・香りは変わります。種類の名前を入口に、気になった一本を試してみてください。</p></div>
+      <button class="btn btn-primary" type="button" onclick="restart()">もう一度診断する</button>
+      <div class="footer">ビール猫診断 v0.5　※お酒は20歳になってから</div>
+    </section>
+  </main>
+
+  <script id="app-data" type="application/json">
+  {
+    "axisLabels":["ホップの苦味","麦のコク","果実・酸味"],
+    "results":[
+      {"id":"pilsner","cat":"すっきり一杯猫","style":"ピルスナー／すっきりラガー","portrait":0,"axes":[4,2,1],"lead":"軽快なのどごしと、飲んだあとの気持ちよさを大切にする猫です。","taste":"透明感のある色、きめ細かな泡、すっきりした苦味。日本の定番ビールに近く、最初の一杯や食事中に選びやすい種類です。","trivia":"ピルスナーはラガーの一種です。低温でゆっくり発酵・熟成させるラガーの中でも、明るい色と爽やかな苦味が特徴。日本で定番として親しまれてきたビールにも近い仲間です。","pairings":["唐揚げ","餃子","枝豆","白身魚"]},
+      {"id":"pale","cat":"ちょうどよし猫","style":"ペールエール","portrait":2,"axes":[6,5,3],"lead":"香りも苦味も、どちらかに寄りすぎない“ちょうどよさ”が好きな猫です。","taste":"柑橘を思わせる香りと、ほどよい苦味、麦のやわらかなコク。クラフトビールの入口に向く、バランス型です。","trivia":"ペールエールは、ホップの香りと麦のコクをほどよく両立したエールです。IPAより苦味とアルコール感が穏やかなことが多く、クラフトビールの違いを知る最初の一杯に向いています。","pairings":["ハンバーガー","焼き鳥","ピザ","燻製"]},
+      {"id":"ipa","cat":"苦味一直線猫","style":"IPA","portrait":1,"axes":[9,5,4],"lead":"ひと口目から、ホップの香りと苦味をしっかり感じたい猫です。","taste":"柑橘、松、ハーブを思わせる強い香りと、はっきりした苦味。味の濃い料理にも負けない存在感があります。","trivia":"IPAは、いまではホップの香りと苦味を主役にしたビールの呼び名です。同じIPAでも、柑橘、松、南国果実など香りはさまざま。苦いだけのビールではありません。","pairings":["スパイス料理","濃い味の唐揚げ","青カビチーズ","焼肉"]},
+      {"id":"hazy","cat":"香り雲猫","style":"ヘイジーIPA","portrait":0,"axes":[7,6,8],"lead":"苦味だけでなく、果汁のような香りとやわらかさに包まれたい猫です。","taste":"濁りのある見た目、マンゴーや柑橘を思わせる香り、まろやかな口当たり。一般的なIPAより苦味が丸いものも多いです。","trivia":"ヘイジーIPAの濁りは、失敗ではありません。主にホップ由来の成分と穀物のたんぱく質がつくる見た目で、果汁のような香りとやわらかな口当たりを狙ったスタイルです。","pairings":["辛い料理","タコス","フライドチキン","クリームチーズ"]},
+      {"id":"wheat","cat":"麦のまどろみ猫","style":"ヴァイツェン／白ビール","portrait":2,"axes":[2,5,6],"lead":"苦味よりも、ふんわりした口当たりとやさしい香りにほっとする猫です。","taste":"小麦を使ったなめらかな飲み口。バナナやクローブを思わせる香りがあり、苦味は比較的穏やかです。","trivia":"ヴァイツェンはドイツ語で「小麦」。バナナやクローブのような香りは、果物や香辛料を入れたものではなく、酵母の発酵から生まれることが多いのが面白いところです。","pairings":["ソーセージ","サラダ","白身肉","やさしいチーズ"]},
+      {"id":"stout","cat":"夜更かし黒猫","style":"スタウト／ポーター","portrait":2,"axes":[5,9,2],"lead":"香ばしさと深いコクを、ゆっくり味わいたい夜型の猫です。","taste":"コーヒー、カカオ、焦がしたパンのような香り。黒い見た目でも、甘めからドライまで幅があります。","trivia":"スタウトとポーターは、どちらも焙煎した麦や麦芽の香ばしさを楽しむ黒いエールです。コーヒーやチョコレートの印象があっても、実際にそれらを入れているとは限りません。黒くても甘口とは限りません。","pairings":["煮込み料理","チョコレート","燻製","ロースト肉"]},
+      {"id":"belgian","cat":"発酵の魔法猫","style":"ベルジャンエール","portrait":1,"axes":[3,7,7],"lead":"果実、スパイス、発酵の不思議な香りを面白がれる好奇心猫です。","taste":"酵母由来の果実香やスパイス香が主役。やさしいものからアルコール度数の高い濃厚なものまで、個性の幅が広い種類です。","trivia":"「ベルジャンエール」は一種類ではなく、ベルギー系ビールの大きな家族です。果実や胡椒のような香りは、材料を足すのではなく、酵母が生み出していることも多くあります。","pairings":["チーズ","鶏の煮込み","ハーブ料理","ドライフルーツ"]},
+      {"id":"sour","cat":"きゅんと果実猫","style":"サワーエール／フルーツビール","portrait":0,"axes":[1,3,9],"lead":"苦味より、果実の香りときゅっとした酸味に心が動く猫です。","taste":"レモンやベリーのような酸味、果実の香り、軽快な飲み口。ビールの苦味が苦手な人にも入口になることがあります。","trivia":"サワーエールの酸味は、傷んだ味ではありません。乳酸菌や野生酵母なども使い、意図して酸味や複雑な発酵香をつくります。フルーツビールは、加えた果実とビールの組み合わせを楽しむ、また別の大きな仲間です。","pairings":["サラダ","魚介のマリネ","フルーツ","軽いデザート"]}
+    ],
+    "questions":[
+      {"tag":"最初の一口","text":"一杯目に欲しい気持ちよさは？","options":[
+        {"label":"ごくごく飲める、すっきり感","scores":{"pilsner":5,"pale":2,"sour":1}},
+        {"label":"果物みたいな、ふわっとした香り","scores":{"hazy":5,"wheat":3,"belgian":2}},
+        {"label":"目が覚めるような、はっきりした苦味","scores":{"ipa":5,"pale":2,"stout":1}},
+        {"label":"ゆっくり味わう、深いコク","scores":{"stout":5,"belgian":3,"hazy":1}}
+      ]},
+      {"tag":"普段の飲み物","text":"ビール以外なら、どれに惹かれますか？","options":[
+        {"label":"炭酸水やレモンソーダ","scores":{"pilsner":4,"sour":3,"pale":1}},
+        {"label":"果汁やスムージー","scores":{"hazy":4,"wheat":3,"sour":2}},
+        {"label":"コーヒーやココア","scores":{"stout":5,"belgian":2,"ipa":1}},
+        {"label":"ハーブティーやスパイスの飲み物","scores":{"belgian":4,"ipa":2,"wheat":1}}
+      ]},
+      {"tag":"好きな香り","text":"グラスから香るなら、どれがうれしい？","options":[
+        {"label":"柑橘や松のような爽やかさ","scores":{"ipa":4,"pale":3,"pilsner":1}},
+        {"label":"マンゴーや桃のような果実感","scores":{"hazy":5,"ipa":2,"sour":1}},
+        {"label":"バナナやスパイスのような甘い香り","scores":{"wheat":5,"belgian":3}},
+        {"label":"パン、カラメル、コーヒーの香ばしさ","scores":{"stout":5,"pale":2,"belgian":1}}
+      ]},
+      {"tag":"口当たり","text":"炭酸の強さは、どれが好み？","options":[
+        {"label":"しゅわっと強めが気持ちいい","scores":{"pilsner":5,"sour":3,"ipa":1}},
+        {"label":"やわらかく、ふんわり","scores":{"wheat":4,"hazy":3,"belgian":2}},
+        {"label":"強すぎず弱すぎず、ほどほど","scores":{"pale":5,"ipa":2,"pilsner":1}},
+        {"label":"炭酸より、味や香りを重視","scores":{"stout":3,"belgian":3,"hazy":2,"sour":1}}
+      ]},
+      {"tag":"料理との相性","text":"一緒に食べるなら、今はどれ？","options":[
+        {"label":"唐揚げ、餃子、さっぱりしたつまみ","scores":{"pilsner":4,"pale":3,"ipa":2}},
+        {"label":"辛い料理やスパイス料理","scores":{"ipa":4,"hazy":3,"belgian":2}},
+        {"label":"肉料理、煮込み、濃いチーズ","scores":{"stout":4,"belgian":4,"pale":1}},
+        {"label":"サラダ、果物、軽いデザート","scores":{"sour":4,"wheat":3,"hazy":2}}
+      ]},
+      {"tag":"苦味","text":"ビールの苦味、どこまで楽しめそう？","options":[
+        {"label":"できるだけ穏やかな方がいい","scores":{"wheat":4,"sour":4,"pilsner":2}},
+        {"label":"ほどほどなら心地いい","scores":{"pale":5,"pilsner":2,"belgian":1}},
+        {"label":"しっかり苦い方が好き","scores":{"ipa":5,"pale":2,"hazy":2}},
+        {"label":"香りやコクがあれば、苦味はその次","scores":{"hazy":4,"belgian":3,"stout":2,"sour":1}}
+      ]},
+      {"tag":"冒険心","text":"知らないビールを選ぶときの気分は？","options":[
+        {"label":"まずは王道から入りたい","scores":{"pilsner":5,"pale":3,"wheat":1}},
+        {"label":"飲みやすさの中に、少し個性がほしい","scores":{"pale":4,"wheat":3,"hazy":2}},
+        {"label":"せっかくなら、濃さや香りを楽しみたい","scores":{"belgian":4,"stout":4,"ipa":2}},
+        {"label":"酸味や発酵の変化球も面白そう","scores":{"sour":5,"hazy":2,"belgian":2}}
+      ]}
+    ]
+  }
+  </script>
+  <script>
+    const DATA=JSON.parse(document.getElementById('app-data').textContent);
+    const resultById=Object.fromEntries(DATA.results.map(r=>[r.id,r]));
+    const answers=[];
+    let current=0;
+    const screens=['start','quiz','result'];
+    function show(id){screens.forEach(s=>document.getElementById(s).classList.toggle('active',s===id));window.scrollTo({top:0,behavior:'smooth'});}
+    function startQuiz(){answers.length=0;current=0;show('quiz');renderQuestion();}
+    function renderQuestion(){
+      const q=DATA.questions[current];
+      document.getElementById('qCount').textContent=`${current+1} / ${DATA.questions.length}`;
+      document.getElementById('progress').style.width=`${((current+1)/DATA.questions.length)*100}%`;
+      document.getElementById('qTag').textContent=q.tag;
+      document.getElementById('qText').textContent=q.text;
+      const box=document.getElementById('options');box.innerHTML='';
+      q.options.forEach((opt,index)=>{const b=document.createElement('button');b.type='button';b.className='option';b.textContent=opt.label;b.onclick=()=>choose(index);box.appendChild(b)});
+      document.getElementById('backBtn').style.visibility=current===0?'hidden':'visible';
+    }
+    function choose(index){answers[current]=index;if(current<DATA.questions.length-1){current++;renderQuestion();window.scrollTo({top:0,behavior:'smooth'})}else{renderResult()}}
+    function goBack(){if(current>0){current--;answers.length=current;renderQuestion()}}
+    function rankResults(){
+      const rows=DATA.results.map((r,order)=>({id:r.id,score:0,hits:0,order}));
+      answers.forEach((answer,qIndex)=>{const scores=DATA.questions[qIndex].options[answer].scores;rows.forEach(row=>{const n=scores[row.id]||0;row.score+=n;if(n>=4)row.hits++})});
+      return rows.sort((a,b)=>b.score-a.score||b.hits-a.hits||a.order-b.order);
+    }
+    function buildTasteChart(r){
+      const W=400,H=330,c={x:200,y:174},top={x:200,y:48},br={x:326,y:262},bl={x:74,y:262};
+      const toward=(p,f)=>({x:c.x+(p.x-c.x)*f,y:c.y+(p.y-c.y)*f});
+      const vertices=[top,br,bl];
+      const pts=vertices.map((p,i)=>toward(p,r.axes[i]/10));
+      const grid=[.25,.5,.75,1].map(f=>{const p=vertices.map(v=>toward(v,f));return `<polygon points="${p.map(x=>`${x.x},${x.y}`).join(' ')}"/>`}).join('');
+      const shape=pts.map(p=>`${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(' ');
+      const l=DATA.axisLabels,v=r.axes;
+      return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${l[0]}${v[0]}、${l[1]}${v[1]}、${l[2]}${v[2]}"><g fill="none" stroke="#dec9a5" stroke-width="1">${grid}<line x1="200" y1="174" x2="200" y2="48"/><line x1="200" y1="174" x2="326" y2="262"/><line x1="200" y1="174" x2="74" y2="262"/></g><polygon points="${shape}" fill="#d58a2f" fill-opacity=".22" stroke="#a85a13" stroke-width="2.6"/><g font-family="serif" font-weight="700" fill="#432b1c" text-anchor="middle"><text x="200" y="24" font-size="15">${l[0]} ${v[0]}</text><text x="334" y="288" font-size="14">${l[2]} ${v[2]}</text><text x="66" y="288" font-size="14">${l[1]} ${v[1]}</text></g><text x="200" y="318" text-anchor="middle" font-size="11" fill="#756453">中心 0　／　外側 10</text></svg>`;
+    }
+    
+/* ==== 集計送信（日本酒診断と同じスプレッドシートへ。category列で区別）。ローカル/テスト実行時は送らない ==== */
+const LOG_URL="https://script.google.com/macros/s/AKfycbxKxuJHkFBw0kW_GKFCg009aqqsOs5wgO1ZnFYXlZrykFOTP9fo5T1hVPzgDpgSVlHt/exec";
+function isTestRun(){return location.protocol==="file:"||location.hostname==="localhost"||location.hostname==="127.0.0.1"||new URLSearchParams(location.search).get("test")==="1";}
+function sendLog(payload){
+  if(isTestRun())return;
+  try{
+    fetch(LOG_URL,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain;charset=utf-8"},
+      body:JSON.stringify(payload)}).catch(function(){});
+  }catch(e){}
+}
+sendLog({typeNumber:"",typeName:(document.referrer||"(direct)")+(location.search?" "+location.search:""),sukkiri:"",fruity:"",shikkari:"",lang:"ja",category:"beer_visit"});
+function renderResult(){
+      const ranked=rankResults();const r=resultById[ranked[0].id];
+      sendLog({typeNumber:r.id,typeName:r.cat,sukkiri:r.axes[0],fruity:r.axes[1],shikkari:r.axes[2],lang:"ja",category:"beer"});
+      const cat=document.getElementById('resultCat');cat.className='cat-crop result-cat';cat.style.backgroundImage=`url("assets/cat_${r.id}.png")`;
+      document.getElementById('resultCatName').textContent=r.cat;
+      document.getElementById('resultStyle').textContent=`おすすめ：${r.style}`;
+      document.getElementById('resultLead').textContent=r.lead;
+      document.getElementById('tasteChart').innerHTML=buildTasteChart(r);
+      document.getElementById('resultTaste').textContent=r.taste;
+      document.getElementById('resultTrivia').textContent=r.trivia;
+      document.getElementById('resultPairings').innerHTML=r.pairings.map(x=>`<span>${x}</span>`).join('');
+      document.getElementById('nextGrid').innerHTML=ranked.slice(1,3).map(x=>{const n=resultById[x.id];return `<div class="next-item"><strong>${n.style}</strong><span>${n.cat}</span></div>`}).join('');
+      show('result');
+    }
+    function restart(){answers.length=0;current=0;show('start')}
+  </script>
+</body>
+</html>
