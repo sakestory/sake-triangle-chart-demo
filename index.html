@@ -276,7 +276,7 @@ body{
     </div>
 
     <button class="btn btn-primary" onclick="startQuiz()">診断を始める</button>
-    <div class="foot">v11.5.3</div>
+    <div class="foot">v11.5.4</div>
   </section>
 
   <!-- ===== 質問 ===== -->
@@ -362,7 +362,7 @@ body{
 
     <p class="story-note">この診断のもとになった『日本酒三角チャート』は、東京・五反田の日本酒居酒屋 SAKE story の店主が、20年間カウンターで「とりあえず辛口で」と言われ続けた末にたどり着いた、ひとつの答えなんです。<br>→ <a href="https://sake-story.com/" target="_blank" rel="noopener">SAKE story</a></p>
     <p class="x-follow"><a href="https://x.com/motorkey" target="_blank" rel="noopener">店主の独り言をフォロー（X）</a>　<a href="https://www.instagram.com/mr.sake_japan/" target="_blank" rel="noopener">Instagram</a></p>
-    <div class="foot">© SAKE story　日本酒三角チャート®　v11.5.3</div>
+    <div class="foot">© SAKE story　日本酒三角チャート®　v11.5.4</div>
   </section>
 
 </div>
@@ -430,6 +430,37 @@ const TASTE_MESSAGE={
   25:"軽さも香りも、しっかりしたうま味も楽しみたい。どの要素にも満足できる、豊かな一杯が合います。",
   26:"軽やかな後味と華やかな香りを楽しみながら、味の厚みもほしい。きれいに締まる、満足感のある一杯が合います。",
   27:"まだ決まった好みはなく、いろいろな味を試せる時期。まずは気になった一杯から、自由に楽しめます。"
+};
+/* v11.5.4：シェアカード専用の短縮版味わい文（TASTE_MESSAGEの約半分）。
+   結果画面・Xシェア文はTASTE_MESSAGEのまま。文言正本（shindan_logic_master）への追記が未反映 */
+const CARD_TASTE={
+  1:"きりっと軽く、潔い後味の一杯が合います。",
+  2:"すっきりの中に、ほんのり華やかな一杯が合います。",
+  3:"軽やかさと明るい香りの一杯が合います。",
+  4:"きりっと軽く、うま味も少しある一杯が合います。",
+  5:"軽さを軸に、香りもうま味もほどよい一杯が合います。",
+  6:"飲みごたえがあって、重く残らない一杯が合います。",
+  7:"控えめで、するする飲める軽やかな一杯が合います。",
+  8:"何もかも強すぎない、毎日なじむ一杯が合います。",
+  9:"料理と一緒に、味の幅を楽しめる一杯が合います。",
+  10:"甘やかで華やかな香りを味わえる一杯が合います。",
+  11:"香りは華やか、後味はきれいに切れる一杯が合います。",
+  12:"華やかな香りの奥に、飲みごたえのある一杯が合います。",
+  13:"華やかさも、豊かなうま味も楽しめる一杯が合います。",
+  14:"香りも料理との相性も、バランスのいい一杯が合います。",
+  15:"やわらかい甘さの、やさしい一杯が合います。",
+  16:"どの味にも寄りすぎない、気分で選べる一杯が合います。",
+  17:"じんわり広がる、やさしく穏やかな一杯が合います。",
+  18:"やさしい甘さの奥に、うま味が広がる一杯が合います。",
+  19:"米のうま味と深みをじっくり味わえる一杯が合います。",
+  20:"うま味しっかり、二杯目から良さが増す一杯が合います。",
+  21:"香りもうま味も豊かで、飲みごたえある一杯が合います。",
+  22:"毎晩でも飲みたくなる、なじみのいい一杯が合います。",
+  23:"濃すぎず軽すぎず、食事のそばで飲める一杯が合います。",
+  24:"うま味しっかり、後味は爽やかな一杯が合います。",
+  25:"軽さも香りもうま味も楽しめる、豊かな一杯が合います。",
+  26:"華やかさと味の厚み、きれいに締まる一杯が合います。",
+  27:"好みはまだこれから。気になる一杯から自由に楽しめます。"
 };
 /* 日本酒の3軸を、別酒類の味の方向へ読み替えた試作。
    すっきり＝ビールでは軽さ・泡・後味、ワインでは酸と軽さ。
@@ -1449,7 +1480,7 @@ function drawCard(r,done){
     ctx.textAlign="left";ctx.fillStyle="#B23A2E";ctx.font="600 21px 'Noto Sans JP',sans-serif";ctx.letterSpacing="1px";
     ctx.fillText(LANG==="en"?"Your Flavor Profile":"あなたの日本酒の好み",455,150);
     ctx.fillStyle="#2C2620";ctx.font="500 27px 'Noto Serif JP',serif";ctx.letterSpacing="0px";
-    wrap(LANG==="en"?(EN_TASTE[r.type.no]||""):(TASTE_MESSAGE[r.type.no]||""),455,192,495,42,5);
+    wrap(LANG==="en"?(EN_TASTE[r.type.no]||""):(CARD_TASTE[r.type.no]||TASTE_MESSAGE[r.type.no]||""),455,192,495,42,5);
     /* おすすめ4本：店内1位＋全国の◇（専門店）◎（酒屋・通販）★（スーパー・コンビニ）を1本ずつ */
     const nearMark=function(mk){return NATL_SAKE.filter(function(b){return b.mark===mk;})
       .map(function(b){return{n:b.name,d:Math.sqrt(Math.pow(b.x-r.X,2)+Math.pow(b.y-r.Y,2)+Math.pow(b.z-r.Z,2))};})
