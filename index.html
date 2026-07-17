@@ -276,7 +276,7 @@ body{
     </div>
 
     <button class="btn btn-primary" onclick="startQuiz()">診断を始める</button>
-    <div class="foot">v11.5.4</div>
+    <div class="foot">v11.5.5</div>
   </section>
 
   <!-- ===== 質問 ===== -->
@@ -362,7 +362,7 @@ body{
 
     <p class="story-note">この診断のもとになった『日本酒三角チャート』は、東京・五反田の日本酒居酒屋 SAKE story の店主が、20年間カウンターで「とりあえず辛口で」と言われ続けた末にたどり着いた、ひとつの答えなんです。<br>→ <a href="https://sake-story.com/" target="_blank" rel="noopener">SAKE story</a></p>
     <p class="x-follow"><a href="https://x.com/motorkey" target="_blank" rel="noopener">店主の独り言をフォロー（X）</a>　<a href="https://www.instagram.com/mr.sake_japan/" target="_blank" rel="noopener">Instagram</a></p>
-    <div class="foot">© SAKE story　日本酒三角チャート®　v11.5.4</div>
+    <div class="foot">© SAKE story　日本酒三角チャート®　v11.5.5</div>
   </section>
 
 </div>
@@ -431,9 +431,9 @@ const TASTE_MESSAGE={
   26:"軽やかな後味と華やかな香りを楽しみながら、味の厚みもほしい。きれいに締まる、満足感のある一杯が合います。",
   27:"まだ決まった好みはなく、いろいろな味を試せる時期。まずは気になった一杯から、自由に楽しめます。"
 };
-/* v11.5.4：シェアカード専用の短縮版味わい文（TASTE_MESSAGEの約半分）。
-   結果画面・Xシェア文はTASTE_MESSAGEのまま。文言正本（shindan_logic_master）への追記が未反映 */
-const CARD_TASTE={
+/* v11.5.5：Xシェア文用の短縮版味わい文（TASTE_MESSAGEの約半分）。
+   結果画面・シェアカードはTASTE_MESSAGEのまま。文言正本（shindan_logic_master）への追記が未反映 */
+const SHARE_TASTE={
   1:"きりっと軽く、潔い後味の一杯が合います。",
   2:"すっきりの中に、ほんのり華やかな一杯が合います。",
   3:"軽やかさと明るい香りの一杯が合います。",
@@ -872,7 +872,7 @@ function buildShareText(r){
   }
   return "日本酒三角チャート診断で、私の酒猫は「"+((TYPE_EXTRA[r.type.no]||{}).cat||"")+"」でした🍶\n"
     +"〜"+r.type.name+"〜\n\n"
-    +(TASTE_MESSAGE[r.type.no]||"")+"\n\n"
+    +(SHARE_TASTE[r.type.no]||TASTE_MESSAGE[r.type.no]||"")+"\n\n"
     +"あなたはどの酒猫？\n"
     +"https://shindan.sake-story.com/\n"
     +"#日本酒三角チャート";
@@ -1480,7 +1480,7 @@ function drawCard(r,done){
     ctx.textAlign="left";ctx.fillStyle="#B23A2E";ctx.font="600 21px 'Noto Sans JP',sans-serif";ctx.letterSpacing="1px";
     ctx.fillText(LANG==="en"?"Your Flavor Profile":"あなたの日本酒の好み",455,150);
     ctx.fillStyle="#2C2620";ctx.font="500 27px 'Noto Serif JP',serif";ctx.letterSpacing="0px";
-    wrap(LANG==="en"?(EN_TASTE[r.type.no]||""):(CARD_TASTE[r.type.no]||TASTE_MESSAGE[r.type.no]||""),455,192,495,42,5);
+    wrap(LANG==="en"?(EN_TASTE[r.type.no]||""):(TASTE_MESSAGE[r.type.no]||""),455,192,495,42,5);
     /* おすすめ4本：店内1位＋全国の◇（専門店）◎（酒屋・通販）★（スーパー・コンビニ）を1本ずつ */
     const nearMark=function(mk){return NATL_SAKE.filter(function(b){return b.mark===mk;})
       .map(function(b){return{n:b.name,d:Math.sqrt(Math.pow(b.x-r.X,2)+Math.pow(b.y-r.Y,2)+Math.pow(b.z-r.Z,2))};})
@@ -1509,7 +1509,16 @@ function drawCard(r,done){
     if(lw2>495){lfs2=Math.max(11,Math.floor(15*495/lw2)); ctx.font="500 "+lfs2+"px 'Noto Sans JP',sans-serif";}
     ctx.fillText(markLegend,455,430);
     ctx.fillStyle="#5B5247";ctx.font="500 20px 'Noto Sans JP',sans-serif";
-    wrap(LANG==="en"?("At a sake bar: \u201c"+((EN_TYPE[r.type.no]||{}).ord||"")+"\u201d"):("お店で頼むなら「"+r.type.orderPhrase+"」"),455,460,495,27,2);
+    wrap(LANG==="en"?("At a sake bar: \u201c"+((EN_TYPE[r.type.no]||{}).ord||"")+"\u201d"):("お店で頼むなら「"+r.type.orderPhrase+"」"),455,456,495,26,2);
+    /* v11.5.5：タイプに合うビール・ワイン（CROSS_DRINKS）を一行で添える（日本語版のみ） */
+    if(LANG!=="en"&&CROSS_DRINKS[r.type.no]){
+      const cd=CROSS_DRINKS[r.type.no];
+      const bwLine="ビール："+cd.beer[0]+"　ワイン："+cd.wine[0];
+      let bfs=18;ctx.font="600 "+bfs+"px 'Noto Sans JP',sans-serif";
+      const bwW=ctx.measureText(bwLine).width;
+      if(bwW>495){bfs=Math.max(12,Math.floor(18*495/bwW));ctx.font="600 "+bfs+"px 'Noto Sans JP',sans-serif";}
+      ctx.fillStyle="#6F5428";ctx.fillText(bwLine,455,507);
+    }
 
     /* 大きな本チャートに、絶対点数の歪んだ三角形も重ねる。 */
     const top={x:W/2,y:545}, bl={x:295,y:850}, br={x:705,y:850};
