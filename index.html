@@ -280,7 +280,7 @@ a.btn{text-decoration:none;text-align:center;box-sizing:border-box;display:block
       <div style="margin:16px 0 0;padding:12px 14px;border:1px solid var(--line);border-radius:10px;color:var(--sumi-soft);font-size:12.5px;line-height:1.8;text-align:left;"><p style="margin:0;">結果画面では、2つのおすすめをご案内します。ひとつは、このチャートを作った酒場店主の店・日本酒居酒屋 SAKE story（東京・五反田）でいま飲める一杯。もうひとつは、お家や他店で飲むときのおすすめです。どちらも、酒場店主が実際に飲んで確かめた銘柄の中から選んで掲載しています。</p><p style="margin:6px 0 0;font-size:11px;color:#746A5C;text-align:right;">2026年7月19日改訂</p></div>
     </div>
 
-    <div class="foot">v11.9.6</div>
+    <div class="foot">v11.9.7</div>
   </section>
 
   <!-- ===== 質問 ===== -->
@@ -365,7 +365,7 @@ a.btn{text-decoration:none;text-align:center;box-sizing:border-box;display:block
 
     <p class="story-note">この診断のもとになった『日本酒三角チャート』は、東京・五反田の日本酒居酒屋 SAKE story の酒場店主が、20年間カウンターで「とりあえず辛口で」と言われ続けた末にたどり着いた、ひとつの答えなんです。<br>→ <a href="https://sake-story.com/" target="_blank" rel="noopener">SAKE story</a></p>
     <p class="x-follow"><a href="https://x.com/motorkey" target="_blank" rel="noopener">酒場店主の独り言をフォロー（X）</a>　<a href="https://www.instagram.com/mr.sake_japan/" target="_blank" rel="noopener">Instagram</a></p>
-    <div class="foot">© SAKE story　日本酒三角チャート®　v11.9.6</div>
+    <div class="foot">© SAKE story　日本酒三角チャート®　v11.9.7</div>
     <p style="font-size:10.5px;color:#746A5C;margin:4px 0 0;">「日本酒三角チャート」は登録商標です。文章・画像・銘柄データの無断転用はご遠慮ください。</p>
   </section>
 
@@ -908,25 +908,51 @@ function buildShareText(r){
 }
 function reasonForEn(b,X,Y,Z,i){
   i=i||0;
+  /* v11.9.7：日本語版 reasonFor と同じ「同じ文が並ぶ」対策を英語版にも適用（2026-07-19）。
+     副軸の強さを4段階に細分し、言い回しを主軸の強さ4段階で切り替える。
+     好みから遠い銘柄も、銘柄を見ずに3文を使い回すのをやめて個性で書き分ける。 */
+  const deg=function(v){return v>=8?"generous":v>=6?"solid":v>=4?"gentle":"faint";};
+  const band=function(v){return v>=8?3:v>=6?2:v>=4?1:0;};
   const shared={x:Math.min(X,b.x),y:Math.min(Y,b.y),z:Math.min(Z,b.z)};
   const max=Math.max(shared.x,shared.y,shared.z);
   if(max<3){
-    const mids=["A calm, balanced bottle that should settle right into your taste.","Balance over flash — the kind you grow fonder of sip by sip.","An honest, easygoing sake. A safe, happy pick when in doubt."];
-    return mids[i%mids.length];
+    const soft={
+      x:["Quiet, but the finish is light and quick.","It never asserts itself, yet the lightness is certain.","Within its calm, there is a clear lightness."],
+      y:["Quiet, but a faint aroma shows its face.","Restrained, yet a fruit-like sweetness lingers.","Within its calm, there is a soft aroma."],
+      z:["Quiet, but the rice umami sits at its core.","Restrained, yet there is real drinking weight.","Within its calm, there is a settled umami."]
+    };
+    const softNu={
+      x:[" You can sense {d} sharpness as well."," A {d} lightness stays on the finish, too."," There is a {d} lightness on the finish as well."," It holds a {d} pull on the finish, too."],
+      y:[" You can sense a {d} aroma as well."," A {d} aroma shows its face, too."," The aroma rises {d}ly, too."," It has a {d} fragrant side as well."],
+      z:[" You can sense {d} umami as well."," A {d} umami lingers, too."," The umami spreads {d}ly, too."," It carries {d} umami as well."]
+    };
+    let pb="x"; if(b.y>b[pb])pb="y"; if(b.z>b[pb])pb="z";
+    const rest=["x","y","z"].filter(function(k){return k!==pb;})
+      .sort(function(a,c){return b[c]-b[a];})[0];
+    return soft[pb][i%3]+softNu[rest][band(b[pb])].replace("{d}",deg(b[rest]));
   }
   const primary=shared.x===max?"x":(shared.y===max?"y":"z");
   const heads={x:["For your love of crisp, clean sake.","If you want a sharp finish, don’t miss this one.","Clear and clean — right in your lane."],
                y:["For your love of bright aromas.","If juicy, fruity sake is your thing, try this too.","Its lively bouquet sings to your taste."],
                z:["For your love of umami and depth.","To savor the rice itself, this is a fine companion.","Steady and full-bodied — it answers your taste."]};
+  const nu={
+    x:[" There is {d} sharpness hiding behind it, and the finish slips away clean."," The finish carries {d} sharpness and slips away clean."," The ending is tied up lightly by {d} sharpness."," It closes with {d} sharpness; the aftertaste stays light."],
+    y:[" There is a {d} floral aroma in the back — it gets more fun as you go."," A {d} blooming aroma comes chasing after you."," The aroma is floral and {d}, and it opens up as you drink."," A {d} aroma rises from the back, and the cups keep coming."],
+    z:[" It carries {d} rice umami, so it sits well with food."," Its {d} rice umami stands up to your dishes."," The rice umami is {d}. Put it beside a meal and it comes alive."," Its {d} rice umami spreads out and stays close to the food."]
+  };
+  const tails={
+    x:[" A transparent, no-noise glass."," Nothing extra — just a clear glass."," Quiet, and clear all the way through."," A clean glass that never turns cloudy."],
+    y:[" A fragrant, fruit-like glass that stays close."," An aroma like fruit that quietly stays with you."," A glass that entertains you with its aroma."," The fruitiness lingers, softly."],
+    z:[" A satisfying, well-grounded glass."," Settled and solid — a glass with real body."," Well-grounded, with a satisfying depth."," A thick, chewy sort of glass."]
+  };
   const head=heads[primary][i%3];
+  const bp=band(b[primary]);
   const other=[["x",b.x],["y",b.y],["z",b.z]].filter(function(a){return a[0]!==primary&&a[1]>=3;}).sort(function(a,b2){return b2[1]-a[1];});
-  const tail=primary==="x"?" A transparent, no-noise glass.":primary==="y"?" A fragrant, fruit-like glass.":" A satisfying, well-grounded glass.";
   if(other.length){
-    const sec=other[0][0], deg=other[0][1]>=6?"plenty of":"a hint of";
-    const nu=sec==="x"?(" With "+deg+" crispness behind it — the finish slips away clean."):sec==="y"?(" With "+deg+" floral aroma in the back — it gets more fun as you go."):(" With "+deg+" rice umami on board — great with food, too.");
-    return head+nu;
+    const sec=other[0][0], val=other[0][1];
+    return head+nu[sec][bp].replace("{d}",deg(val));
   }
-  return head+tail;
+  return head+tails[primary][bp];
 }
 function applyEnUI(){
   if(LANG!=="en")return;
@@ -1211,7 +1237,7 @@ function renderResult(){
   /* v10.8: スコア数値の表示欄は設けない方針（三角チャート上の位置が数値の役目を担う）。
      旧setScore呼び出しは表示先の要素が存在せず空振りしていたため削除 */
   document.getElementById("chart").innerHTML=buildUnifiedChart(r);
-  /* v11.9.6：味わい3軸の数値表示と、その説明文（中心が0・外側が10…）は橋野さん指示で廃止。
+  /* v11.9.7：味わい3軸の数値表示と、その説明文（中心が0・外側が10…）は橋野さん指示で廃止。
      チャート上の形が数値の役目を担う。表示先の要素ごと削除済み */
   /* シェアカード事前生成（猫画像の読み込み完了後に確定） */
   const drawAndPrepare=()=>{
@@ -1237,7 +1263,7 @@ function reasonFor(b,X,Y,Z,i){
   if(LANG==="en") return reasonForEn(b,X,Y,Z,i);
   if(b.comment&&b.comment.trim()) return b.comment.trim();
   i=i||0;
-  /* v11.9.6：同じ文が並ぶ事故への対策（橋野さん指摘 2026-07-19）。
+  /* v11.9.7：同じ文が並ぶ事故への対策（橋野さん指摘 2026-07-19）。
      旧版は副軸の強さを「6以上／未満」の2段階でしか見ておらず、
      例）残響(フ3)と天明(フ4)が同じ引き出しに入り、順位の言い出しも3本の使い回し（2位と5位が衝突）で
      文章が完全に一致した。対策＝銘柄の個性をより細かく見る：
@@ -1274,7 +1300,7 @@ function reasonFor(b,X,Y,Z,i){
     y:["華やかな香りが好きなあなたへ。","果実のような甘みを楽しむなら、この一本も。","ジューシーな味わいが、あなたの好みと響き合います。"],
     z:["旨みやコクを楽しみたいあなたに。","米の旨味をじっくり味わうなら、これも良い相棒です。","腰の据わった味わいが、あなたの好みに応えてくれます。"]
   };
-  /* 締めの言い回しは主軸の強さ4段階で切り替える（v11.9.6）*/
+  /* 締めの言い回しは主軸の強さ4段階で切り替える（v11.9.7）*/
   const nu={
     x:["{d}としたキレも隠れていて、後口はすっと引きます。","後口には{d}としたキレ。すっと引いていきます。","{d}としたキレが、最後を軽くまとめます。","締めくくりは{d}としたキレ。余韻は軽やかです。"],
     y:["奥に{d}と華やかな香りもあって、飲むほど楽しくなります。","{d}と華やぐ香りが、後から追いかけてきます。","香りは{d}と華やか。飲むほどに表情が出ます。","奥から{d}と香りが立って、杯が進みます。"],
@@ -1555,7 +1581,7 @@ function drawCard(r,done){
     ctx.fillText(LANG==="en"?"For you \u2014 these four":"あなたにおすすめの日本酒",455,318);
     /* 2本×2行で大きく。各行とも銘柄名の長さに合わせて42pxを上限に幅495へ自動フィット */
     const fourLines=[
-      /* v11.9.6：店の一杯にも入手マークを添える（橋野さん指示）。例「店◎ 〆張鶴」＝店で飲めて、酒屋でも買える */
+      /* v11.9.7：店の一杯にも入手マークを添える（橋野さん指示）。例「店◎ 〆張鶴」＝店で飲めて、酒屋でも買える */
       [tenpo?("店"+(tenpo.mark||"")+" "+bn(tenpo.name)):"",hoshi?"☆ "+bn(hoshi.n):""].filter(Boolean).join("　"),
       [maru?"◎ "+bn(maru.n):"",dia?"◇ "+bn(dia.n):""].filter(Boolean).join("　")
     ];
