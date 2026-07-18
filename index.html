@@ -143,6 +143,14 @@ body{
 .rec-reason{font-size:13px;color:var(--sumi-soft);line-height:1.85;}
 .rec-coord{font-size:11px;color:var(--sumi-soft);}
 .rec.top1{border-color:var(--shu-soft);background:#fff;}
+.menu-toggle{display:block;width:100%;box-sizing:border-box;margin:2px 0 0;padding:12px 6px;font-family:var(--sans);font-size:13px;font-weight:500;color:var(--sumi-soft);background:transparent;border:1px solid var(--line);border-radius:10px;cursor:pointer;}
+.menu-toggle:hover{background:var(--card);}
+.menu-list{margin-top:10px;}
+.menu-item{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-bottom:8px;}
+.menu-item.is-pick{border-color:var(--shu-soft);background:#fff;}
+.menu-name{font-family:var(--serif);font-weight:700;font-size:15px;color:var(--sumi);line-height:1.5;}
+.menu-pick{font-size:11px;color:var(--shu);margin-left:7px;font-weight:500;}
+.menu-desc{font-size:12.5px;color:var(--sumi-soft);line-height:1.8;margin-top:3px;}
 
 /* 店主ライン */
 .onsite{text-align:center;font-family:var(--serif);font-size:13.5px;color:var(--shu);letter-spacing:.04em;margin:26px 4px 0;line-height:1.75;padding:14px 18px;border:1px solid var(--shu-soft);border-radius:13px;background:#fff9f8;}
@@ -280,7 +288,7 @@ a.btn{text-decoration:none;text-align:center;box-sizing:border-box;display:block
       <div style="margin:16px 0 0;padding:12px 14px;border:1px solid var(--line);border-radius:10px;color:var(--sumi-soft);font-size:12.5px;line-height:1.8;text-align:left;"><p style="margin:0;">結果画面では、2つのおすすめをご案内します。ひとつは、このチャートを作った酒場店主の店・日本酒居酒屋 SAKE story（東京・五反田）でいま飲める一杯。もうひとつは、お家や他店で飲むときのおすすめです。どちらも、酒場店主が実際に飲んで確かめた銘柄の中から選んで掲載しています。</p><p style="margin:6px 0 0;font-size:11px;color:#746A5C;text-align:right;">2026年7月19日改訂</p></div>
     </div>
 
-    <div class="foot">v11.9.7</div>
+    <div class="foot">v11.10</div>
   </section>
 
   <!-- ===== 質問 ===== -->
@@ -322,6 +330,10 @@ a.btn{text-decoration:none;text-align:center;box-sizing:border-box;display:block
 
     <div class="sec">あなたに近い、店の一杯</div>
     <div id="storeList"></div>
+    <!-- v11.10：店内の全銘柄メニュー（橋野さん発案 2026-07-19）。店で見せる用途を想定し、
+         おすすめ5本の外にある銘柄も読めるようにする。一言コメントが入ればそちらを優先表示 -->
+    <button id="menuToggle" class="menu-toggle" type="button" aria-expanded="false" aria-controls="menuList"></button>
+    <div id="menuList" class="menu-list" hidden></div>
     <div id="visitGift" class="visit-gift">
       <div class="visit-gift-title">🧲 この結果画面を、お店で見せてください</div>
       <p class="visit-gift-body">五反田の日本酒居酒屋「SAKE story」でこの画面を見せていただいた方に、日本酒の蓋で作る<strong>「酒蓋マグネット」</strong>の作り方をお教えして、そのまま1つプレゼントします。※なくなり次第終了</p>
@@ -365,7 +377,7 @@ a.btn{text-decoration:none;text-align:center;box-sizing:border-box;display:block
 
     <p class="story-note">この診断のもとになった『日本酒三角チャート』は、東京・五反田の日本酒居酒屋 SAKE story の酒場店主が、20年間カウンターで「とりあえず辛口で」と言われ続けた末にたどり着いた、ひとつの答えなんです。<br>→ <a href="https://sake-story.com/" target="_blank" rel="noopener">SAKE story</a></p>
     <p class="x-follow"><a href="https://x.com/motorkey" target="_blank" rel="noopener">酒場店主の独り言をフォロー（X）</a>　<a href="https://www.instagram.com/mr.sake_japan/" target="_blank" rel="noopener">Instagram</a></p>
-    <div class="foot">© SAKE story　日本酒三角チャート®　v11.9.7</div>
+    <div class="foot">© SAKE story　日本酒三角チャート®　v11.10</div>
     <p style="font-size:10.5px;color:#746A5C;margin:4px 0 0;">「日本酒三角チャート」は登録商標です。文章・画像・銘柄データの無断転用はご遠慮ください。</p>
   </section>
 
@@ -908,7 +920,7 @@ function buildShareText(r){
 }
 function reasonForEn(b,X,Y,Z,i){
   i=i||0;
-  /* v11.9.7：日本語版 reasonFor と同じ「同じ文が並ぶ」対策を英語版にも適用（2026-07-19）。
+  /* v11.10：日本語版 reasonFor と同じ「同じ文が並ぶ」対策を英語版にも適用（2026-07-19）。
      副軸の強さを4段階に細分し、言い回しを主軸の強さ4段階で切り替える。
      好みから遠い銘柄も、銘柄を見ずに3文を使い回すのをやめて個性で書き分ける。 */
   const deg=function(v){return v>=8?"generous":v>=6?"solid":v>=4?"gentle":"faint";};
@@ -1217,6 +1229,35 @@ function renderResult(){
       +'<span class="rec-body"><span class="rec-name">'+bn(b.name)+'</span>'
       +'<span class="rec-reason">'+reasonFor(b,r.X,r.Y,r.Z,i)+'</span></span>'
     +'</div>').join("");
+  /* v11.10：店内の全銘柄メニュー。すっきりの強い順（軽い→重い）に並べ、
+     おすすめ5本には印を添える。説明は一言コメント優先、無ければ自動生成 */
+  (function(){
+    const btn=document.getElementById("menuToggle"), box=document.getElementById("menuList");
+    if(!btn||!box) return;
+    const picks=r.recStore.map(function(b){return b.name;});
+    const all=STORE_SAKE.slice().sort(function(a,c){return c.x-a.x;});
+    box.innerHTML=all.map(function(b){
+      const isPick=picks.indexOf(b.name)>=0;
+      const desc=(b.comment&&b.comment.trim())?b.comment.trim()
+                 :reasonFor(b,r.X,r.Y,r.Z,Math.max(0,picks.indexOf(b.name)));
+      return '<div class="menu-item'+(isPick?" is-pick":"")+'">'
+        +'<div class="menu-name">'+bn(b.name)
+        +(isPick?'<span class="menu-pick">'+(LANG==="en"?"our pick for you":"あなたへのおすすめ")+'</span>':'')
+        +'</div><div class="menu-desc">'+desc+'</div></div>';
+    }).join("");
+    const label=function(open){
+      return LANG==="en"
+        ? (open?"Close the full menu":("See all "+all.length+" sake on our menu"))
+        : (open?"メニューを閉じる":("お店のメニューを全部見る（"+all.length+"種）"));
+    };
+    btn.textContent=label(false);
+    btn.onclick=function(){
+      const open=box.hidden;
+      box.hidden=!open;
+      btn.setAttribute("aria-expanded",open?"true":"false");
+      btn.textContent=label(open);
+    };
+  })();
   const home=homeTop3(r,r.recStore.map(function(b){return b.name;}));
   document.getElementById("homeList").innerHTML=home.map(function(b){
     return '<div class="home-rec"><span class="home-mark">'+b.mark+'</span><span class="home-name">'+bn(b.name)+'</span></div>';
@@ -1237,7 +1278,7 @@ function renderResult(){
   /* v10.8: スコア数値の表示欄は設けない方針（三角チャート上の位置が数値の役目を担う）。
      旧setScore呼び出しは表示先の要素が存在せず空振りしていたため削除 */
   document.getElementById("chart").innerHTML=buildUnifiedChart(r);
-  /* v11.9.7：味わい3軸の数値表示と、その説明文（中心が0・外側が10…）は橋野さん指示で廃止。
+  /* v11.10：味わい3軸の数値表示と、その説明文（中心が0・外側が10…）は橋野さん指示で廃止。
      チャート上の形が数値の役目を担う。表示先の要素ごと削除済み */
   /* シェアカード事前生成（猫画像の読み込み完了後に確定） */
   const drawAndPrepare=()=>{
@@ -1263,7 +1304,7 @@ function reasonFor(b,X,Y,Z,i){
   if(LANG==="en") return reasonForEn(b,X,Y,Z,i);
   if(b.comment&&b.comment.trim()) return b.comment.trim();
   i=i||0;
-  /* v11.9.7：同じ文が並ぶ事故への対策（橋野さん指摘 2026-07-19）。
+  /* v11.10：同じ文が並ぶ事故への対策（橋野さん指摘 2026-07-19）。
      旧版は副軸の強さを「6以上／未満」の2段階でしか見ておらず、
      例）残響(フ3)と天明(フ4)が同じ引き出しに入り、順位の言い出しも3本の使い回し（2位と5位が衝突）で
      文章が完全に一致した。対策＝銘柄の個性をより細かく見る：
@@ -1300,7 +1341,7 @@ function reasonFor(b,X,Y,Z,i){
     y:["華やかな香りが好きなあなたへ。","果実のような甘みを楽しむなら、この一本も。","ジューシーな味わいが、あなたの好みと響き合います。"],
     z:["旨みやコクを楽しみたいあなたに。","米の旨味をじっくり味わうなら、これも良い相棒です。","腰の据わった味わいが、あなたの好みに応えてくれます。"]
   };
-  /* 締めの言い回しは主軸の強さ4段階で切り替える（v11.9.7）*/
+  /* 締めの言い回しは主軸の強さ4段階で切り替える（v11.10）*/
   const nu={
     x:["{d}としたキレも隠れていて、後口はすっと引きます。","後口には{d}としたキレ。すっと引いていきます。","{d}としたキレが、最後を軽くまとめます。","締めくくりは{d}としたキレ。余韻は軽やかです。"],
     y:["奥に{d}と華やかな香りもあって、飲むほど楽しくなります。","{d}と華やぐ香りが、後から追いかけてきます。","香りは{d}と華やか。飲むほどに表情が出ます。","奥から{d}と香りが立って、杯が進みます。"],
@@ -1581,7 +1622,7 @@ function drawCard(r,done){
     ctx.fillText(LANG==="en"?"For you \u2014 these four":"あなたにおすすめの日本酒",455,318);
     /* 2本×2行で大きく。各行とも銘柄名の長さに合わせて42pxを上限に幅495へ自動フィット */
     const fourLines=[
-      /* v11.9.7：店の一杯にも入手マークを添える（橋野さん指示）。例「店◎ 〆張鶴」＝店で飲めて、酒屋でも買える */
+      /* v11.10：店の一杯にも入手マークを添える（橋野さん指示）。例「店◎ 〆張鶴」＝店で飲めて、酒屋でも買える */
       [tenpo?("店"+(tenpo.mark||"")+" "+bn(tenpo.name)):"",hoshi?"☆ "+bn(hoshi.n):""].filter(Boolean).join("　"),
       [maru?"◎ "+bn(maru.n):"",dia?"◇ "+bn(dia.n):""].filter(Boolean).join("　")
     ];
