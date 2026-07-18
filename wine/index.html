@@ -81,7 +81,7 @@
       <div class="card"><h2>次に試すなら</h2><div id="nextGrid" class="next-grid"></div></div>
       <div class="card"><p class="caution">葡萄品種が同じでも、産地・造り手・熟成方法で味は変わります。この結果は、ワイン売り場やお店で相談するときの入口です。</p></div>
       <button class="btn btn-primary" type="button" onclick="restart()">もう一度診断する</button>
-      <div class="footer">ワイン猫診断 v0.4　※お酒は20歳になってから</div>
+      <div class="footer">ワイン猫診断 v0.5　※お酒は20歳になってから</div>
     </section>
   </main>
 
@@ -122,10 +122,10 @@
         {"label":"渋味は少なく、爽やかな方がいい","scores":{"riesling":4,"sauvignon":3,"chardonnay":3,"rose":2}},
         {"label":"やわらかな渋味なら心地いい","scores":{"pinot":4,"merlot":4,"chardonnay":1}},
         {"label":"赤らしい渋味をしっかり感じたい","scores":{"cabernet":5,"syrah":4,"merlot":2}},
-        {"label":"渋味より、泡や酸味の刺激が好き","scores":{"sparkling":5,"sauvignon":3,"rose":2}}
+        {"label":"渋味より、泡や酸味の刺激が好き","scores":{"sparkling":5,"sauvignon":1,"rose":2}}
       ]},
       {"tag":"料理との相性","text":"一緒に食べるなら、今はどれ？","options":[
-        {"label":"魚介、サラダ、さっぱりした前菜","scores":{"sauvignon":5,"sparkling":3,"rose":2}},
+        {"label":"魚介、サラダ、さっぱりした前菜","scores":{"sauvignon":5,"sparkling":4,"rose":2}},
         {"label":"鶏料理、クリームソース、グラタン","scores":{"chardonnay":5,"riesling":2,"pinot":2}},
         {"label":"生ハム、トマト料理、きのこ","scores":{"pinot":4,"merlot":4,"rose":2}},
         {"label":"ステーキ、焼肉、スパイス料理","scores":{"cabernet":5,"syrah":5,"merlot":2}}
@@ -134,7 +134,7 @@
         {"label":"ハーブや石のような、涼しい香り","scores":{"sauvignon":5,"pinot":2,"sparkling":1}},
         {"label":"バターやトーストのような香ばしさ","scores":{"chardonnay":5,"cabernet":2,"merlot":1}},
         {"label":"花や蜂蜜のような華やかさ","scores":{"riesling":5,"rose":3,"chardonnay":1}},
-        {"label":"黒胡椒やスモークのようなスパイス感","scores":{"syrah":5,"cabernet":3,"pinot":1}}
+        {"label":"黒胡椒やスモークのようなスパイス感","scores":{"syrah":5,"cabernet":1,"pinot":1}}
       ]},
       {"tag":"飲みたい場面","text":"今日のワイン、どんな時間に寄り添ってほしい？","options":[
         {"label":"乾杯して、気分を明るくしたい","scores":{"sparkling":5,"rose":2,"chardonnay":1}},
@@ -152,9 +152,9 @@
     function show(id){screens.forEach(s=>document.getElementById(s).classList.toggle('active',s===id));window.scrollTo({top:0,behavior:'smooth'})}
     function startQuiz(){answers.length=0;current=0;show('quiz');renderQuestion()}
     function renderQuestion(){const q=DATA.questions[current];document.getElementById('qCount').textContent=`${current+1} / ${DATA.questions.length}`;document.getElementById('progress').style.width=`${((current+1)/DATA.questions.length)*100}%`;document.getElementById('qTag').textContent=q.tag;document.getElementById('qText').textContent=q.text;const box=document.getElementById('options');box.innerHTML='';q.options.forEach((opt,index)=>{const b=document.createElement('button');b.type='button';b.className='option';b.textContent=opt.label;b.onclick=()=>choose(index);box.appendChild(b)});document.getElementById('backBtn').style.visibility=current===0?'hidden':'visible'}
-    function choose(index){answers[current]=index;if(current<DATA.questions.length-1){current++;renderQuestion();window.scrollTo({top:0,behavior:'smooth'})}else{renderResult()}}
+    function choose(index){if(window.__lock)return;window.__lock=true;answers[current]=index;if(current<DATA.questions.length-1){current++;renderQuestion();window.scrollTo({top:0,behavior:'smooth'})}else{renderResult()}setTimeout(function(){window.__lock=false},320)}
     function goBack(){if(current>0){current--;answers.length=current;renderQuestion()}}
-    function rankResults(){const rows=DATA.results.map((r,order)=>({id:r.id,score:0,hits:0,order}));answers.forEach((answer,qIndex)=>{const scores=DATA.questions[qIndex].options[answer].scores;rows.forEach(row=>{const n=scores[row.id]||0;row.score+=n;if(n>=4)row.hits++})});return rows.sort((a,b)=>b.score-a.score||b.hits-a.hits||a.order-b.order)}
+    function rankResults(){const rows=DATA.results.map((r,order)=>({id:r.id,score:0,hits:0,c5:0,c4:0,order}));answers.forEach((answer,qIndex)=>{const scores=DATA.questions[qIndex].options[answer].scores;rows.forEach(row=>{const n=scores[row.id]||0;row.score+=n;if(n>=4)row.hits++;if(n===5)row.c5++;if(n===4)row.c4++})});let seed=0;answers.forEach((a,i)=>{seed+=(a||0)*Math.pow(4,i)});rows.sort((a,b)=>b.score-a.score||b.c5-a.c5||b.c4-a.c4||a.order-b.order);const t=rows.filter(x=>x.score===rows[0].score&&x.c5===rows[0].c5&&x.c4===rows[0].c4);if(t.length>1){const w=t[seed%t.length];const rest=rows.filter(x=>x!==w);rest.unshift(w);return rest}return rows}
     function buildTasteChart(r){
       const W=400,H=330,c={x:200,y:174},top={x:200,y:48},br={x:326,y:262},bl={x:74,y:262};
       const toward=(p,f)=>({x:c.x+(p.x-c.x)*f,y:c.y+(p.y-c.y)*f});
