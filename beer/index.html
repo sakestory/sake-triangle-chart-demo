@@ -75,7 +75,7 @@
     .footer{text-align:center;font-family:var(--serif);font-size:11px;color:var(--muted);margin-top:38px;letter-spacing:.08em}
     @media(max-width:380px){.wrap{padding-inline:16px}.option{padding:14px}.card{padding:17px}.result-cat{width:152px}}
     @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
-  </style>
+  a.btn{text-decoration:none;text-align:center;box-sizing:border-box}.btn-bridge{background:var(--accent);color:#fff;margin-top:24px}.cross-line{font-size:14px;line-height:1.95;color:var(--ink);margin:2px 0 4px}.cross-line strong{color:var(--accent);font-family:var(--serif)}</style>
 </head>
 <body>
   <main class="wrap">
@@ -116,8 +116,8 @@
       <div class="card"><h2>合わせやすい料理</h2><div id="resultPairings" class="pairings"></div></div>
       <div class="card"><h2>次の一杯に試すなら</h2><div id="nextGrid" class="next-grid"></div></div>
       <div class="card"><p class="caution">同じ種類でも、醸造所や商品によって苦味・甘さ・香りは変わります。種類の名前を入口に、気になった一本を試してみてください。</p></div>
-      <button class="btn btn-primary" type="button" onclick="restart()">もう一度診断する</button>
-      <div class="footer">ビール猫診断 v0.6　※お酒は20歳になってから</div>
+      <div class="card"><h2>ほかのお酒でも、あなたの入口</h2><p class="cross-line">🍶 日本酒なら <strong id="crossSake"></strong><br>🍷 ワインなら <strong id="crossOther"></strong></p><a class="btn btn-bridge" href="../">🍶 日本酒三角チャートをやってみる</a><a class="btn btn-ghost" href="../wine/">🍷 ワイン版もやってみる</a></div><button class="btn btn-primary" type="button" onclick="restart()">もう一度診断する</button>
+      <div class="footer">ビール猫診断 v0.7　※お酒は20歳になってから</div>
     </section>
   </main>
 
@@ -223,8 +223,8 @@ function sendLog(payload){
   }catch(e){}
 }
 sendLog({typeNumber:"",typeName:(document.referrer||"(direct)")+(location.search?" "+location.search:""),sukkiri:"",fruity:"",shikkari:"",lang:"ja",category:"beer_visit"});
-function renderResult(){
-      const ranked=rankResults();const r=resultById[ranked[0].id];
+const CROSS_BRIDGE={pilsner:{sake:"とりあえず辛口、卒業生",other:"辛口スパークリング"},pale:{sake:"食中酒の美学",other:"シャルドネ（白）"},ipa:{sake:"濃いのに、爽やか",other:"カベルネ・ソーヴィニヨン（赤）"},hazy:{sake:"迷ったら、両方",other:"ピノ・ノワール（赤）"},wheat:{sake:"やさしい甘さ党",other:"リースリング（白）"},stout:{sake:"切れ味も、深みも",other:"シャルドネ（白）"},belgian:{sake:"うっとり、濃厚派",other:"シラー／シラーズ（赤）"},sour:{sake:"はずむソーダ水",other:"リースリング（白）"}}; function renderResult(){
+      const ranked=rankResults();const r=resultById[ranked[0].id];{var cb=(typeof CROSS_BRIDGE!=='undefined')&&CROSS_BRIDGE[r.id];if(cb){var e1=document.getElementById('crossSake'),e2=document.getElementById('crossOther');if(e1)e1.textContent='「'+cb.sake+'」';if(e2)e2.textContent=cb.other;}}
       sendLog({typeNumber:r.id,typeName:r.cat,sukkiri:r.axes[0],fruity:r.axes[1],shikkari:r.axes[2],lang:"ja",category:"beer"});
       const cat=document.getElementById('resultCat');cat.className='cat-crop result-cat';cat.style.backgroundImage=`url("assets/cat_${r.id}.png")`;
       document.getElementById('resultCatName').textContent=r.cat;
