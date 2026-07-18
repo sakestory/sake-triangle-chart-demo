@@ -219,7 +219,7 @@ body{
 /* 猫の透かし背景 */
 #catBg{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:-1;}
 #catBg img{position:absolute;pointer-events:none;user-select:none;-webkit-user-drag:none;}
-a.btn{text-decoration:none;text-align:center;box-sizing:border-box;display:block;}.cross-jump{display:flex;gap:10px;margin-top:14px;}.cross-jump .btn{margin-top:0;flex:1;font-size:13px;padding:13px 6px;}</style>
+a.btn{text-decoration:none;text-align:center;box-sizing:border-box;display:block;}.cross-jump{display:flex;gap:10px;margin-top:14px;}.cross-jump .btn{margin-top:0;flex:1;font-size:13px;padding:13px 6px;}.cross-jump .is-soon{cursor:default;background:#E2E0DB;color:#5E5C58;border-color:#C9C5BD;}</style>
 </head>
 <body>
 <div id="catBg" aria-hidden="true"></div>
@@ -230,7 +230,7 @@ a.btn{text-decoration:none;text-align:center;box-sizing:border-box;display:block
       <div class="hero-sub">SAKE story</div>
       <h1 style="font-size:clamp(28px,8.6vw,38px);letter-spacing:0.06em;">日本酒三角チャート診断</h1>
       <div class="hero-cat">好きな日本酒と、あなたの&#8220;酒猫&#8221;が見つかる</div>
-      <p style="margin:9px 0 0;font-size:11.5px;letter-spacing:.08em;color:#746A5C;">最終更新 2026.7.18</p>
+      <p style="margin:9px 0 0;font-size:11.5px;letter-spacing:.08em;color:#746A5C;">最終更新 2026.7.19</p>
     </div>
 
     <div class="start-chips">
@@ -279,10 +279,10 @@ a.btn{text-decoration:none;text-align:center;box-sizing:border-box;display:block
       </svg>
 
       <p class="hero-desc">簡単な質問に答えると、独自開発の三角チャートであなたの日本酒の好みの傾向を診断。飲食20年の酒場店主が実際に飲んで確かめた銘柄の中から、おすすめを提案します。</p>
-      <div style="margin:16px 0 0;padding:12px 14px;border:1px solid var(--line);border-radius:10px;color:var(--sumi-soft);font-size:12.5px;line-height:1.8;text-align:left;"><p style="margin:0;">結果画面では、2つのおすすめをご案内します。ひとつは、このチャートを作った酒場店主の店・日本酒居酒屋 SAKE story（東京・五反田）でいま飲める一杯。もうひとつは、お家や他店で飲むときのおすすめです。どちらも、酒場店主が実際に飲んで確かめた銘柄の中から選んで掲載しています。</p><p style="margin:6px 0 0;font-size:11px;color:#746A5C;text-align:right;">2026年7月18日改訂</p></div>
+      <div style="margin:16px 0 0;padding:12px 14px;border:1px solid var(--line);border-radius:10px;color:var(--sumi-soft);font-size:12.5px;line-height:1.8;text-align:left;"><p style="margin:0;">結果画面では、2つのおすすめをご案内します。ひとつは、このチャートを作った酒場店主の店・日本酒居酒屋 SAKE story（東京・五反田）でいま飲める一杯。もうひとつは、お家や他店で飲むときのおすすめです。どちらも、酒場店主が実際に飲んで確かめた銘柄の中から選んで掲載しています。</p><p style="margin:6px 0 0;font-size:11px;color:#746A5C;text-align:right;">2026年7月19日改訂</p></div>
     </div>
 
-    <div class="foot">v11.9.1</div>
+    <div class="foot">v11.9.2</div>
   </section>
 
   <!-- ===== 質問 ===== -->
@@ -352,7 +352,7 @@ a.btn{text-decoration:none;text-align:center;box-sizing:border-box;display:block
           <p class="cross-reason" id="crossWineReason"></p>
         </div>
       </div>
-      <p class="cross-note">日本酒と同じ味という意味ではなく、「軽さ・香り・飲みごたえ」の好みを別のお酒へつないだ提案です。</p><div class="cross-jump"><a class="btn btn-ghost cross-jump-btn" href="beer/">🍺 ビール版をやってみる</a><a class="btn btn-ghost cross-jump-btn" href="wine/">🍷 ワイン版をやってみる</a></div>
+      <p class="cross-note">日本酒と同じ味という意味ではなく、「軽さ・香り・飲みごたえ」の好みを別のお酒へつないだ提案です。</p><div class="cross-jump"><span class="btn btn-ghost cross-jump-btn is-soon" aria-disabled="true">🍺 ビール版（現在製作中）</span><span class="btn btn-ghost cross-jump-btn is-soon" aria-disabled="true">🍷 ワイン版（現在製作中）</span></div>
     </div>
 
     <!-- 行動 -->
@@ -368,7 +368,7 @@ a.btn{text-decoration:none;text-align:center;box-sizing:border-box;display:block
 
     <p class="story-note">この診断のもとになった『日本酒三角チャート』は、東京・五反田の日本酒居酒屋 SAKE story の酒場店主が、20年間カウンターで「とりあえず辛口で」と言われ続けた末にたどり着いた、ひとつの答えなんです。<br>→ <a href="https://sake-story.com/" target="_blank" rel="noopener">SAKE story</a></p>
     <p class="x-follow"><a href="https://x.com/motorkey" target="_blank" rel="noopener">酒場店主の独り言をフォロー（X）</a>　<a href="https://www.instagram.com/mr.sake_japan/" target="_blank" rel="noopener">Instagram</a></p>
-    <div class="foot">© SAKE story　日本酒三角チャート®　v11.9.1</div>
+    <div class="foot">© SAKE story　日本酒三角チャート®　v11.9.2</div>
     <p style="font-size:10.5px;color:#746A5C;margin:4px 0 0;">「日本酒三角チャート」は登録商標です。文章・画像・銘柄データの無断転用はご遠慮ください。</p>
   </section>
 
@@ -943,7 +943,7 @@ function applyEnUI(){
     "すっきり":"Crisp","フルーティー":"Fruity","しっかり":"Rich",
     "あなたの酒猫は":"Your Sake Cat is...",
     "あなたの味わい傾向":"Your Flavor Profile","あなたの味わいと近い銘柄":"Labels Close to Your Taste",
-    "あなたに近い、店の一杯":"Your Matches on Our Menu","お家や他店で飲むなら":"To Enjoy at Home or Other Bars","「日本酒三角チャート」は登録商標です。文章・画像・銘柄データの無断転用はご遠慮ください。":"“Sake Triangle Chart” is a registered trademark. Please do not copy or reuse the text, images, or data without permission.","2026年7月18日改訂":"Updated: Jul 18, 2026","最終更新 2026.7.18":"Last updated Jul 18, 2026","🍺 ビール版をやってみる":"🍺 Try the Beer version","🍷 ワイン版をやってみる":"🍷 Try the Wine version",
+    "あなたに近い、店の一杯":"Your Matches on Our Menu","お家や他店で飲むなら":"To Enjoy at Home or Other Bars","「日本酒三角チャート」は登録商標です。文章・画像・銘柄データの無断転用はご遠慮ください。":"“Sake Triangle Chart” is a registered trademark. Please do not copy or reuse the text, images, or data without permission.","2026年7月19日改訂":"Updated: Jul 19, 2026","最終更新 2026.7.19":"Last updated Jul 19, 2026","🍺 ビール版（現在製作中）":"🍺 Beer version (in the works)","🍷 ワイン版（現在製作中）":"🍷 Wine version (in the works)",
     "☆ なかなか出会えないかも　／　◎ 酒屋・オンラインで探しやすい　／　◇ スーパー・コンビニで見つけやすい":"☆ Rare finds / ◎ Easy at sake shops & online / ◇ Easy at supermarkets & convenience stores",
     "日本酒は各銘柄にも多様な味わいがあります。作者の独断で各銘柄の代表的なお酒を基に結果に反映しています。":"Every label has many expressions. Results reflect each brand’s representative style, chosen at the author’s discretion.",
     "シェア用カード":"Share Card","この診断を作った人":"The person behind this quiz","🍺🍷 現在、ビール版・ワイン版なども製作中！続報は酒場店主のXで。":"🍺🍷 Beer & wine versions are in the works! Updates on the owner\u2019s X.","🍶 酒場店主の独り言をのぞく（X）":"🍶 Peek at the owner\u2019s X (mostly musings)","お店のことを見る":"See the bar","酒場店主の独り言をフォロー（X）":"Follow the owner’s X (mostly musings)","画像つきでシェア":"Share with Image","画像を保存":"Save Image","もう一度、診断する":"Take the Quiz Again"
