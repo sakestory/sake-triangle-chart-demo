@@ -235,7 +235,7 @@ a.btn{text-decoration:none;text-align:center;box-sizing:border-box;display:block
 
     <div class="start-chips">
       <span class="chip">⏱ 約1〜2分でわかる</span>
-      <span class="chip">9問で診断</span>
+      <span class="chip">10問で診断</span>
       <span class="chip">三角チャートで見える化</span>
     </div>
 
@@ -282,7 +282,7 @@ a.btn{text-decoration:none;text-align:center;box-sizing:border-box;display:block
       <div style="margin:16px 0 0;padding:12px 14px;border:1px solid var(--line);border-radius:10px;color:var(--sumi-soft);font-size:12.5px;line-height:1.8;text-align:left;"><p style="margin:0;">結果画面では、2つのおすすめをご案内します。ひとつは、このチャートを作った酒場店主の店・日本酒居酒屋 SAKE story（東京・五反田）でいま飲める一杯。もうひとつは、お家や他店で飲むときのおすすめです。どちらも、酒場店主が実際に飲んで確かめた銘柄の中から選んで掲載しています。</p><p style="margin:6px 0 0;font-size:11px;color:#746A5C;text-align:right;">2026年7月18日改訂</p></div>
     </div>
 
-    <div class="foot">v11.8.2</div>
+    <div class="foot">v11.9.0</div>
   </section>
 
   <!-- ===== 質問 ===== -->
@@ -368,7 +368,7 @@ a.btn{text-decoration:none;text-align:center;box-sizing:border-box;display:block
 
     <p class="story-note">この診断のもとになった『日本酒三角チャート』は、東京・五反田の日本酒居酒屋 SAKE story の酒場店主が、20年間カウンターで「とりあえず辛口で」と言われ続けた末にたどり着いた、ひとつの答えなんです。<br>→ <a href="https://sake-story.com/" target="_blank" rel="noopener">SAKE story</a></p>
     <p class="x-follow"><a href="https://x.com/motorkey" target="_blank" rel="noopener">酒場店主の独り言をフォロー（X）</a>　<a href="https://www.instagram.com/mr.sake_japan/" target="_blank" rel="noopener">Instagram</a></p>
-    <div class="foot">© SAKE story　日本酒三角チャート®　v11.8.2</div>
+    <div class="foot">© SAKE story　日本酒三角チャート®　v11.9.0</div>
     <p style="font-size:10.5px;color:#746A5C;margin:4px 0 0;">「日本酒三角チャート」は登録商標です。文章・画像・銘柄データの無断転用はご遠慮ください。</p>
   </section>
 
@@ -709,7 +709,7 @@ const TYPES = [
    ── v10.8：占い版の全国市販酒リスト（RECS3）は撤去。
    店内版は STORE_SAKE から診断座標に近い順で提示する（下の compute / renderResult 参照）── */
 
-/* 質問（QUESTIONS） ── v10.8：9問・複合配点 */
+/* 質問（QUESTIONS） ── v11.9：10問・複合配点（v10.8の9問にQ10「飲み比べのこと」を追加） */
 const QUESTIONS = [
   {tag:"「辛口」のこと",
    text:"もし「辛口ください」と頼むとしたら、期待するのは？",
@@ -778,10 +778,20 @@ const QUESTIONS = [
   {tag:"香り・後味のこと",
    text:"香りや後味で「ちょっと苦手」なのは？",
    opts:[
-     {label:"香水みたいな、強すぎる香り",   sc:{x:0,y:-2,z:0}},  /* v11.0改定：強い香りが苦手→フルーティー-2のみ（旧：X-1,Y-1） */
+     {label:"香水みたいな、強すぎる香り",   sc:{x:-1,y:-1,z:0}}, /* v11.9改定：香り高い酒＝すっきり・やや甘寄りが多い（橋野さん）→X-1,Y-1（v11.0のY-2から変更） */
      {label:"熟成したような、深すぎる香り", sc:{x:0,y:0,z:-2}},
      {label:"何も残らない、あっさりしすぎ", sc:{x:-2,y:0,z:0}},
      {label:"特にないかも",                 sc:{x:0,y:0,z:0}},
+   ]},
+  /* v11.9追加：フルーティー軸（甘み・果実感）を正面から測る設問。
+     実データ12,726件でY低57%・Y0点34%の偏りを確認→測定機会を1問追加（設問・配点は橋野さん承認済み） */
+  {tag:"飲み比べのこと",
+   text:"飲み比べセットが目の前に。いちばん飲んでみたいのは？",
+   opts:[
+     {label:"果物みたいに甘くて、ジューシーな一杯",         sc:{x:0,y:3,z:0}},
+     {label:"梨やりんごみたいに、みずみずしく軽やかな一杯", sc:{x:1,y:2,z:0}},
+     {label:"お米の甘みが、ふんわり広がる一杯",             sc:{x:0,y:1,z:1}},
+     {label:"甘くなくて、すっきりキレる一杯",               sc:{x:2,y:0,z:0}},
    ]},
 ];
 
@@ -805,7 +815,8 @@ const EN_QUESTIONS=[
  {tag:"About Ramen",text:"If you were having ramen, which would you pick first?",opts:["Light shio (salt)","Shoyu with rich dashi","Hearty miso","Rich, creamy tonkotsu"]},
  {tag:"Food Pairing",text:"What would you most like to eat with your sake?",opts:["White fish sashimi, tempura with salt","Fruit, prosciutto with melon, sweeter dishes","Braised dishes, smoked food, aged cheese","Carpaccio, Western-style appetizers"]},
  {tag:"Avoiding a Miss",text:"Which of these would you most want to avoid in a drink?",opts:["Thin and underwhelming","So sweet it’s basically juice","Heavy and boozy","Nothing in particular"]},
- {tag:"Aroma & Finish",text:"Any aromas or finishes you’re not so fond of?",opts:["Perfume-like, overpowering aroma","Deep, aged, funky notes","So light it leaves nothing behind","Nothing in particular"]}
+ {tag:"Aroma & Finish",text:"Any aromas or finishes you’re not so fond of?",opts:["Perfume-like, overpowering aroma","Deep, aged, funky notes","So light it leaves nothing behind","Nothing in particular"]},
+ {tag:"Tasting Flight",text:"A tasting flight lands in front of you. Which would you most like to try?",opts:["Sweet and juicy, like ripe fruit","Fresh and light, like pear or crisp apple","A soft, gentle sweetness of rice","Not sweet — clean and sharp"]}
 ];
 const EN_TYPE={
  1:{cat:"Crisp Flash Cat",name:"Dry-Sake Graduate",ord:"Something crisp and dry, easy on the sweetness, please."},
@@ -927,7 +938,7 @@ function applyEnUI(){
     "好きな日本酒と、あなたの“酒猫”が見つかる":"Find your favorite sake — and your Sake Cat",
     "簡単な質問に答えると、独自開発の三角チャートであなたの日本酒の好みの傾向を診断。飲食20年の酒場店主が実際に飲んで確かめた銘柄の中から、おすすめを提案します。":"Answer a few quick questions and our original Triangle Chart will map your sake preferences — then recommend bottles the owner, with 20 years behind the bar, has personally tasted and trusts.",
     "結果画面では、2つのおすすめをご案内します。ひとつは、このチャートを作った酒場店主の店・日本酒居酒屋 SAKE story（東京・五反田）でいま飲める一杯。もうひとつは、お家や他店で飲むときのおすすめです。どちらも、酒場店主が実際に飲んで確かめた銘柄の中から選んで掲載しています。":"Your results come in two parts: a glass you can enjoy right now at SAKE story, the owner's sake izakaya in Gotanda, Tokyo, and picks for drinking at home or at other bars. Every bottle listed is one the owner has personally tasted and chosen.",
-    "⏱ 約1〜2分でわかる":"⏱ About 1–2 minutes","9問で診断":"9 questions","三角チャートで見える化":"Mapped on the Triangle Chart",
+    "⏱ 約1〜2分でわかる":"⏱ About 1–2 minutes","10問で診断":"10 questions","三角チャートで見える化":"Mapped on the Triangle Chart",
     "診断を始める":"Start the Quiz","← ひとつ戻る":"← Back",
     "すっきり":"Crisp","フルーティー":"Fruity","しっかり":"Rich",
     "あなたの酒猫は":"Your Sake Cat is...",
@@ -1025,15 +1036,15 @@ function renderQ(){
     b.className="opt"; b.textContent=(eq&&eq.opts[oi])?eq.opts[oi]:o.label;
     /* 「ひとつ戻る」で戻ってきた時、前に選んだ選択肢を薄く点灯させる */
     if(answers[qi]&&answers[qi].sc===o.sc) b.classList.add("opt-selected");
-    b.onclick=()=>choose(o.sc);
+    b.onclick=()=>choose(o.sc,oi);
     box.appendChild(b);
   });
   sprinkleCats();
   window.scrollTo({top:0,behavior:"smooth"});
 }
 
-function choose(sc){
-  answers[qi]={sc:sc};
+function choose(sc,oi){
+  answers[qi]={sc:sc,oi:(oi==null?"":oi+1)};
   if(qi<QUESTIONS.length-1){ qi++; renderQ(); }
   else{ quizDone=true; compute(); show("sc-result"); renderResult(); }
 }
@@ -1041,9 +1052,10 @@ function choose(sc){
 /* ==== v10.8 診断エンジン（複合配点方式）====
    ・各選択肢が複数軸に同時加点できる sc:{x,y,z} 形式（負値＝嫌い減点）
    ・軸ごとに「合計点（下限0）÷ DIV × 10」で0〜10座標へ（上限10）
-   ・DIVは理論満点ではなく実効満点。全262,144通りの自動検証で
-     27タイプ全到達を確認済み（2026-07-11。2026-07-12にQ8「薄い」→Z+2／Q9「香水」→Y-2へ改定し全通り再検証済み）。値を変える時は再検証すること */
-const DIV = { x:10, y:7, z:10 };
+   ・DIVは理論満点ではなく実効満点。値を変える時は全通り再検証すること
+   ・v11.9（2026-07-18）：Q10追加に伴いYの補正を7→10へ（3軸統一）。Q9「香水」はX-1,Y-1へ。
+     全1,048,576通りの自動検証で27タイプ全到達・Y全11段階を確認済み */
+const DIV = { x:10, y:10, z:10 };
 
 function compute(){
   let s={x:0,y:0,z:0};
@@ -1216,7 +1228,9 @@ function renderResult(){
   else{setTimeout(drawAndPrepare,600);}
   window.scrollTo({top:0,behavior:"smooth"});
   /* 診断結果を店舗ログへ送信（集計用・個人情報は含みません）。category未指定→シート側で「診断」になる */
-  sendLog({typeNumber:t.no,typeName:t.name,sukkiri:r.X,fruity:r.Y,shikkari:r.Z,lang:document.documentElement.lang||"ja"});
+  /* v11.9：category="診断v2"で10問版と旧9問版をシート上で区別。logicVersion/q9/q10はGAS側が対応したら列に入る（未対応でも無害） */
+  sendLog({typeNumber:t.no,typeName:t.name,sukkiri:r.X,fruity:r.Y,shikkari:r.Z,lang:document.documentElement.lang||"ja",
+    category:"診断v2",logicVersion:2,q9:(answers[8]&&answers[8].oi)||"",q10:(answers[9]&&answers[9].oi)||""});
 }
 
 /* 各銘柄の理由文。
