@@ -176,22 +176,20 @@ body{
 .trend-checks li::before{content:"✓";position:absolute;left:2px;color:#B23A2E;font-weight:700;}
 .trend-center{margin:14px 6px 4px;text-align:center;font-family:var(--serif);font-size:15.5px;color:#2C2620;line-height:1.8;}
 .trend-center strong{color:#B23A2E;}
-.chart-scores{text-align:center;font-size:12.5px;color:#5B5247;margin:8px 0 2px;}
 .staff-note{text-align:center;font-family:var(--serif);font-size:14.5px;color:#B23A2E;margin:10px 0 4px;}
 .result-note{font-size:12px;color:#8A8071;text-align:center;margin:18px 8px 0;line-height:1.8;}
 .data-note{font-size:11px;color:#8A8071;text-align:center;margin:10px 10px 0;line-height:1.75;}
-.cross-intro{font-size:13px;color:var(--sumi-soft);line-height:1.9;margin:0 2px 12px;}
-.cross-grid{display:grid;grid-template-columns:1fr;gap:10px;}
-.cross-card{background:var(--card);border:1px solid var(--line);border-radius:15px;padding:17px 18px 16px;}
-.cross-kind{display:flex;align-items:center;gap:8px;font-family:var(--serif);font-size:11.5px;color:var(--sumi-soft);letter-spacing:.12em;margin-bottom:7px;}
+.cross-intro{font-size:12px;color:var(--sumi-soft);line-height:1.75;margin:0 2px 8px;}
+.cross-grid{display:grid;grid-template-columns:1fr;gap:8px;}
+.cross-card{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:12px 13px 11px;}
+.cross-kind{display:flex;align-items:center;gap:6px;font-family:var(--serif);font-size:10.5px;color:var(--sumi-soft);letter-spacing:.1em;margin-bottom:4px;}
 .cross-kind span{font-size:19px;line-height:1;letter-spacing:0;}
-.cross-name{font-family:var(--serif);font-size:17px;font-weight:700;color:var(--sumi);line-height:1.55;margin:0 0 6px;}
-.cross-reason{font-size:13px;color:var(--sumi-soft);line-height:1.85;margin:0;}
-.cross-note{font-size:10.5px;color:#8A8071;line-height:1.75;margin:10px 3px 0;}
+.cross-name{font-family:var(--serif);font-size:14.5px;font-weight:700;color:var(--sumi);line-height:1.45;margin:0 0 4px;}
+.cross-reason{font-size:11.5px;color:var(--sumi-soft);line-height:1.7;margin:0;}
+.cross-note{font-size:10px;color:#8A8071;line-height:1.65;margin:7px 3px 0;}
 @media (min-width:540px){.cross-grid{grid-template-columns:1fr 1fr;}}
 .cat-lead{text-align:center;font-size:12.5px;color:#7A4A3E;font-family:var(--serif);margin:12px 0 0;letter-spacing:.08em;}
 .hero-cat{text-align:center;font-family:var(--serif);font-size:14.5px;color:#B23A2E;letter-spacing:1.5px;margin:8px 0 2px;}
-.chart-note{font-size:11px;color:#8A8071;}
 .share-card-label{font-family:var(--serif);font-size:12px;color:var(--sumi-soft);letter-spacing:.18em;margin:30px 0 12px;display:flex;align-items:center;gap:9px;}
 .share-card-label::before{content:"";width:12px;height:1px;background:var(--shu);flex:none;}
 #shareCanvas{width:100%;border-radius:14px;box-shadow:0 6px 20px -8px rgba(44,38,32,.25);display:block;}
@@ -219,7 +217,7 @@ body{
 /* 猫の透かし背景 */
 #catBg{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:-1;}
 #catBg img{position:absolute;pointer-events:none;user-select:none;-webkit-user-drag:none;}
-a.btn{text-decoration:none;text-align:center;box-sizing:border-box;display:block;}.cross-jump{display:flex;gap:10px;margin-top:14px;}.cross-jump .btn{margin-top:0;flex:1;font-size:13px;padding:13px 6px;}.cross-jump .is-soon{cursor:default;background:#E2E0DB;color:#5E5C58;border-color:#C9C5BD;}</style>
+a.btn{text-decoration:none;text-align:center;box-sizing:border-box;display:block;}.cross-jump{display:flex;gap:8px;margin-top:10px;}.cross-jump .btn{margin-top:0;flex:1;font-size:12px;padding:10px 6px;}.cross-jump .is-soon{cursor:default;background:#E2E0DB;color:#5E5C58;border-color:#C9C5BD;}</style>
 </head>
 <body>
 <div id="catBg" aria-hidden="true"></div>
@@ -282,7 +280,7 @@ a.btn{text-decoration:none;text-align:center;box-sizing:border-box;display:block
       <div style="margin:16px 0 0;padding:12px 14px;border:1px solid var(--line);border-radius:10px;color:var(--sumi-soft);font-size:12.5px;line-height:1.8;text-align:left;"><p style="margin:0;">結果画面では、2つのおすすめをご案内します。ひとつは、このチャートを作った酒場店主の店・日本酒居酒屋 SAKE story（東京・五反田）でいま飲める一杯。もうひとつは、お家や他店で飲むときのおすすめです。どちらも、酒場店主が実際に飲んで確かめた銘柄の中から選んで掲載しています。</p><p style="margin:6px 0 0;font-size:11px;color:#746A5C;text-align:right;">2026年7月19日改訂</p></div>
     </div>
 
-    <div class="foot">v11.9.3</div>
+    <div class="foot">v11.9.4</div>
   </section>
 
   <!-- ===== 質問 ===== -->
@@ -319,7 +317,6 @@ a.btn{text-decoration:none;text-align:center;box-sizing:border-box;display:block
 
     <div class="sec">あなたの味わいと近い銘柄</div>
     <div class="chart-card"><div id="chart"></div>
-      <p class="chart-scores" id="chartScores"></p>
       <p class="chart-legend"><strong>赤</strong> 店内おすすめ　／　<strong>茶</strong> お家や他店で飲むなら</p>
     </div>
 
@@ -327,7 +324,7 @@ a.btn{text-decoration:none;text-align:center;box-sizing:border-box;display:block
     <div id="storeList"></div>
     <div id="visitGift" class="visit-gift">
       <div class="visit-gift-title">🧲 この結果画面を、お店で見せてください</div>
-      <p class="visit-gift-body">五反田の日本酒居酒屋「SAKE story」でこの画面を見せていただいた方に、日本酒の蓋で作る<strong>「酒蓋マグネット」</strong>の作り方をお教えして、そのまま1つプレゼントします。さらに、お土産に<strong>朝倉山椒のポップコーン</strong>を少しだけお包みします。<br>診断で遊んでくださったことへの、ささやかなお礼です。※なくなり次第終了</p>
+      <p class="visit-gift-body">五反田の日本酒居酒屋「SAKE story」でこの画面を見せていただいた方に、日本酒の蓋で作る<strong>「酒蓋マグネット」</strong>の作り方をお教えして、そのまま1つプレゼントします。※なくなり次第終了</p>
       <a class="visit-gift-map" href="https://www.google.com/maps/search/?api=1&query=SAKE+story+%E4%BA%94%E5%8F%8D%E7%94%B0" target="_blank" rel="noopener">お店の場所を地図で見る</a>
     </div>
     <div class="sec">お家や他店で飲むなら</div>
@@ -368,7 +365,7 @@ a.btn{text-decoration:none;text-align:center;box-sizing:border-box;display:block
 
     <p class="story-note">この診断のもとになった『日本酒三角チャート』は、東京・五反田の日本酒居酒屋 SAKE story の酒場店主が、20年間カウンターで「とりあえず辛口で」と言われ続けた末にたどり着いた、ひとつの答えなんです。<br>→ <a href="https://sake-story.com/" target="_blank" rel="noopener">SAKE story</a></p>
     <p class="x-follow"><a href="https://x.com/motorkey" target="_blank" rel="noopener">酒場店主の独り言をフォロー（X）</a>　<a href="https://www.instagram.com/mr.sake_japan/" target="_blank" rel="noopener">Instagram</a></p>
-    <div class="foot">© SAKE story　日本酒三角チャート®　v11.9.3</div>
+    <div class="foot">© SAKE story　日本酒三角チャート®　v11.9.4</div>
     <p style="font-size:10.5px;color:#746A5C;margin:4px 0 0;">「日本酒三角チャート」は登録商標です。文章・画像・銘柄データの無断転用はご遠慮ください。</p>
   </section>
 
@@ -1214,9 +1211,8 @@ function renderResult(){
   /* v10.8: スコア数値の表示欄は設けない方針（三角チャート上の位置が数値の役目を担う）。
      旧setScore呼び出しは表示先の要素が存在せず空振りしていたため削除 */
   document.getElementById("chart").innerHTML=buildUnifiedChart(r);
-  document.getElementById("chartScores").innerHTML=(LANG==="en"
-    ?("Crisp "+r.X+" / Fruity "+r.Y+" / Rich "+r.Z+'<br><span class="chart-note">Center is 0, edge is 10. Each direction shows your score.</span>')
-    :("すっきり "+r.X+"　／　フルーティー "+r.Y+"　／　しっかり "+r.Z+'<br><span class="chart-note">中心が0、外側が10です。3方向の長さが、それぞれの点数を表します。</span>'));
+  /* v11.9.4：味わい3軸の数値表示と、その説明文（中心が0・外側が10…）は橋野さん指示で廃止。
+     チャート上の形が数値の役目を担う。表示先の要素ごと削除済み */
   /* シェアカード事前生成（猫画像の読み込み完了後に確定） */
   const drawAndPrepare=()=>{
     drawCard(result,()=>{
