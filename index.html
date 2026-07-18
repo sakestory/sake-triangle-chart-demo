@@ -5,11 +5,12 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <title>日本酒三角チャート診断｜好きな日本酒が、見つかる SAKE story</title>
-<meta name="description" content="20年カウンターに立つ酒場店主が作った無料診断。9つの質問で好みを「すっきり・フルーティー・しっかり」の三角チャートに見える化し、27タイプの酒猫があなたに合う日本酒を案内します。約1分。"/>
+<meta name="description" content="20年カウンターに立つ酒場店主が作った無料診断。9つの質問で好みを「すっきり・フルーティー・しっかり」の三角チャートに見える化し、27タイプの酒猫があなたに合う日本酒を案内します。約1〜2分。"/>
 <meta property="og:type" content="website"/>
 <meta property="og:site_name" content="SAKE story"/>
 <meta property="og:title" content="日本酒三角チャート診断｜あなたはどの酒猫？"/>
-<meta property="og:description" content="約1分・無料。9つの質問で日本酒の好みを見える化し、27タイプの酒猫がおすすめ銘柄を案内します。"/>
+<link rel="canonical" href="https://shindan.sake-story.com/"/>
+<meta property="og:description" content="約1〜2分・無料。9つの質問で日本酒の好みを見える化し、27タイプの酒猫がおすすめ銘柄を案内します。"/>
 <meta property="og:url" content="https://shindan.sake-story.com/"/>
 <meta property="og:image" content="https://shindan.sake-story.com/ogp.png"/>
 <meta name="twitter:card" content="summary_large_image"/>
@@ -25,7 +26,7 @@
  "offers":{"@type":"Offer","price":"0","priceCurrency":"JPY"},
  "inLanguage":["ja","en"],
  "description":"9つの質問で、日本酒の好みを「すっきり・フルーティー・しっかり」の三角チャートに見える化。27タイプの酒猫と、酒場店主が実際に飲んで確かめた銘柄から、あなたに合う一杯が見つかる無料診断。",
- "author":{"@type":"Person","name":"橋野元樹","jobTitle":"SAKE story 店主","description":"東京・五反田の日本酒バーSAKE story店主。初代Mr.SAKEグランプリ。飲食歴20年。","url":"https://sake-story.com/","sameAs":["https://x.com/motorkey","https://note.com/mr_sake","https://www.instagram.com/mr.sake_japan/"]},
+ "author":{"@type":"Person","name":"橋野元樹","jobTitle":"SAKE story 店主","description":"東京・五反田の日本酒居酒屋 SAKE story 店主。初代Mr.SAKEグランプリ。飲食歴20年。","url":"https://sake-story.com/","sameAs":["https://x.com/motorkey","https://note.com/mr_sake","https://www.instagram.com/mr.sake_japan/"]},
  "publisher":{"@type":"Organization","name":"SAKE story","url":"https://sake-story.com/"}
 }
 </script>
@@ -229,7 +230,17 @@ body{
       <div class="hero-sub">SAKE story</div>
       <h1 style="font-size:clamp(28px,8.6vw,38px);letter-spacing:0.06em;">日本酒三角チャート診断</h1>
       <div class="hero-cat">好きな日本酒と、あなたの&#8220;酒猫&#8221;が見つかる</div>
+    </div>
 
+    <div class="start-chips">
+      <span class="chip">⏱ 約1〜2分でわかる</span>
+      <span class="chip">9問で診断</span>
+      <span class="chip">三角チャートで見える化</span>
+    </div>
+
+    <button class="btn btn-primary" onclick="startQuiz()">診断を始める</button>
+
+    <div class="hero" style="padding:10px 0 12px;">
       <!-- 三角チャート：20〜30%大きく、ラベル外側・視認性UP -->
       <svg class="emblem" width="300" height="230" viewBox="-40 -10 340 260" fill="none">
         <!-- 外枠 -->
@@ -267,17 +278,10 @@ body{
       </svg>
 
       <p class="hero-desc">簡単な質問に答えると、独自開発の三角チャートであなたの日本酒の好みの傾向を診断。飲食20年の酒場店主が実際に飲んで確かめた銘柄の中から、おすすめを提案します。</p>
-      <div style="margin:16px 0 0;padding:12px 14px;border:1px solid var(--line);border-radius:10px;color:var(--sumi-soft);font-size:12.5px;line-height:1.8;text-align:left;"><p style="margin:0;">結果画面では、2つのおすすめをご案内します。ひとつは、このチャートを作った酒場店主の店・日本酒居酒屋 SAKE story（東京・五反田）でいま飲める一杯。もうひとつは、お家や他店で飲むときのおすすめです。どちらも、酒場店主が実際に飲んで確かめた銘柄の中から選んで掲載しています。</p><p style="margin:6px 0 0;font-size:11px;color:#9A8F7E;text-align:right;">2026年7月18日改訂</p></div>
+      <div style="margin:16px 0 0;padding:12px 14px;border:1px solid var(--line);border-radius:10px;color:var(--sumi-soft);font-size:12.5px;line-height:1.8;text-align:left;"><p style="margin:0;">結果画面では、2つのおすすめをご案内します。ひとつは、このチャートを作った酒場店主の店・日本酒居酒屋 SAKE story（東京・五反田）でいま飲める一杯。もうひとつは、お家や他店で飲むときのおすすめです。どちらも、酒場店主が実際に飲んで確かめた銘柄の中から選んで掲載しています。</p><p style="margin:6px 0 0;font-size:11px;color:#746A5C;text-align:right;">2026年7月18日改訂</p></div>
     </div>
 
-    <div class="start-chips">
-      <span class="chip">⏱ 約2分でわかる</span>
-      <span class="chip">9問で診断</span>
-      <span class="chip">三角チャートで見える化</span>
-    </div>
-
-    <button class="btn btn-primary" onclick="startQuiz()">診断を始める</button>
-    <div class="foot">v11.7.4</div>
+    <div class="foot">v11.8</div>
   </section>
 
   <!-- ===== 質問 ===== -->
@@ -322,7 +326,7 @@ body{
     <div id="storeList"></div>
     <div id="visitGift" class="visit-gift">
       <div class="visit-gift-title">🧲 この結果画面を、お店で見せてください</div>
-      <p class="visit-gift-body">五反田の日本酒バー「SAKE story」でこの画面を見せていただいた方に、日本酒の蓋で作る<strong>「酒蓋マグネット」</strong>の作り方をお教えして、そのまま1つプレゼントします。さらに、お土産に<strong>朝倉山椒のポップコーン</strong>を少しだけお包みします。<br>診断で遊んでくださったことへの、ささやかなお礼です。※なくなり次第終了</p>
+      <p class="visit-gift-body">五反田の日本酒居酒屋「SAKE story」でこの画面を見せていただいた方に、日本酒の蓋で作る<strong>「酒蓋マグネット」</strong>の作り方をお教えして、そのまま1つプレゼントします。さらに、お土産に<strong>朝倉山椒のポップコーン</strong>を少しだけお包みします。<br>診断で遊んでくださったことへの、ささやかなお礼です。※なくなり次第終了</p>
       <a class="visit-gift-map" href="https://www.google.com/maps/search/?api=1&query=SAKE+story+%E4%BA%94%E5%8F%8D%E7%94%B0" target="_blank" rel="noopener">お店の場所を地図で見る</a>
     </div>
     <div class="sec">お家や他店で飲むなら</div>
@@ -363,8 +367,8 @@ body{
 
     <p class="story-note">この診断のもとになった『日本酒三角チャート』は、東京・五反田の日本酒居酒屋 SAKE story の酒場店主が、20年間カウンターで「とりあえず辛口で」と言われ続けた末にたどり着いた、ひとつの答えなんです。<br>→ <a href="https://sake-story.com/" target="_blank" rel="noopener">SAKE story</a></p>
     <p class="x-follow"><a href="https://x.com/motorkey" target="_blank" rel="noopener">酒場店主の独り言をフォロー（X）</a>　<a href="https://www.instagram.com/mr.sake_japan/" target="_blank" rel="noopener">Instagram</a></p>
-    <div class="foot">© SAKE story　日本酒三角チャート®　v11.7.4</div>
-    <p style="font-size:10.5px;color:#A79C8B;margin:4px 0 0;">「日本酒三角チャート」は登録商標です。文章・画像・銘柄データの無断転用はご遠慮ください。</p>
+    <div class="foot">© SAKE story　日本酒三角チャート®　v11.8</div>
+    <p style="font-size:10.5px;color:#746A5C;margin:4px 0 0;">「日本酒三角チャート」は登録商標です。文章・画像・銘柄データの無断転用はご遠慮ください。</p>
   </section>
 
 </div>
@@ -864,9 +868,14 @@ const ROMAJI={"〆張鶴":"Shimeharitsuru","サビ猫ロック":"Sabineko Rock",
 function bn(name){return LANG==="en"?(ROMAJI[name]||name):name;}
 /* シェアカード・シェア文で共通の「おすすめ4本」：店内1位＋全国☆◎◇の最寄り各1本 */
 function cardFour(r){
-  const nearMark=function(mk){return NATL_SAKE.filter(function(b){return b.mark===mk;})
-    .map(function(b){return{n:b.name,d:Math.sqrt(Math.pow(b.x-r.X,2)+Math.pow(b.y-r.Y,2)+Math.pow(b.z-r.Z,2))};})
-    .sort(function(a,b){return a.d-b.d;})[0];};
+  const nearMark=function(mk){
+    const cands=NATL_SAKE.filter(function(b){return b.mark===mk;})
+      .map(function(b){return{n:b.name,d:(b.x-r.X)*(b.x-r.X)+(b.y-r.Y)*(b.y-r.Y)+(b.z-r.Z)*(b.z-r.Z)};});
+    if(!cands.length)return null;
+    let min=Infinity;cands.forEach(function(c){if(c.d<min)min=c.d;});
+    const ties=cands.filter(function(c){return c.d===min;});
+    return ties[(r.seed||0)%ties.length];  /* 完全同点は回答由来のシードで振り分け（v11.8） */
+  };
   return {tenpo:r.recStore&&r.recStore[0], hoshi:nearMark("☆"), maru:nearMark("◎"), dia:nearMark("◇")};
 }
 function buildShareText(r){
@@ -917,7 +926,7 @@ function applyEnUI(){
     "好きな日本酒と、あなたの“酒猫”が見つかる":"Find your favorite sake — and your Sake Cat",
     "簡単な質問に答えると、独自開発の三角チャートであなたの日本酒の好みの傾向を診断。飲食20年の酒場店主が実際に飲んで確かめた銘柄の中から、おすすめを提案します。":"Answer a few quick questions and our original Triangle Chart will map your sake preferences — then recommend bottles the owner, with 20 years behind the bar, has personally tasted and trusts.",
     "結果画面では、2つのおすすめをご案内します。ひとつは、このチャートを作った酒場店主の店・日本酒居酒屋 SAKE story（東京・五反田）でいま飲める一杯。もうひとつは、お家や他店で飲むときのおすすめです。どちらも、酒場店主が実際に飲んで確かめた銘柄の中から選んで掲載しています。":"Your results come in two parts: a glass you can enjoy right now at SAKE story, the owner's sake izakaya in Gotanda, Tokyo, and picks for drinking at home or at other bars. Every bottle listed is one the owner has personally tasted and chosen.",
-    "⏱ 約2分でわかる":"⏱ About 2 minutes","9問で診断":"9 questions","三角チャートで見える化":"Mapped on the Triangle Chart",
+    "⏱ 約1〜2分でわかる":"⏱ About 1–2 minutes","9問で診断":"9 questions","三角チャートで見える化":"Mapped on the Triangle Chart",
     "診断を始める":"Start the Quiz","← ひとつ戻る":"← Back",
     "すっきり":"Crisp","フルーティー":"Fruity","しっかり":"Rich",
     "あなたの酒猫は":"Your Sake Cat is...",
@@ -989,6 +998,7 @@ sendLog({typeNumber:"",typeName:(document.referrer||"(direct)")+(location.search
 
 function startQuiz(){
   answers=[]; qi=0;
+  dropSent=false; quizDone=false;  /* 同じ画面で2回目以降の診断でも途中離脱を正しく記録する */
   show("sc-quiz");
   renderQ();
 }
@@ -1062,7 +1072,13 @@ function compute(){
     d:Math.sqrt((b.x-sc.x)**2+(b.y-sc.y)**2+(b.z-sc.z)**2)
   })).sort((a,b)=>a.d-b.d);
   const recStore=ranked.slice(0,5);  /* 近い順の上位5本 */
-  result={X:sc.x,Y:sc.y,Z:sc.z,type,ranked,recStore,orderPhrase:type.orderPhrase};
+  /* 同点銘柄の振り分け用シード：回答の組み合わせ番号（同じ回答→同じ値。ランダムは使わない） */
+  let seed=0;
+  answers.forEach(function(a,i){
+    const oi=QUESTIONS[i]?QUESTIONS[i].opts.indexOf(a):-1;
+    seed=seed*4+(oi>0?oi:0);
+  });
+  result={X:sc.x,Y:sc.y,Z:sc.z,type,ranked,recStore,orderPhrase:type.orderPhrase,seed:seed};
 }
 
 /* ==== v11.0 「あなたの味わい傾向」動的生成（D案：3軸動的＋タイプ固定の締め） ====
@@ -1128,10 +1144,13 @@ function natlTop2(r,exclude){
 function homeTop3(r,exclude){
   const ex=exclude||[];
   return ["☆","◎","◇"].map(function(mark){
-    const hit=NATL_SAKE.filter(function(b){return b.mark===mark&&ex.indexOf(b.name)<0;})
-      .map(function(b){return {b:b,d:(b.x-r.X)*(b.x-r.X)+(b.y-r.Y)*(b.y-r.Y)+(b.z-r.Z)*(b.z-r.Z)};})
-      .sort(function(p,q){return p.d-q.d;})[0];
-    return hit&&hit.b;
+    const cands=NATL_SAKE.filter(function(b){return b.mark===mark&&ex.indexOf(b.name)<0;})
+      .map(function(b){return {b:b,d:(b.x-r.X)*(b.x-r.X)+(b.y-r.Y)*(b.y-r.Y)+(b.z-r.Z)*(b.z-r.Z)};});
+    if(!cands.length)return null;
+    let min=Infinity;cands.forEach(function(c){if(c.d<min)min=c.d;});
+    const ties=cands.filter(function(c){return c.d===min;});
+    /* 完全同点は回答由来のシードで振り分け：同じ回答なら同じ1本、違う回答なら同点銘柄にも出番が回る（v11.8） */
+    return ties[(r.seed||0)%ties.length].b;
   }).filter(Boolean);
 }
 
@@ -1386,7 +1405,7 @@ function buildTasteShape(r){
   [0.25,0.5,0.75,1].forEach(function(f){const a=toward(top,f),b=toward(br,f),d=toward(bl,f);s+='<polygon points="'+a.x+','+a.y+' '+b.x+','+b.y+' '+d.x+','+d.y+'"/>';});
   s+='<line x1="'+c.x+'" y1="'+c.y+'" x2="'+top.x+'" y2="'+top.y+'"/><line x1="'+c.x+'" y1="'+c.y+'" x2="'+br.x+'" y2="'+br.y+'"/><line x1="'+c.x+'" y1="'+c.y+'" x2="'+bl.x+'" y2="'+bl.y+'"/></g>';
   s+='<polygon points="'+ps+'" fill="#B23A2E" fill-opacity="0.16" stroke="#B23A2E" stroke-width="2.6" stroke-linejoin="round"/><circle cx="'+pts[0].x.toFixed(1)+'" cy="'+pts[0].y.toFixed(1)+'" r="4.5" fill="#6E8FA3"/><circle cx="'+pts[1].x.toFixed(1)+'" cy="'+pts[1].y.toFixed(1)+'" r="4.5" fill="#C46B7E"/><circle cx="'+pts[2].x.toFixed(1)+'" cy="'+pts[2].y.toFixed(1)+'" r="4.5" fill="#C0893C"/>';
-  s+='<g font-family="serif" fill="#2C2620" text-anchor="middle"><text x="200" y="25" font-size="15" font-weight="700">すっきり '+r.X+'</text><text x="332" y="286" font-size="15" font-weight="700">フルーティー '+r.Y+'</text><text x="68" y="286" font-size="15" font-weight="700">しっかり '+r.Z+'</text><text x="200" y="316" font-size="11" fill="#7B7163">中心 0　／　外側 10</text></g></svg>';
+  s+='<g font-family="serif" fill="#2C2620" text-anchor="middle"><text x="200" y="25" font-size="15" font-weight="700">すっきり '+r.X+'</text><text x="332" y="286" font-size="15" font-weight="700">フルーティー '+r.Y+'</text><text x="68" y="286" font-size="15" font-weight="700">しっかり '+r.Z+'</text><text x="200" y="316" font-size="11" fill="#6F6558">中心 0　／　外側 10</text></g></svg>';
   return s;
 }
 
@@ -1423,7 +1442,7 @@ function buildUnifiedChart(r){
   const drawSide=function(list,side){list.forEach(function(v,i){const y=rows[i],edge=side==="left"?128:392,labelX=side==="left"?10:510,anchor=side==="left"?"start":"end";const lfs=Math.min(20,Math.max(12,Math.floor(108/uw(v.label))));s+='<polyline points="'+v.p.x.toFixed(1)+','+v.p.y.toFixed(1)+' '+edge+','+y+' '+(side==="left"?118:402)+','+y+'" fill="none" stroke="'+v.color+'" stroke-width="0.8"/><circle cx="'+v.p.x.toFixed(1)+'" cy="'+v.p.y.toFixed(1)+'" r="5" fill="'+v.color+'"/><text x="'+labelX+'" y="'+(y+6)+'" text-anchor="'+anchor+'" font-family="serif" font-size="'+lfs+'" font-weight="600" fill="'+v.color+'">'+esc(v.label)+'</text>';});};
   drawSide(left,"left");drawSide(right,"right");
   s+='<g><circle cx="'+me.x.toFixed(1)+'" cy="'+me.y.toFixed(1)+'" r="9" fill="#FFFDF7" stroke="#2C2620" stroke-width="2.2"/><circle cx="'+me.x.toFixed(1)+'" cy="'+me.y.toFixed(1)+'" r="3" fill="#2C2620"/><text x="'+(me.x+13).toFixed(1)+'" y="'+(me.y+4).toFixed(1)+'" font-family="serif" font-size="15" font-weight="700" fill="#2C2620" stroke="#FFFDF7" stroke-width="3" paint-order="stroke">'+(LANG==="en"?"You":"あなた")+'</text></g>';
-  s+='<text x="260" y="412" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#7B7163">'+(LANG==="en"?"Shape = your 3 scores / B&amp;W = you / Red = our menu / Brown = home picks":"面＝3軸の点数　白黒＝あなた　赤＝店内おすすめ　茶＝お家候補")+'</text></svg>';
+  s+='<text x="260" y="412" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#6F6558">'+(LANG==="en"?"Shape = your 3 scores / B&amp;W = you / Red = our menu / Brown = home picks":"面＝3軸の点数　白黒＝あなた　赤＝店内おすすめ　茶＝お家候補")+'</text></svg>';
   return s;
 }
 
@@ -1477,7 +1496,7 @@ function drawCard(r,done){
     const nw=ctx.measureText(name).width;
     if(nw>400){nfs=Math.max(22,Math.floor(nfs*400/nw));ctx.font="700 "+nfs+"px 'Noto Serif JP',serif";}
     ctx.fillText(name,245,493);
-    ctx.fillStyle="#7B7163";ctx.font="400 21px 'Noto Serif JP',serif";ctx.letterSpacing="0px";
+    ctx.fillStyle="#6F6558";ctx.font="400 21px 'Noto Serif JP',serif";ctx.letterSpacing="0px";
     ctx.fillText(LANG==="en"?("\u201c"+tname+"\u201d"):("〜"+tname+"〜"),245,525);
 
     /* 分析文は3〜4行に整え、シェアを見た人にも診断の深さが伝わるようにする。 */
@@ -1513,7 +1532,7 @@ function drawCard(r,done){
     ctx.font="700 "+pfs+"px 'Noto Serif JP',serif";
     fourLines.forEach(function(line,i){ctx.fillText(line,455,358+i*44);});
     /* 印の意味をごく小さく添える */
-    ctx.fillStyle="#7B7163";
+    ctx.fillStyle="#6F6558";
     const markLegend=LANG==="en"?"店 = at SAKE story / ☆ = specialty shops / ◎ = sake shops & online / ◇ = supermarkets":"店＝五反田SAKE storyで飲める　☆＝専門店　◎＝酒屋・通販　◇＝スーパーでも買える";
     let lfs2=15; ctx.font="500 "+lfs2+"px 'Noto Sans JP',sans-serif";
     const lw2=ctx.measureText(markLegend).width;
@@ -1568,7 +1587,7 @@ function drawCard(r,done){
     ctx.fillText(LANG==="en"?"Which Sake Cat are you?":"あなたはどの酒猫？",W/2,938);
     ctx.fillStyle="#5B5247";ctx.font="500 18px 'Noto Sans JP',sans-serif";ctx.letterSpacing="0px";
     ctx.fillText(LANG==="en"?"shindan.sake-story.com/?lang=en　#sake":"shindan.sake-story.com　#日本酒三角チャート",W/2,966);
-    ctx.fillStyle="#7B7163";ctx.font="400 12px 'Noto Serif JP',serif";
+    ctx.fillStyle="#6F6558";ctx.font="400 12px 'Noto Serif JP',serif";
     ctx.fillText("© SAKE story　日本酒三角チャート®",W/2,986);
     ctx.textAlign="left";
     done&&done();
