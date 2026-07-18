@@ -11,6 +11,8 @@ on:
       - 'index.html'
       - 'cat_*.png'
       - 'ogp.png'
+      - 'robots.txt'
+      - 'sitemap.xml'
       - 'beer/**'
       - 'wine/**'
   workflow_dispatch:   # 手動実行も可能（初回はこれで管理者が明示起動する想定）
@@ -41,6 +43,8 @@ jobs:
           mkdir -p deploy
           cp index.html deploy/
           cp ogp.png deploy/
+          cp robots.txt deploy/
+          cp sitemap.xml deploy/
           cp -R beer deploy/
           cp -R wine deploy/
           for n in $(seq -w 1 27); do
@@ -50,7 +54,7 @@ jobs:
           find deploy -type f -printf '%f\n' | sort
           count=$(find deploy -type f | wc -l | tr -d ' ')
           echo "staged count: ${count}"
-          test "${count}" -eq 48   # 本体29 + beer10 + wine9   # 28個ちょうどでなければ失敗させる
+          test "${count}" -eq 50   # 本体29 + robots/sitemap2 + beer10 + wine9。数が合わなければ失敗させる
 
       - name: lftp を導入
         run: sudo apt-get update && sudo apt-get install -y lftp
