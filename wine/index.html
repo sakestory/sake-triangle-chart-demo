@@ -48,7 +48,7 @@
     .chart-card{padding:12px 8px 10px;text-align:center}.chart-card h2{text-align:left;margin:6px 12px 0}.chart-card svg{display:block;width:100%;height:auto;margin:0 auto}.chart-note{font-size:11px!important;color:var(--muted)!important;margin:-3px 10px 8px!important}.sweetness{display:flex;align-items:center;justify-content:center;gap:9px;flex-wrap:wrap;margin:4px 8px 5px;font-size:12px;color:var(--muted)}.sweetness strong{font-family:var(--serif);color:var(--accent);border:1px solid var(--accent-soft);background:#fff;border-radius:999px;padding:3px 12px}
     .pairings{display:flex;flex-wrap:wrap;gap:8px;margin-top:3px}.pairings span{font-size:13px;border:1px solid var(--line);border-radius:999px;background:#fff;padding:5px 12px}.next-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px}.next-item{background:#fff;border:1px solid var(--line);border-radius:13px;padding:12px 10px;text-align:center}.next-item strong{display:block;font-family:var(--serif);font-size:13px;color:var(--accent)}.next-item span{display:block;font-size:11px;color:var(--muted);margin-top:2px}.caution{font-size:11px!important;color:var(--muted)!important;line-height:1.75}.footer{text-align:center;font-family:var(--serif);font-size:11px;color:var(--muted);margin-top:38px;letter-spacing:.08em}
     @media(max-width:380px){.wrap{padding-inline:16px}.option{padding:14px}.card{padding:17px}.result-cat{width:152px}}@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
-  </style>
+  a.btn{text-decoration:none;text-align:center;box-sizing:border-box}.btn-bridge{background:var(--accent);color:#fff;margin-top:24px}.cross-line{font-size:14px;line-height:1.95;color:var(--ink);margin:2px 0 4px}.cross-line strong{color:var(--accent);font-family:var(--serif)}</style>
 </head>
 <body>
   <main class="wrap">
@@ -80,8 +80,8 @@
       <div class="card"><h2>合わせやすい料理</h2><div id="resultPairings" class="pairings"></div></div>
       <div class="card"><h2>次に試すなら</h2><div id="nextGrid" class="next-grid"></div></div>
       <div class="card"><p class="caution">葡萄品種が同じでも、産地・造り手・熟成方法で味は変わります。この結果は、ワイン売り場やお店で相談するときの入口です。</p></div>
-      <button class="btn btn-primary" type="button" onclick="restart()">もう一度診断する</button>
-      <div class="footer">ワイン猫診断 v0.6　※お酒は20歳になってから</div>
+      <div class="card"><h2>ほかのお酒でも、あなたの入口</h2><p class="cross-line">🍶 日本酒なら <strong id="crossSake"></strong><br>🍺 ビールなら <strong id="crossOther"></strong></p><a class="btn btn-bridge" href="../">🍶 日本酒三角チャートをやってみる</a><a class="btn btn-ghost" href="../beer/">🍺 ビール版もやってみる</a></div><button class="btn btn-primary" type="button" onclick="restart()">もう一度診断する</button>
+      <div class="footer">ワイン猫診断 v0.7　※お酒は20歳になってから</div>
     </section>
   </main>
 
@@ -177,7 +177,7 @@ function sendLog(payload){
   }catch(e){}
 }
 sendLog({typeNumber:"",typeName:(document.referrer||"(direct)")+(location.search?" "+location.search:""),sukkiri:"",fruity:"",shikkari:"",lang:"ja",category:"wine_visit"});
-function renderResult(){const ranked=rankResults();const r=resultById[ranked[0].id];
+const CROSS_BRIDGE={sauvignon:{sake:"キレの中に、ひと香り",other:"ペールエール"},chardonnay:{sake:"食中酒の美学",other:"ペールエール"},riesling:{sake:"はずむソーダ水",other:"サワーエール／フルーツビール"},pinot:{sake:"風の調律師",other:"ペールエール"},merlot:{sake:"じんわり幸せ収集家",other:"ヴァイツェン／白ビール"},cabernet:{sake:"旨味ひとすじ",other:"スタウト／ポーター"},syrah:{sake:"うっとり、濃厚派",other:"ベルジャンエール"},rose:{sake:"ほどよきを知る人",other:"ペールエール"},sparkling:{sake:"とりあえず辛口、卒業生",other:"ピルスナー／すっきりラガー"}}; function renderResult(){const ranked=rankResults();const r=resultById[ranked[0].id];{var cb=(typeof CROSS_BRIDGE!=='undefined')&&CROSS_BRIDGE[r.id];if(cb){var e1=document.getElementById('crossSake'),e2=document.getElementById('crossOther');if(e1)e1.textContent='「'+cb.sake+'」';if(e2)e2.textContent=cb.other;}}
       sendLog({typeNumber:r.id,typeName:r.cat,sukkiri:r.axes[0],fruity:r.axes[1],shikkari:r.axes[2],lang:"ja",category:"wine"});const cat=document.getElementById('resultCat');cat.className='cat-crop result-cat';cat.style.backgroundImage=`url("assets/cat_${r.id}.png")`;document.getElementById('resultCatName').textContent=r.cat;document.getElementById('resultStyle').textContent=`おすすめ：${r.style}`;document.getElementById('resultLead').textContent=r.lead;document.getElementById('tasteChart').innerHTML=buildTasteChart(r);document.getElementById('sweetness').textContent=r.sweetness;document.getElementById('resultTaste').textContent=r.taste;document.getElementById('resultOrder').textContent=`「${r.order}」`;document.getElementById('resultAvoid').textContent=r.avoid;document.getElementById('resultPairings').innerHTML=r.pairings.map(x=>`<span>${x}</span>`).join('');document.getElementById('nextGrid').innerHTML=ranked.slice(1,3).map(x=>{const n=resultById[x.id];return `<div class="next-item"><strong>${n.style}</strong><span>${n.cat}</span></div>`}).join('');show('result')}
     function restart(){answers.length=0;current=0;show('start')}
   </script>
