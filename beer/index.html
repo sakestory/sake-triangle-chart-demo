@@ -116,8 +116,8 @@
       <div class="card"><h2>合わせやすい料理</h2><div id="resultPairings" class="pairings"></div></div>
       <div class="card"><h2>次の一杯に試すなら</h2><div id="nextGrid" class="next-grid"></div></div>
       <div class="card"><p class="caution">同じ種類でも、醸造所や商品によって苦味・甘さ・香りは変わります。種類の名前を入口に、気になった一本を試してみてください。</p></div>
-      <div class="card"><h2>結果をシェア</h2><canvas id="shareCanvas" width="1000" height="1000" style="width:100%;height:auto;border-radius:12px;display:block;border:1px solid var(--line)"></canvas><button class="btn btn-bridge" type="button" onclick="saveAndShare()">画像つきでシェア</button><button class="btn btn-ghost" type="button" onclick="downloadCard()">画像を保存</button><p class="caution">スマホは共有画面が開きます。パソコンは画像を保存して、Xなどに添付してください。</p></div><div class="card"><h2>ほかのお酒でも、あなたの入口</h2><p class="cross-line">🍶 日本酒なら <strong id="crossSake"></strong><br>🍷 ワインなら <strong id="crossOther"></strong></p><a class="btn btn-bridge" href="../">🍶 日本酒三角チャートをやってみる</a><a class="btn btn-ghost" href="../wine/">🍷 ワイン版もやってみる</a></div><button class="btn btn-primary" type="button" onclick="restart()">もう一度診断する</button>
-      <div class="footer">ビール猫診断 v0.8　※お酒は20歳になってから</div>
+      <div class="card"><h2>ほかのお酒でも、あなたの入口</h2><p class="cross-line">🍶 日本酒なら <strong id="crossSake"></strong><br>🍷 ワインなら <strong id="crossOther"></strong></p><a class="btn btn-bridge" href="../">🍶 日本酒三角チャートをやってみる</a><a class="btn btn-ghost" href="../wine/">🍷 ワイン版もやってみる</a></div><button class="btn btn-primary" type="button" onclick="restart()">もう一度診断する</button>
+      <div class="footer">ビール猫診断 v0.7　※お酒は20歳になってから</div>
     </section>
   </main>
 
@@ -223,68 +223,8 @@ function sendLog(payload){
   }catch(e){}
 }
 sendLog({typeNumber:"",typeName:(document.referrer||"(direct)")+(location.search?" "+location.search:""),sukkiri:"",fruity:"",shikkari:"",lang:"ja",category:"beer_visit"});
-
-function cssv(n){return getComputedStyle(document.documentElement).getPropertyValue(n).trim()}
-function buildShareText(r){return "私のビール猫は「"+r.cat+"」でした🍺\nあなたに合うビールスタイルがわかる #ビール三角チャート\nhttps://shindan.sake-story.com/beer/"}
-function drawShareCard(r,done){
-  var cv=document.getElementById("shareCanvas");if(!cv)return;var ctx=cv.getContext("2d");
-  var paper=cssv("--paper")||"#f7f0e0",ink=cssv("--ink")||"#3a2a20",accent=cssv("--accent")||"#a85a13",muted=cssv("--muted")||"#756453",line=cssv("--line")||"#dcc9a5",card=cssv("--card")||"#fffaf0";
-  var serif='"Hiragino Mincho ProN","Yu Mincho",YuMincho,serif';
-  ctx.fillStyle=paper;ctx.fillRect(0,0,1000,1000);
-  ctx.strokeStyle=accent;ctx.lineWidth=10;ctx.strokeRect(14,14,972,972);
-  ctx.textAlign="center";
-  ctx.fillStyle=accent;ctx.font="600 26px "+serif;ctx.fillText("S A K E   s t o r y",500,84);
-  ctx.fillStyle=ink;ctx.font="700 52px "+serif;ctx.fillText("ビール三角チャート診断",500,150);
-  var img=new Image();
-  img.onload=function(){
-    ctx.save();ctx.beginPath();ctx.arc(240,390,168,0,Math.PI*2);ctx.closePath();ctx.clip();
-    ctx.drawImage(img,72,222,336,336);ctx.restore();
-    ctx.strokeStyle=accent;ctx.lineWidth=6;ctx.beginPath();ctx.arc(240,390,171,0,Math.PI*2);ctx.stroke();
-    finish();
-  };
-  img.onerror=finish;
-  img.src="assets/cat_"+r.id+".png";
-  function fit(t,max,base,w){ctx.font=w+" "+base+"px "+serif;var tw=ctx.measureText(t).width;if(tw>max){var f=Math.max(18,Math.floor(base*max/tw));ctx.font=w+" "+f+"px "+serif;}}
-  function finish(){
-    ctx.textAlign="left";
-    ctx.fillStyle=muted;ctx.font="500 26px "+serif;ctx.fillText("あなたのビール猫は",450,300);
-    ctx.fillStyle=accent;fit(r.cat,480,58,"700");ctx.fillText(r.cat,450,368);
-    ctx.fillStyle=ink;fit(r.style,480,34,"600");ctx.fillText(r.style,450,424);
-    ctx.fillStyle=muted;ctx.font="400 22px sans-serif";
-    var t=r.lead||"",lineArr=[],cur="";
-    for(var i=0;i<t.length;i++){var test=cur+t[i];if(ctx.measureText(test).width>470&&cur){lineArr.push(cur);cur=t[i]}else cur=test}
-    if(cur)lineArr.push(cur);lineArr.slice(0,3).forEach(function(v,i2){ctx.fillText(v,450,470+i2*33)});
-    /* 三角チャート */
-    var cxp=500,top={x:cxp,y:655},br={x:cxp+160,y:908},bl={x:cxp-160,y:908},c={x:cxp,y:(655+908+908)/3};
-    function tw2(p,f){return{x:c.x+(p.x-c.x)*f,y:c.y+(p.y-c.y)*f}}
-    var verts=[top,br,bl];
-    [0.33,0.66,1].forEach(function(f){ctx.strokeStyle=line;ctx.lineWidth=f===1?3:1.5;ctx.beginPath();var ps=verts.map(function(v){return tw2(v,f)});ctx.moveTo(ps[0].x,ps[0].y);ctx.lineTo(ps[1].x,ps[1].y);ctx.lineTo(ps[2].x,ps[2].y);ctx.closePath();ctx.stroke()});
-    var pts=verts.map(function(v,i3){return tw2(v,Math.max(0.08,(r.axes[i3]||0)/10))});
-    ctx.fillStyle=accent;ctx.globalAlpha=0.22;ctx.beginPath();ctx.moveTo(pts[0].x,pts[0].y);ctx.lineTo(pts[1].x,pts[1].y);ctx.lineTo(pts[2].x,pts[2].y);ctx.closePath();ctx.fill();ctx.globalAlpha=1;
-    ctx.strokeStyle=accent;ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(pts[0].x,pts[0].y);ctx.lineTo(pts[1].x,pts[1].y);ctx.lineTo(pts[2].x,pts[2].y);ctx.closePath();ctx.stroke();
-    pts.forEach(function(p){ctx.fillStyle=accent;ctx.beginPath();ctx.arc(p.x,p.y,7,0,Math.PI*2);ctx.fill()});
-    ctx.textAlign="center";ctx.fillStyle=ink;ctx.font="600 26px "+serif;
-    var albl=(DATA.axisLabels||["","",""]);
-    ctx.fillText(albl[0]+" "+r.axes[0],top.x,top.y-22);
-    ctx.fillText(albl[1]+" "+r.axes[1],br.x-20,br.y+36);
-    ctx.fillText(albl[2]+" "+r.axes[2],bl.x+20,bl.y+36);
-    /* 日本酒への橋 */
-    var cb=(typeof CROSS_BRIDGE!=="undefined")&&CROSS_BRIDGE[r.id];
-    if(cb){ctx.fillStyle=ink;ctx.font="600 28px "+serif;ctx.fillText("🍶 日本酒なら「"+cb.sake+"」",500,592)}
-    ctx.fillStyle=accent;ctx.font="700 29px "+serif;ctx.fillText("shindan.sake-story.com/beer/　#ビール三角チャート",500,984);
-    if(done)done(cv);
-  }
-}
-function saveAndShare(){var r=window.__lastR;if(!r)return;drawShareCard(r,function(cv){cv.toBlob(function(b){
-  var text=buildShareText(r);var f=b?new File([b],"result.png",{type:"image/png"}):null;
-  if(f&&navigator.share&&navigator.canShare&&navigator.canShare({files:[f]})){navigator.share({files:[f],text:text}).catch(function(){})}
-  else{var a=document.createElement("a");a.download="result.png";a.href=cv.toDataURL("image/png");a.click();
-    setTimeout(function(){window.open("https://twitter.com/intent/tweet?text="+encodeURIComponent(text),"_blank")},600)}
-},"image/png")})}
-function downloadCard(){var r=window.__lastR;if(!r)return;drawShareCard(r,function(cv){var a=document.createElement("a");a.download="result.png";a.href=cv.toDataURL("image/png");a.click()})}
-
 const CROSS_BRIDGE={pilsner:{sake:"とりあえず辛口、卒業生",other:"辛口スパークリング"},pale:{sake:"食中酒の美学",other:"シャルドネ（白）"},ipa:{sake:"濃いのに、爽やか",other:"カベルネ・ソーヴィニヨン（赤）"},hazy:{sake:"迷ったら、両方",other:"ピノ・ノワール（赤）"},wheat:{sake:"やさしい甘さ党",other:"リースリング（白）"},stout:{sake:"切れ味も、深みも",other:"シャルドネ（白）"},belgian:{sake:"うっとり、濃厚派",other:"シラー／シラーズ（赤）"},sour:{sake:"はずむソーダ水",other:"リースリング（白）"}}; function renderResult(){
-      const ranked=rankResults();const r=resultById[ranked[0].id];{var cb=(typeof CROSS_BRIDGE!=='undefined')&&CROSS_BRIDGE[r.id];if(cb){var e1=document.getElementById('crossSake'),e2=document.getElementById('crossOther');if(e1)e1.textContent='「'+cb.sake+'」';if(e2)e2.textContent=cb.other;}}window.__lastR=r;try{drawShareCard(r)}catch(e){}
+      const ranked=rankResults();const r=resultById[ranked[0].id];{var cb=(typeof CROSS_BRIDGE!=='undefined')&&CROSS_BRIDGE[r.id];if(cb){var e1=document.getElementById('crossSake'),e2=document.getElementById('crossOther');if(e1)e1.textContent='「'+cb.sake+'」';if(e2)e2.textContent=cb.other;}}
       sendLog({typeNumber:r.id,typeName:r.cat,sukkiri:r.axes[0],fruity:r.axes[1],shikkari:r.axes[2],lang:"ja",category:"beer"});
       const cat=document.getElementById('resultCat');cat.className='cat-crop result-cat';cat.style.backgroundImage=`url("assets/cat_${r.id}.png")`;
       document.getElementById('resultCatName').textContent=r.cat;
