@@ -1,6 +1,6 @@
 name: Deploy to Lolipop (/shindan) via SFTP
 
-# main へ push されたら、診断サイトの本番ファイル(29個)だけを
+# main へ push されたら、診断サイトの本番ファイルだけを
 # ロリポップの /shindan へ SFTP(SSH) でアップロードする（アップロードのみ・削除なし）。
 # FTPS ではなく SFTP を使う理由：FTPアクセス制限(.ftpaccess)が有効なため
 # FTP系は許可IP以外から操作不可。SSH経由なら制限を維持したままデプロイできる。
@@ -8,11 +8,17 @@ on:
   push:
     branches: [ main ]
     paths:
+      - '.github/workflows/deploy-lolipop.yml'
       - 'index.html'
       - 'cat_*.png'
       - 'ogp.png'
+      - 'ogp-*.png'
       - 'robots.txt'
       - 'sitemap.xml'
+      - 'en/**'
+      - 'zh-cn/**'
+      - 'zh-tw/**'
+      - 'ko/**'
       - 'beer/**'
       - 'wine/**'
   workflow_dispatch:   # 手動実行も可能（初回はこれで管理者が明示起動する想定）
@@ -37,14 +43,22 @@ jobs:
       - name: リポジトリを取得
         uses: actions/checkout@v4
 
-      - name: 対象28ファイルだけを staging に集める
+      - name: 公開対象ファイルだけを staging に集める
         run: |
           set -euo pipefail
           mkdir -p deploy
           cp index.html deploy/
           cp ogp.png deploy/
+          cp ogp-en.png deploy/
+          cp ogp-zh-cn.png deploy/
+          cp ogp-zh-tw.png deploy/
+          cp ogp-ko.png deploy/
           cp robots.txt deploy/
           cp sitemap.xml deploy/
+          cp -R en deploy/
+          cp -R zh-cn deploy/
+          cp -R zh-tw deploy/
+          cp -R ko deploy/
           cp -R beer deploy/
           cp -R wine deploy/
           for n in $(seq -w 1 27); do
@@ -54,7 +68,7 @@ jobs:
           find deploy -type f -printf '%f\n' | sort
           count=$(find deploy -type f | wc -l | tr -d ' ')
           echo "staged count: ${count}"
-          test "${count}" -eq 50   # 本体29 + robots/sitemap2 + beer10 + wine9。数が合わなければ失敗させる
+          test "${count}" -eq 58   # 既存50 + 言語別OGP4 + 言語別入口4。数が合わなければ失敗させる
 
       - name: lftp を導入
         run: sudo apt-get update && sudo apt-get install -y lftp
