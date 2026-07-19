@@ -288,7 +288,7 @@ a.btn{text-decoration:none;text-align:center;box-sizing:border-box;display:block
       <div style="margin:16px 0 0;padding:12px 14px;border:1px solid var(--line);border-radius:10px;color:var(--sumi-soft);font-size:12.5px;line-height:1.8;text-align:left;"><p style="margin:0;">結果画面では、2つのおすすめをご案内します。ひとつは、このチャートを作った酒場店主の店・日本酒居酒屋 SAKE story（東京・五反田）でいま飲める一杯。もうひとつは、お家や他店で飲むときのおすすめです。どちらも、酒場店主が実際に飲んで確かめた銘柄の中から選んで掲載しています。</p><p style="margin:6px 0 0;font-size:11px;color:#746A5C;text-align:right;">2026年7月19日改訂</p></div>
     </div>
 
-    <div class="foot">v11.11</div>
+    <div class="foot">v11.11.1</div>
   </section>
 
   <!-- ===== 質問 ===== -->
@@ -377,7 +377,7 @@ a.btn{text-decoration:none;text-align:center;box-sizing:border-box;display:block
 
     <p class="story-note">この診断のもとになった『日本酒三角チャート』は、東京・五反田の日本酒居酒屋 SAKE story の酒場店主が、20年間カウンターで「とりあえず辛口で」と言われ続けた末にたどり着いた、ひとつの答えなんです。<br>→ <a href="https://sake-story.com/" target="_blank" rel="noopener">SAKE story</a></p>
     <p class="x-follow"><a href="https://x.com/motorkey" target="_blank" rel="noopener">酒場店主の独り言をフォロー（X）</a>　<a href="https://www.instagram.com/mr.sake_japan/" target="_blank" rel="noopener">Instagram</a></p>
-    <div class="foot">© SAKE story　日本酒三角チャート®　v11.11</div>
+    <div class="foot">© SAKE story　日本酒三角チャート®　v11.11.1</div>
     <p style="font-size:10.5px;color:#746A5C;margin:4px 0 0;">「日本酒三角チャート」は登録商標です。文章・画像・銘柄データの無断転用はご遠慮ください。</p>
   </section>
 
@@ -2026,7 +2026,7 @@ function drawCard(r,done){
     /* 分析文は3〜4行に整え、シェアを見た人にも診断の深さが伝わるようにする。 */
     const wrap=function(text,x,y,maxWidth,lineHeight,maxLines){
       /* 英語は単語単位、日本語は1文字単位で折り返す */
-      let line="",lines=[];const toks=(PACK&&PACK.wordWrap===false)?text.split(/(?<= )/):[...text];
+      let line="",lines=[];const toks=(PACK&&PACK.wordWrap===true)?text.split(/(?<= )/):[...text];
       for(const ch of toks){const test=line+ch;if(ctx.measureText(test).width>maxWidth&&line){lines.push(line);line=ch;}else line=test;}if(line)lines.push(line);
       if(lines.length>maxLines){lines=lines.slice(0,maxLines);lines[maxLines-1]=lines[maxLines-1].replace(/[。、]$/,'')+'…';}
       lines.forEach(function(v,i){ctx.fillText(v,x,y+i*lineHeight);});return lines.length;
