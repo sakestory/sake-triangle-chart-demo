@@ -28,6 +28,28 @@
 <meta property="og:image:height" content="630"/>
 <meta property="og:image:alt" content="日本酒三角チャート診断。全10問、約1〜2分、無料。"/>
 <meta name="twitter:card" content="summary_large_image"/>
+<!-- GA4: sake-story.com と同じプロパティで、日本語を含む5言語の流入と診断行動を集計。
+     広告向けシグナルと広告パーソナライズは使用しない。file/localhost/?test=1 では送信しない。 -->
+<script>
+(function(){
+  try{
+    var p=new URLSearchParams(location.search);
+    var test=location.protocol==="file:"||location.hostname==="localhost"||location.hostname==="127.0.0.1"||p.get("test")==="1";
+    if(test)return;
+    window.dataLayer=window.dataLayer||[];
+    window.gtag=window.gtag||function(){window.dataLayer.push(arguments);};
+    window.gtag("js",new Date());
+    window.gtag("config","G-NK2MW06S5P",{
+      allow_google_signals:false,
+      allow_ad_personalization_signals:false
+    });
+    var s=document.createElement("script");
+    s.async=true;
+    s.src="https://www.googletagmanager.com/gtag/js?id=G-NK2MW06S5P";
+    document.head.appendChild(s);
+  }catch(e){}
+})();
+</script>
 <script type="application/ld+json">
 {
  "@context":"https://schema.org",
@@ -1433,6 +1455,8 @@ applyPackUI();
   });
   sel.setAttribute("style","position:fixed;top:10px;right:10px;z-index:60;font-family:var(--sans);font-size:12.5px;padding:6px 10px;border-radius:999px;border:1px solid var(--line);background:var(--card);color:var(--sumi-soft);cursor:pointer;box-shadow:0 1px 5px rgba(0,0,0,.08);-webkit-appearance:none;appearance:none;");
   sel.onchange=function(){
+    if(typeof trackEvent==="function")trackEvent("language_change",{from_language:cur,to_language:sel.value,transport_type:"beacon"});
+    if(typeof sendActionLog==="function")sendActionLog("language_change",null,cur+"→"+sel.value);
     const u=new URL(location.href);
     if(sel.value==="ja"){u.searchParams.delete("lang");}else{u.searchParams.set("lang",sel.value);}
     location.href=u.toString();
@@ -1443,12 +1467,40 @@ applyPackUI();
 /* ==== 集計送信（訪問・診断とも同じスプレッドシートへ）。ローカル/テスト実行時は送らない ==== */
 const LOG_URL="https://script.google.com/macros/s/AKfycbxKxuJHkFBw0kW_GKFCg009aqqsOs5wgO1ZnFYXlZrykFOTP9fo5T1hVPzgDpgSVlHt/exec";
 function isTestRun(){return location.protocol==="file:"||location.hostname==="localhost"||location.hostname==="127.0.0.1"||new URLSearchParams(location.search).get("test")==="1";}
+/* GA4イベント。UTMと表示言語を全イベントへ付け、SNS別・言語別の比較を可能にする。 */
+function analyticsContext(){
+  const p=new URLSearchParams(location.search);
+  return {
+    language:document.documentElement.lang||"ja",
+    app_language:typeof LANG!=="undefined"?LANG:"ja",
+    utm_source:p.get("utm_source")||"",
+    utm_medium:p.get("utm_medium")||"",
+    utm_campaign:p.get("utm_campaign")||"",
+    utm_content:p.get("utm_content")||""
+  };
+}
+function trackEvent(name,params){
+  if(isTestRun()||typeof window.gtag!=="function")return;
+  try{window.gtag("event",name,Object.assign(analyticsContext(),params||{}));}catch(e){}
+}
 function sendLog(payload){
   if(isTestRun())return;
   try{
     fetch(LOG_URL,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain;charset=utf-8"},
       body:JSON.stringify(payload)}).catch(function(){});
   }catch(e){}
+}
+function sendActionLog(category,r,typeName){
+  const t=r&&r.type?r.type:null;
+  sendLog({
+    typeNumber:t?t.no:"",
+    typeName:typeName||(t?t.name:""),
+    sukkiri:r?r.X:"",
+    fruity:r?r.Y:"",
+    shikkari:r?r.Z:"",
+    lang:document.documentElement.lang||"ja",
+    category:category
+  });
 }
 /* 離脱計測：診断の途中でページを離れた時、どの質問まで進んでいたかを1回だけ送る（category="drop"、typeName=q番号）。
    既存の訪問・診断ログと同じ列構成の行として記録される。タブ切替後に戻って完走する人も混ざるため、傾向を見る用途。 */
@@ -1458,6 +1510,7 @@ function sendDrop(){
   const qz=document.getElementById("sc-quiz");
   if(!qz||!qz.classList.contains("active"))return;
   dropSent=true;
+  trackEvent("quiz_drop",{question_number:qi+1,transport_type:"beacon"});
   const payload=JSON.stringify({typeNumber:"",typeName:"q"+(qi+1),sukkiri:"",fruity:"",shikkari:"",lang:document.documentElement.lang||"ja",category:"drop"});
   try{
     if(navigator.sendBeacon){navigator.sendBeacon(LOG_URL,payload);}
@@ -1474,6 +1527,8 @@ sendLog({typeNumber:"",typeName:(document.referrer||"(direct)")+(location.search
 function startQuiz(){
   answers=[]; qi=0;
   dropSent=false; quizDone=false;  /* 同じ画面で2回目以降の診断でも途中離脱を正しく記録する */
+  trackEvent("quiz_start",{question_count:QUESTIONS.length});
+  sendActionLog("quiz_start",null,"10 questions");
   show("sc-quiz");
   renderQ();
 }
@@ -1690,6 +1745,8 @@ function renderResult(){
       box.hidden=!open;
       btn.setAttribute("aria-expanded",open?"true":"false");
       btn.textContent=label(open);
+      if(open)trackEvent("menu_expand",{sake_cat_number:r.type.no,sake_cat_name:r.type.name,menu_item_count:all.length});
+      if(open)sendActionLog("menu_expand",r,String(all.length));
     };
   })();
   const home=homeTop3(r,r.recStore.map(function(b){return b.name;}));
@@ -1728,6 +1785,14 @@ function renderResult(){
   /* v11.9：category="診断v2"で10問版と旧9問版をシート上で区別。logicVersion/q9/q10はGAS側が対応したら列に入る（未対応でも無害） */
   sendLog({typeNumber:t.no,typeName:t.name,sukkiri:r.X,fruity:r.Y,shikkari:r.Z,lang:document.documentElement.lang||"ja",
     category:"診断v2",logicVersion:2,q9:(answers[8]&&answers[8].oi)||"",q10:(answers[9]&&answers[9].oi)||""});
+  trackEvent("quiz_complete",{
+    sake_cat_number:t.no,
+    sake_cat_name:t.name,
+    crisp_score:r.X,
+    fruity_score:r.Y,
+    rich_score:r.Z,
+    question_count:QUESTIONS.length
+  });
 }
 
 /* 各銘柄の理由文。
@@ -2147,6 +2212,8 @@ function saveAndShare(){
   /* ① スマホ：事前に用意した画像ファイルを、押した瞬間そのまま共有
         （awaitを挟まないことで、スマホの「共有許可」の一瞬を逃さない） */
   if(cardFile && navigator.canShare && navigator.canShare({files:[cardFile]})){
+    trackEvent("result_card_share",{share_method:"native",sake_cat_number:r.type.no,sake_cat_name:r.type.name});
+    sendActionLog("card_share_native",r);
     navigator.share({files:[cardFile], text:shareText}).catch(()=>{});
     return;
   }
@@ -2158,6 +2225,8 @@ function saveAndShare(){
     a.download="sake-result.png";
     a.href=cv.toDataURL("image/png");
     a.click();
+    trackEvent("result_card_download",{download_method:"share_fallback",sake_cat_number:r.type.no,sake_cat_name:r.type.name});
+    sendActionLog("card_download_share_fallback",r);
   }catch(e){}
   setTimeout(()=>{
     window.open("https://twitter.com/intent/tweet?text="+encodeURIComponent(shareText),"_blank");
@@ -2172,16 +2241,20 @@ function downloadCard(){
     a.download="sake-shindan-result.png";
     a.href=cv.toDataURL("image/png");
     a.click();
+    trackEvent("result_card_download",{download_method:"save_button",sake_cat_number:result.type.no,sake_cat_name:result.type.name});
+    sendActionLog("card_download",result);
   });
 }
 
 function shareX(){
   const r=result;
   const text=buildShareText(r);
+  trackEvent("result_card_share",{share_method:"x",sake_cat_number:r.type.no,sake_cat_name:r.type.name});
+  sendActionLog("card_share_x",r);
   window.open("https://twitter.com/intent/tweet?text="+encodeURIComponent(text),"_blank");
 }
 
-function restart(){ show("sc-start"); window.scrollTo({top:0,behavior:"smooth"}); }
+function restart(){ trackEvent("quiz_restart",result?{sake_cat_number:result.type.no,sake_cat_name:result.type.name}:{}); sendActionLog("quiz_restart",result); show("sc-start"); window.scrollTo({top:0,behavior:"smooth"}); }
 
 function show(id){
   document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
