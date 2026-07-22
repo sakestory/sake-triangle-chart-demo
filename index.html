@@ -341,7 +341,7 @@ a.btn{text-decoration:none;text-align:center;box-sizing:border-box;display:block
       <div style="margin:16px 0 0;padding:12px 14px;border:1px solid var(--line);border-radius:10px;color:var(--sumi-soft);font-size:12.5px;line-height:1.8;text-align:left;"><p style="margin:0;">結果画面では、2つのおすすめをご案内します。ひとつは、このチャートを作った酒場店主の店・日本酒居酒屋 SAKE story（東京・五反田）でいま飲める一杯。もうひとつは、お家や他店で飲むときのおすすめです。どちらも、酒場店主が実際に飲んで確かめた銘柄の中から選んで掲載しています。</p><p style="margin:6px 0 0;font-size:11px;color:#746A5C;text-align:right;">2026年7月22日改訂</p></div>
     </div>
 
-    <div class="foot">v11.14.2</div>
+    <div class="foot">v11.14.3</div>
   </section>
 
   <!-- ===== 質問 ===== -->
@@ -388,11 +388,6 @@ a.btn{text-decoration:none;text-align:center;box-sizing:border-box;display:block
          おすすめ5本の外にある銘柄も読めるようにする。一言コメントが入ればそちらを優先表示 -->
     <button id="menuToggle" class="menu-toggle" type="button" aria-expanded="false" aria-controls="menuList"></button>
     <div id="menuList" class="menu-list" hidden></div>
-    <div id="visitGift" class="visit-gift">
-      <div class="visit-gift-title">🧲 この結果画面を、お店で見せてください</div>
-      <p class="visit-gift-body">五反田の日本酒居酒屋「SAKE story」でこの画面を見せていただいた方に、日本酒の蓋で作る<strong>「酒蓋マグネット」</strong>の作り方をお教えして、そのまま1つプレゼントします。※なくなり次第終了</p>
-      <a class="visit-gift-map" href="https://www.google.com/maps/search/?api=1&query=SAKE+story+%E4%BA%94%E5%8F%8D%E7%94%B0" target="_blank" rel="noopener">お店の場所を地図で見る</a>
-    </div>
     <div class="sec">お家や他店で飲むなら</div>
     <div id="homeList" class="home-list"></div>
     <p class="home-note">☆ なかなか出会えないかも　／　◎ 酒屋・オンラインで探しやすい　／　◇ スーパー・コンビニで見つけやすい</p>
@@ -432,8 +427,14 @@ a.btn{text-decoration:none;text-align:center;box-sizing:border-box;display:block
     <button class="btn btn-ghost" onclick="restart()" style="margin-top:22px;">もう一度、診断する</button>
 
     <p class="story-note">この診断のもとになった『日本酒三角チャート』は、東京・五反田の日本酒居酒屋 SAKE story の酒場店主が、20年間カウンターで「とりあえず辛口で」と言われ続けた末にたどり着いた、ひとつの答えなんです。<br>→ <a href="https://sake-story.com/" target="_blank" rel="noopener">SAKE story</a></p>
+    <!-- v11.14.3：酒蓋マグネット枠を「店の一杯」直下からここ（店の物語の直後）へ移動＝宣伝色を抑える（橋野さん指示 2026-07-22） -->
+    <div id="visitGift" class="visit-gift">
+      <div class="visit-gift-title">🧲 この結果画面を、お店で見せてください</div>
+      <p class="visit-gift-body">五反田の日本酒居酒屋「SAKE story」でこの画面を見せていただいた方に、日本酒の蓋で作る<strong>「酒蓋マグネット」</strong>の作り方をお教えして、そのまま1つプレゼントします。※なくなり次第終了</p>
+      <a class="visit-gift-map" href="https://www.google.com/maps/search/?api=1&query=SAKE+story+%E4%BA%94%E5%8F%8D%E7%94%B0" target="_blank" rel="noopener">お店の場所を地図で見る</a>
+    </div>
     <p class="x-follow"><a href="https://x.com/motorkey" target="_blank" rel="noopener">酒場店主の独り言をフォロー（X）</a>　<a href="https://www.instagram.com/mr.sake_japan/" target="_blank" rel="noopener">Instagram</a></p>
-    <div class="foot">© SAKE story　日本酒三角チャート®　v11.14.2</div>
+    <div class="foot">© SAKE story　日本酒三角チャート®　v11.14.3</div>
     <p style="font-size:10.5px;color:#746A5C;margin:4px 0 0;">「日本酒三角チャート」は登録商標です。文章・画像・銘柄データの無断転用はご遠慮ください。</p>
   </section>
 
