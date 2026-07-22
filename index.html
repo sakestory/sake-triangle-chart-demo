@@ -243,6 +243,8 @@ body{
 /* 累計診断数（v11.13）。GASから数字が取れたときだけ表示（取れない間は非表示のまま） */
 .total-count{font-size:12.5px;color:var(--sumi-soft);text-align:center;margin:14px 4px 0;letter-spacing:.04em;}
 .total-count strong{color:var(--shu);font-size:15px;font-weight:700;}
+/* 更新間隔の注記（v11.14）。数字が1時間キャッシュ＝リアルタイムでない誤解を防ぐ */
+.total-count-note{display:block;font-size:10px;color:#746A5C;font-weight:400;margin-top:3px;letter-spacing:.02em;}
 
 /* 店の物語（署名） */
 .story-note{font-family:var(--serif);font-size:12.5px;color:var(--sumi-soft);line-height:1.95;margin:34px 2px 0;padding-top:18px;border-top:1px solid var(--line);}
@@ -338,7 +340,7 @@ a.btn{text-decoration:none;text-align:center;box-sizing:border-box;display:block
       <div style="margin:16px 0 0;padding:12px 14px;border:1px solid var(--line);border-radius:10px;color:var(--sumi-soft);font-size:12.5px;line-height:1.8;text-align:left;"><p style="margin:0;">結果画面では、2つのおすすめをご案内します。ひとつは、このチャートを作った酒場店主の店・日本酒居酒屋 SAKE story（東京・五反田）でいま飲める一杯。もうひとつは、お家や他店で飲むときのおすすめです。どちらも、酒場店主が実際に飲んで確かめた銘柄の中から選んで掲載しています。</p><p style="margin:6px 0 0;font-size:11px;color:#746A5C;text-align:right;">2026年7月22日改訂</p></div>
     </div>
 
-    <div class="foot">v11.13</div>
+    <div class="foot">v11.14</div>
   </section>
 
   <!-- ===== 質問 ===== -->
@@ -430,7 +432,7 @@ a.btn{text-decoration:none;text-align:center;box-sizing:border-box;display:block
 
     <p class="story-note">この診断のもとになった『日本酒三角チャート』は、東京・五反田の日本酒居酒屋 SAKE story の酒場店主が、20年間カウンターで「とりあえず辛口で」と言われ続けた末にたどり着いた、ひとつの答えなんです。<br>→ <a href="https://sake-story.com/" target="_blank" rel="noopener">SAKE story</a></p>
     <p class="x-follow"><a href="https://x.com/motorkey" target="_blank" rel="noopener">酒場店主の独り言をフォロー（X）</a>　<a href="https://www.instagram.com/mr.sake_japan/" target="_blank" rel="noopener">Instagram</a></p>
-    <div class="foot">© SAKE story　日本酒三角チャート®　v11.13</div>
+    <div class="foot">© SAKE story　日本酒三角チャート®　v11.14</div>
     <p style="font-size:10.5px;color:#746A5C;margin:4px 0 0;">「日本酒三角チャート」は登録商標です。文章・画像・銘柄データの無断転用はご遠慮ください。</p>
   </section>
 
@@ -1519,14 +1521,23 @@ function sendLog(payload){
     tw:function(n){return "已有 <strong>"+n+" 人</strong>完成了診斷";},
     ko:function(n){return "지금까지 <strong>"+n+"명</strong>이 진단했습니다";}
   };
+  /* v11.14：更新間隔の注記。GAS側のキャッシュ（COUNT_CACHE_SECONDS）を変えたらここも直す */
+  var notes={
+    ja:"※ 表示は約1時間ごとに更新されます",
+    en:"Updated about once an hour",
+    zh:"数据约每小时更新一次",
+    tw:"數據約每小時更新一次",
+    ko:"약 1시간마다 업데이트됩니다"
+  };
   try{
     fetch(LOG_URL+"?action=count").then(function(r){return r.json();}).then(function(d){
       var c=d&&Number(d.count);
       if(!c||c<1)return;
       var el=document.getElementById("totalCount");
       if(!el)return;
-      var t=texts[typeof LANG!=="undefined"?LANG:"ja"]||texts.ja;
-      el.innerHTML=t(c.toLocaleString("en-US"));
+      var lng=typeof LANG!=="undefined"?LANG:"ja";
+      var t=texts[lng]||texts.ja;
+      el.innerHTML=t(c.toLocaleString("en-US"))+'<span class="total-count-note">'+(notes[lng]||notes.ja)+"</span>";
       el.hidden=false;
     }).catch(function(){});
   }catch(e){}
