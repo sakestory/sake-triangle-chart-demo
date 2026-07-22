@@ -324,7 +324,7 @@ a.btn{text-decoration:none;text-align:center;box-sizing:border-box;display:block
       <div style="margin:16px 0 0;padding:12px 14px;border:1px solid var(--line);border-radius:10px;color:var(--sumi-soft);font-size:12.5px;line-height:1.8;text-align:left;"><p style="margin:0;">結果画面では、2つのおすすめをご案内します。ひとつは、このチャートを作った酒場店主の店・日本酒居酒屋 SAKE story（東京・五反田）でいま飲める一杯。もうひとつは、お家や他店で飲むときのおすすめです。どちらも、酒場店主が実際に飲んで確かめた銘柄の中から選んで掲載しています。</p><p style="margin:6px 0 0;font-size:11px;color:#746A5C;text-align:right;">2026年7月22日改訂</p></div>
     </div>
 
-    <div class="foot">v11.11.2</div>
+    <div class="foot">v11.11.3</div>
   </section>
 
   <!-- ===== 質問 ===== -->
@@ -382,6 +382,15 @@ a.btn{text-decoration:none;text-align:center;box-sizing:border-box;display:block
     <p class="result-note">好みは料理・温度・体調・気分でも変わります。これは「今のあなたの傾向」です。</p>
     <p class="data-note">日本酒は各銘柄にも多様な味わいがあります。作者の独断で各銘柄の代表的なお酒を基に結果に反映しています。</p>
 
+    <!-- 行動 -->
+    <div class="share-card-label">シェア用カード</div>
+    <canvas id="shareCanvas" width="1000" height="1000"></canvas>
+    <div class="share-btns">
+      <button class="btn btn-shu" onclick="saveAndShare()">画像つきでシェア</button>
+      <button class="btn btn-ghost" onclick="downloadCard()">画像を保存</button>
+    </div>
+    <p class="share-hint">スマホの場合は画像つき共有が起動します。<br>PCの場合は画像を保存してXに添付してください。</p>
+
     <div id="crossDrinksSection">
       <div class="sec">日本酒の好みから、こっちも診断！</div>
       <p class="cross-intro">今の味わい傾向をビールとワインに置き換えるなら、以下がおすすめです。</p>
@@ -397,23 +406,16 @@ a.btn{text-decoration:none;text-align:center;box-sizing:border-box;display:block
           <p class="cross-reason" id="crossWineReason"></p>
         </div>
       </div>
-      <p class="cross-note">日本酒と同じ味という意味ではなく、「軽さ・香り・飲みごたえ」の好みを別のお酒へつないだ提案です。</p><div class="cross-jump"><a class="btn btn-ghost cross-jump-btn" href="beer/">🍺 ビール版をやってみる</a><a class="btn btn-ghost cross-jump-btn" href="wine/">🍷 ワイン版をやってみる</a></div>
+      <p class="cross-note">日本酒と同じ味という意味ではなく、「軽さ・香り・飲みごたえ」の好みを別のお酒へつないだ提案です。</p><div class="cross-jump"><a class="btn btn-ghost cross-jump-btn" href="beer/" onclick="trackEvent('cross_diagnosis_click',{drink:'beer'})">🍺 ビール版をやってみる</a><a class="btn btn-ghost cross-jump-btn" href="wine/" onclick="trackEvent('cross_diagnosis_click',{drink:'wine'})">🍷 ワイン版をやってみる</a></div>
     </div>
 
-    <!-- 行動 -->
-    <div class="share-card-label">シェア用カード</div>
-    <canvas id="shareCanvas" width="1000" height="1000"></canvas>
-    <div class="share-btns">
-      <button class="btn btn-shu" onclick="saveAndShare()">画像つきでシェア</button>
-      <button class="btn btn-ghost" onclick="downloadCard()">画像を保存</button>
-    </div>
-    <p class="share-hint">スマホの場合は画像つき共有が起動します。<br>PCの場合は画像を保存してXに添付してください。</p>
+    
 
     <button class="btn btn-ghost" onclick="restart()" style="margin-top:22px;">もう一度、診断する</button>
 
     <p class="story-note">この診断のもとになった『日本酒三角チャート』は、東京・五反田の日本酒居酒屋 SAKE story の酒場店主が、20年間カウンターで「とりあえず辛口で」と言われ続けた末にたどり着いた、ひとつの答えなんです。<br>→ <a href="https://sake-story.com/" target="_blank" rel="noopener">SAKE story</a></p>
     <p class="x-follow"><a href="https://x.com/motorkey" target="_blank" rel="noopener">酒場店主の独り言をフォロー（X）</a>　<a href="https://www.instagram.com/mr.sake_japan/" target="_blank" rel="noopener">Instagram</a></p>
-    <div class="foot">© SAKE story　日本酒三角チャート®　v11.11.2</div>
+    <div class="foot">© SAKE story　日本酒三角チャート®　v11.11.3</div>
     <p style="font-size:10.5px;color:#746A5C;margin:4px 0 0;">「日本酒三角チャート」は登録商標です。文章・画像・銘柄データの無断転用はご遠慮ください。</p>
   </section>
 
