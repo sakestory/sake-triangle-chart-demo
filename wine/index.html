@@ -2,7 +2,6 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <meta name="robots" content="noindex"/><!-- 正式公開時にこのnoindex行を削除する -->
 <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#f7f0e6">
   <title>ワイン猫 三角チャート診断｜あなたに合うワインの入口</title>
@@ -49,10 +48,18 @@
     .pairings{display:flex;flex-wrap:wrap;gap:8px;margin-top:3px}.pairings span{font-size:13px;border:1px solid var(--line);border-radius:999px;background:#fff;padding:5px 12px}.next-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px}.next-item{background:#fff;border:1px solid var(--line);border-radius:13px;padding:12px 10px;text-align:center}.next-item strong{display:block;font-family:var(--serif);font-size:13px;color:var(--accent)}.next-item span{display:block;font-size:11px;color:var(--muted);margin-top:2px}.caution{font-size:11px!important;color:var(--muted)!important;line-height:1.75}.footer{text-align:center;font-family:var(--serif);font-size:11px;color:var(--muted);margin-top:38px;letter-spacing:.08em}
     @media(max-width:380px){.wrap{padding-inline:16px}.option{padding:14px}.card{padding:17px}.result-cat{width:152px}}@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
   a.btn{text-decoration:none;text-align:center;box-sizing:border-box}.btn-bridge{background:var(--accent);color:#fff;margin-top:24px}.cross-line{font-size:14px;line-height:1.95;color:var(--ink);margin:2px 0 4px}.cross-line strong{color:var(--accent);font-family:var(--serif)}</style>
+<link rel="canonical" href="https://shindan.sake-story.com/wine/"/>
+<meta name="description" content="あなたに合うワインの入口がわかる無料診断。7つの質問で好みを三角チャートに見える化し、9匹のワイン猫が品種の入口を案内します。約1分。"/>
+<meta property="og:title" content="ワイン三角チャート診断｜あなたに合うワインの入口がわかる"/>
+<meta property="og:description" content="7つの質問で好みを三角チャートに見える化。9匹のワイン猫があなたに合うワインの入口を案内します。無料・約1分。"/>
+<meta property="og:url" content="https://shindan.sake-story.com/wine/"/>
+<meta property="og:type" content="website"/>
+<meta name="twitter:card" content="summary"/>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"ワイン三角チャート診断","url":"https://shindan.sake-story.com/wine/","applicationCategory":"LifestyleApplication","operatingSystem":"Web","isAccessibleForFree":true,"inLanguage":"ja","author":{"@type":"Person","name":"橋野元樹","jobTitle":"SAKE story 店主","url":"https://sake-story.com/"}}</script>
 </head>
 <body>
   <main class="wrap">
-    <div class="brand">酒猫シリーズ・試作版</div>
+    <div class="brand">酒猫シリーズ</div>
     <section id="start" class="screen active">
       <div class="hero">
         <div class="eyebrow">WINE CAT</div><h1>ワイン猫診断</h1>
@@ -80,8 +87,8 @@
       <div class="card"><h2>合わせやすい料理</h2><div id="resultPairings" class="pairings"></div></div>
       <div class="card"><h2>次に試すなら</h2><div id="nextGrid" class="next-grid"></div></div>
       <div class="card"><p class="caution">葡萄品種が同じでも、産地・造り手・熟成方法で味は変わります。この結果は、ワイン売り場やお店で相談するときの入口です。</p></div>
-      <div class="card"><h2>ほかのお酒でも、あなたの入口</h2><p class="cross-line">🍶 日本酒なら <strong id="crossSake"></strong><br>🍺 ビールなら <strong id="crossOther"></strong></p><a class="btn btn-bridge" href="../">🍶 日本酒三角チャートをやってみる</a><a class="btn btn-ghost" href="../beer/">🍺 ビール版もやってみる</a></div><button class="btn btn-primary" type="button" onclick="restart()">もう一度診断する</button>
-      <div class="footer">ワイン猫診断 v0.7　※お酒は20歳になってから</div>
+      <div class="card"><h2>結果をシェア</h2><canvas id="shareCanvas" width="1000" height="1000" style="width:100%;height:auto;border-radius:12px;display:block;border:1px solid var(--line)"></canvas><button class="btn btn-bridge" type="button" onclick="saveAndShare()">画像つきでシェア</button><button class="btn btn-ghost" type="button" onclick="downloadCard()">画像を保存</button><p class="caution">スマホは共有画面が開きます。パソコンは画像を保存して、Xなどに添付してください。</p></div><div class="card"><h2>ほかのお酒でも、あなたの入口</h2><p class="cross-line">🍶 日本酒なら <strong id="crossSake"></strong><br>🍺 ビールなら <strong id="crossOther"></strong></p><a class="btn btn-bridge" href="../">🍶 日本酒三角チャートをやってみる</a><a class="btn btn-ghost" href="../beer/">🍺 ビール版もやってみる</a></div><button class="btn btn-primary" type="button" onclick="restart()">もう一度診断する</button>
+      <div class="footer">ワイン猫診断 v1.0　※お酒は20歳になってから</div>
     </section>
   </main>
 
@@ -177,7 +184,66 @@ function sendLog(payload){
   }catch(e){}
 }
 sendLog({typeNumber:"",typeName:(document.referrer||"(direct)")+(location.search?" "+location.search:""),sukkiri:"",fruity:"",shikkari:"",lang:"ja",category:"wine_visit"});
-const CROSS_BRIDGE={sauvignon:{sake:"キレの中に、ひと香り",other:"ペールエール"},chardonnay:{sake:"食中酒の美学",other:"ペールエール"},riesling:{sake:"はずむソーダ水",other:"サワーエール／フルーツビール"},pinot:{sake:"風の調律師",other:"ペールエール"},merlot:{sake:"じんわり幸せ収集家",other:"ヴァイツェン／白ビール"},cabernet:{sake:"旨味ひとすじ",other:"スタウト／ポーター"},syrah:{sake:"うっとり、濃厚派",other:"ベルジャンエール"},rose:{sake:"ほどよきを知る人",other:"ペールエール"},sparkling:{sake:"とりあえず辛口、卒業生",other:"ピルスナー／すっきりラガー"}}; function renderResult(){const ranked=rankResults();const r=resultById[ranked[0].id];{var cb=(typeof CROSS_BRIDGE!=='undefined')&&CROSS_BRIDGE[r.id];if(cb){var e1=document.getElementById('crossSake'),e2=document.getElementById('crossOther');if(e1)e1.textContent='「'+cb.sake+'」';if(e2)e2.textContent=cb.other;}}
+
+function cssv(n){return getComputedStyle(document.documentElement).getPropertyValue(n).trim()}
+function buildShareText(r){return "私のワイン猫は「"+r.cat+"」でした🍷\nあなたに合うワインの入口がわかる #ワイン三角チャート\nhttps://shindan.sake-story.com/wine/"}
+function drawShareCard(r,done){
+  var cv=document.getElementById("shareCanvas");if(!cv)return;var ctx=cv.getContext("2d");
+  var paper=cssv("--paper")||"#f7f0e0",ink=cssv("--ink")||"#3a2a20",accent=cssv("--accent")||"#a85a13",muted=cssv("--muted")||"#756453",line=cssv("--line")||"#dcc9a5";
+  var serif='"Hiragino Mincho ProN","Yu Mincho",YuMincho,serif';
+  ctx.setTransform(1,0,0,1,0,0);
+  ctx.fillStyle=paper;ctx.fillRect(0,0,1000,1000);
+  ctx.strokeStyle=accent;ctx.lineWidth=10;ctx.strokeRect(14,14,972,972);
+  ctx.textAlign="center";
+  ctx.fillStyle=accent;ctx.font="600 25px "+serif;ctx.fillText("S A K E   s t o r y",500,78);
+  ctx.fillStyle=ink;ctx.font="700 50px "+serif;ctx.fillText("ワイン三角チャート診断",500,142);
+  var img=new Image();
+  img.onload=function(){ctx.save();ctx.beginPath();ctx.arc(232,368,148,0,Math.PI*2);ctx.closePath();ctx.clip();ctx.drawImage(img,84,220,296,296);ctx.restore();ctx.strokeStyle=accent;ctx.lineWidth=6;ctx.beginPath();ctx.arc(232,368,151,0,Math.PI*2);ctx.stroke();finish();};
+  img.onerror=finish;
+  img.src="assets/cat_"+r.id+".png";
+  function fit(t,max,base,w){ctx.font=w+" "+base+"px "+serif;var tw=ctx.measureText(t).width;if(tw>max){var f=Math.max(18,Math.floor(base*max/tw));ctx.font=w+" "+f+"px "+serif;}}
+  function wrap(t,x,y,maxw,lh,maxlines,font,color){ctx.font=font;ctx.fillStyle=color;var cur="",lines=[];for(var i=0;i<t.length;i++){var test=cur+t[i];if(ctx.measureText(test).width>maxw&&cur){lines.push(cur);cur=t[i]}else{cur=test}}if(cur)lines.push(cur);if(lines.length>maxlines){lines=lines.slice(0,maxlines);lines[maxlines-1]=lines[maxlines-1].replace(/[、。]$/,'')+"…"}lines.forEach(function(v,i2){ctx.fillText(v,x,y+i2*lh)});return lines.length}
+  function finish(){
+    ctx.textAlign="left";
+    ctx.fillStyle=muted;ctx.font="500 25px "+serif;ctx.fillText("あなたのワイン猫は",425,285);
+    ctx.fillStyle=accent;fit(r.cat,505,54,"700");ctx.fillText(r.cat,425,350);
+    ctx.fillStyle=ink;fit(r.style,505,32,"600");ctx.fillText(r.style,425,403);
+    wrap(r.lead||"",425,448,505,33,3,"400 23px sans-serif",muted);
+    ctx.strokeStyle=line;ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(90,568);ctx.lineTo(910,568);ctx.stroke();
+    /* 左：三角チャート */
+    var top={x:300,y:655},br2={x:445,y:900},bl={x:155,y:900},c={x:300,y:(655+900+900)/3};
+    function tw2(p,f){return{x:c.x+(p.x-c.x)*f,y:c.y+(p.y-c.y)*f}}
+    var verts=[top,br2,bl];
+    [0.33,0.66,1].forEach(function(f){ctx.strokeStyle=line;ctx.lineWidth=f===1?3:1.5;ctx.beginPath();var ps=verts.map(function(v){return tw2(v,f)});ctx.moveTo(ps[0].x,ps[0].y);ctx.lineTo(ps[1].x,ps[1].y);ctx.lineTo(ps[2].x,ps[2].y);ctx.closePath();ctx.stroke()});
+    var pts=verts.map(function(v,i3){return tw2(v,Math.max(0.08,(r.axes[i3]||0)/10))});
+    ctx.fillStyle=accent;ctx.globalAlpha=0.22;ctx.beginPath();ctx.moveTo(pts[0].x,pts[0].y);ctx.lineTo(pts[1].x,pts[1].y);ctx.lineTo(pts[2].x,pts[2].y);ctx.closePath();ctx.fill();ctx.globalAlpha=1;
+    ctx.strokeStyle=accent;ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(pts[0].x,pts[0].y);ctx.lineTo(pts[1].x,pts[1].y);ctx.lineTo(pts[2].x,pts[2].y);ctx.closePath();ctx.stroke();
+    pts.forEach(function(p){ctx.fillStyle=accent;ctx.beginPath();ctx.arc(p.x,p.y,7,0,Math.PI*2);ctx.fill()});
+    ctx.textAlign="center";ctx.fillStyle=ink;ctx.font="600 23px "+serif;
+    var albl=(DATA.axisLabels||["","",""]);
+    ctx.fillText(albl[0]+" "+r.axes[0],top.x,top.y-22);
+    ctx.fillText(albl[1]+" "+r.axes[1],br2.x-25,br2.y+36);
+    ctx.fillText(albl[2]+" "+r.axes[2],bl.x+25,bl.y+36);
+    /* 右：味わいメモ */
+    ctx.textAlign="left";
+    ctx.fillStyle=accent;ctx.font="600 26px "+serif;ctx.fillText("この一杯は、どんな味？",520,645);
+    wrap(r.taste||"",520,688,395,36,5,"400 24px sans-serif",ink);
+    ctx.fillStyle=muted;ctx.font="500 22px sans-serif";ctx.fillText("甘辛の目安："+(r.sweetness||""),520,862);
+    var cb=(typeof CROSS_BRIDGE!=="undefined")&&CROSS_BRIDGE[r.id];
+    if(cb){var bt="🍶 日本酒なら「"+cb.sake+"」";ctx.font="600 25px "+serif;var btw=ctx.measureText(bt).width;if(btw>395){ctx.font="600 "+Math.max(19,Math.floor(25*395/btw))+"px "+serif}ctx.fillStyle=ink;ctx.fillText(bt,520,905)}
+    ctx.textAlign="center";ctx.fillStyle=accent;ctx.font="700 26px "+serif;ctx.fillText("shindan.sake-story.com/wine/　#ワイン三角チャート",500,970);
+    if(done)done(cv);
+  }
+}
+function saveAndShare(){var r=window.__lastR;if(!r)return;drawShareCard(r,function(cv){cv.toBlob(function(b){
+  var text=buildShareText(r);var f=b?new File([b],"result.png",{type:"image/png"}):null;
+  if(f&&navigator.share&&navigator.canShare&&navigator.canShare({files:[f]})){navigator.share({files:[f],text:text}).catch(function(){})}
+  else{var a=document.createElement("a");a.download="result.png";a.href=cv.toDataURL("image/png");a.click();
+    setTimeout(function(){window.open("https://twitter.com/intent/tweet?text="+encodeURIComponent(text),"_blank")},600)}
+},"image/png")})}
+function downloadCard(){var r=window.__lastR;if(!r)return;drawShareCard(r,function(cv){var a=document.createElement("a");a.download="result.png";a.href=cv.toDataURL("image/png");a.click()})}
+
+const CROSS_BRIDGE={sauvignon:{sake:"キレの中に、ひと香り",other:"ペールエール"},chardonnay:{sake:"食中酒の美学",other:"ペールエール"},riesling:{sake:"はずむソーダ水",other:"サワーエール／フルーツビール"},pinot:{sake:"風の調律師",other:"ペールエール"},merlot:{sake:"じんわり幸せ収集家",other:"ヴァイツェン／白ビール"},cabernet:{sake:"旨味ひとすじ",other:"スタウト／ポーター"},syrah:{sake:"うっとり、濃厚派",other:"ベルジャンエール"},rose:{sake:"ほどよきを知る人",other:"ペールエール"},sparkling:{sake:"とりあえず辛口、卒業生",other:"ピルスナー／すっきりラガー"}}; function renderResult(){const ranked=rankResults();const r=resultById[ranked[0].id];{var cb=(typeof CROSS_BRIDGE!=='undefined')&&CROSS_BRIDGE[r.id];if(cb){var e1=document.getElementById('crossSake'),e2=document.getElementById('crossOther');if(e1)e1.textContent='「'+cb.sake+'」';if(e2)e2.textContent=cb.other;}}window.__lastR=r;try{drawShareCard(r)}catch(e){}
       sendLog({typeNumber:r.id,typeName:r.cat,sukkiri:r.axes[0],fruity:r.axes[1],shikkari:r.axes[2],lang:"ja",category:"wine"});const cat=document.getElementById('resultCat');cat.className='cat-crop result-cat';cat.style.backgroundImage=`url("assets/cat_${r.id}.png")`;document.getElementById('resultCatName').textContent=r.cat;document.getElementById('resultStyle').textContent=`おすすめ：${r.style}`;document.getElementById('resultLead').textContent=r.lead;document.getElementById('tasteChart').innerHTML=buildTasteChart(r);document.getElementById('sweetness').textContent=r.sweetness;document.getElementById('resultTaste').textContent=r.taste;document.getElementById('resultOrder').textContent=`「${r.order}」`;document.getElementById('resultAvoid').textContent=r.avoid;document.getElementById('resultPairings').innerHTML=r.pairings.map(x=>`<span>${x}</span>`).join('');document.getElementById('nextGrid').innerHTML=ranked.slice(1,3).map(x=>{const n=resultById[x.id];return `<div class="next-item"><strong>${n.style}</strong><span>${n.cat}</span></div>`}).join('');show('result')}
     function restart(){answers.length=0;current=0;show('start')}
   </script>
