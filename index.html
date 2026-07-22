@@ -240,6 +240,10 @@ body{
 .share-btns{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px;}
 .share-btns .btn{margin:0;font-size:14px;padding:14px 8px;}
 
+/* 累計診断数（v11.13）。GASから数字が取れたときだけ表示（取れない間は非表示のまま） */
+.total-count{font-size:12.5px;color:var(--sumi-soft);text-align:center;margin:14px 4px 0;letter-spacing:.04em;}
+.total-count strong{color:var(--shu);font-size:15px;font-weight:700;}
+
 /* 店の物語（署名） */
 .story-note{font-family:var(--serif);font-size:12.5px;color:var(--sumi-soft);line-height:1.95;margin:34px 2px 0;padding-top:18px;border-top:1px solid var(--line);}
 .story-note a{color:var(--shu);text-decoration:none;}
@@ -334,7 +338,7 @@ a.btn{text-decoration:none;text-align:center;box-sizing:border-box;display:block
       <div style="margin:16px 0 0;padding:12px 14px;border:1px solid var(--line);border-radius:10px;color:var(--sumi-soft);font-size:12.5px;line-height:1.8;text-align:left;"><p style="margin:0;">結果画面では、2つのおすすめをご案内します。ひとつは、このチャートを作った酒場店主の店・日本酒居酒屋 SAKE story（東京・五反田）でいま飲める一杯。もうひとつは、お家や他店で飲むときのおすすめです。どちらも、酒場店主が実際に飲んで確かめた銘柄の中から選んで掲載しています。</p><p style="margin:6px 0 0;font-size:11px;color:#746A5C;text-align:right;">2026年7月22日改訂</p></div>
     </div>
 
-    <div class="foot">v11.12</div>
+    <div class="foot">v11.13</div>
   </section>
 
   <!-- ===== 質問 ===== -->
@@ -361,6 +365,7 @@ a.btn{text-decoration:none;text-align:center;box-sizing:border-box;display:block
       <div class="cat-lead">あなたの酒猫は</div>
       <h2 class="res-name" id="resName"></h2>
       <div class="one-liner" id="oneLiner"></div>
+      <p id="totalCount" class="total-count" hidden></p>
     </div>
 
     <!-- 後半「日本酒の話」（v11.0 店内版・短縮構成。注文フレーズ欄は店内版では非表示＝データは保持） -->
@@ -425,7 +430,7 @@ a.btn{text-decoration:none;text-align:center;box-sizing:border-box;display:block
 
     <p class="story-note">この診断のもとになった『日本酒三角チャート』は、東京・五反田の日本酒居酒屋 SAKE story の酒場店主が、20年間カウンターで「とりあえず辛口で」と言われ続けた末にたどり着いた、ひとつの答えなんです。<br>→ <a href="https://sake-story.com/" target="_blank" rel="noopener">SAKE story</a></p>
     <p class="x-follow"><a href="https://x.com/motorkey" target="_blank" rel="noopener">酒場店主の独り言をフォロー（X）</a>　<a href="https://www.instagram.com/mr.sake_japan/" target="_blank" rel="noopener">Instagram</a></p>
-    <div class="foot">© SAKE story　日本酒三角チャート®　v11.12</div>
+    <div class="foot">© SAKE story　日本酒三角チャート®　v11.13</div>
     <p style="font-size:10.5px;color:#746A5C;margin:4px 0 0;">「日本酒三角チャート」は登録商標です。文章・画像・銘柄データの無断転用はご遠慮ください。</p>
   </section>
 
@@ -1502,6 +1507,30 @@ function sendLog(payload){
       body:JSON.stringify(payload)}).catch(function(){});
   }catch(e){}
 }
+/* ==== 累計診断数（v11.13・2026-07-22）。ログ用GASのdoGetから取得して結果画面に表示。
+   カウント定義＝スプレッドシートのB列（タイプ番号）が数値で、種別が「診断」「診断v2」または空欄の行。
+   数字が取れない間（GAS側doGet未設置・通信失敗・シート権限変更）は要素ごと非表示のまま
+   ＝結果画面の表示はブロックしない。更新間隔はGAS側のキャッシュ（基本1時間）で調整する。 ==== */
+(function(){
+  var texts={
+    ja:function(n){return "これまでに <strong>"+n+"人</strong> が診断しました";},
+    en:function(n){return "<strong>"+n+" people</strong> have taken this quiz";},
+    zh:function(n){return "已有 <strong>"+n+" 人</strong>完成了诊断";},
+    tw:function(n){return "已有 <strong>"+n+" 人</strong>完成了診斷";},
+    ko:function(n){return "지금까지 <strong>"+n+"명</strong>이 진단했습니다";}
+  };
+  try{
+    fetch(LOG_URL+"?action=count").then(function(r){return r.json();}).then(function(d){
+      var c=d&&Number(d.count);
+      if(!c||c<1)return;
+      var el=document.getElementById("totalCount");
+      if(!el)return;
+      var t=texts[typeof LANG!=="undefined"?LANG:"ja"]||texts.ja;
+      el.innerHTML=t(c.toLocaleString("en-US"));
+      el.hidden=false;
+    }).catch(function(){});
+  }catch(e){}
+})();
 function sendActionLog(category,r,typeName){
   const t=r&&r.type?r.type:null;
   sendLog({
