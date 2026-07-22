@@ -261,7 +261,17 @@ body{
 /* 猫の透かし背景 */
 #catBg{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:-1;}
 #catBg img{position:absolute;pointer-events:none;user-select:none;-webkit-user-drag:none;}
-a.btn{text-decoration:none;text-align:center;box-sizing:border-box;display:block;}.cross-jump{display:flex;gap:8px;margin-top:10px;}.cross-jump .btn{margin-top:0;flex:1;font-size:12px;padding:10px 6px;}.cross-jump .is-soon{cursor:default;background:#E2E0DB;color:#5E5C58;border-color:#C9C5BD;}</style>
+a.btn{text-decoration:none;text-align:center;box-sizing:border-box;display:block;}.cross-jump{display:flex;gap:8px;margin-top:10px;}.cross-jump .btn{margin-top:0;flex:1;font-size:12px;padding:10px 6px;}.cross-jump .is-soon{cursor:default;background:#E2E0DB;color:#5E5C58;border-color:#C9C5BD;}
+/* ==== レア演出（黄金猫／レア猫・v11.12） ==== */
+.seal-wrap{position:relative;}
+.rare-glow{animation:rareGlow 2.2s ease-in-out infinite;border-radius:50%;}
+@keyframes rareGlow{0%,100%{box-shadow:0 0 0 0 rgba(198,158,58,0);}50%{box-shadow:0 0 46px 6px rgba(198,158,58,.55);}}
+.rare-badge{display:inline-block;margin:10px auto 0;padding:6px 18px;border-radius:999px;font-family:var(--serif);font-weight:700;font-size:14px;letter-spacing:.06em;color:#5A4415;background:linear-gradient(135deg,#F6E7A8,#E7C55A 45%,#C99B34);border:1px solid #C99B34;box-shadow:0 3px 10px -3px rgba(198,158,58,.6);animation:rarePop .5s cubic-bezier(.2,1.3,.4,1) both;}
+.rare-badge.silver{color:#3E4652;background:linear-gradient(135deg,#EEF1F5,#C4CAD4 45%,#9AA1AC);border-color:#9AA1AC;box-shadow:0 3px 10px -3px rgba(120,130,145,.55);}
+@keyframes rarePop{0%{transform:scale(.6);opacity:0;}100%{transform:scale(1);opacity:1;}}
+.spark{position:absolute;pointer-events:none;width:14px;height:14px;opacity:0;background:radial-gradient(circle,#FFF6D8 0%,#F3D06B 45%,rgba(243,208,107,0) 70%);animation:sparkTwinkle 1.8s ease-in-out infinite;}
+@keyframes sparkTwinkle{0%,100%{opacity:0;transform:scale(.4);}50%{opacity:1;transform:scale(1);}}
+</style>
 </head>
 <body>
 <div id="catBg" aria-hidden="true"></div>
@@ -324,7 +334,7 @@ a.btn{text-decoration:none;text-align:center;box-sizing:border-box;display:block
       <div style="margin:16px 0 0;padding:12px 14px;border:1px solid var(--line);border-radius:10px;color:var(--sumi-soft);font-size:12.5px;line-height:1.8;text-align:left;"><p style="margin:0;">結果画面では、2つのおすすめをご案内します。ひとつは、このチャートを作った酒場店主の店・日本酒居酒屋 SAKE story（東京・五反田）でいま飲める一杯。もうひとつは、お家や他店で飲むときのおすすめです。どちらも、酒場店主が実際に飲んで確かめた銘柄の中から選んで掲載しています。</p><p style="margin:6px 0 0;font-size:11px;color:#746A5C;text-align:right;">2026年7月22日改訂</p></div>
     </div>
 
-    <div class="foot">v11.11.3</div>
+    <div class="foot">v11.12</div>
   </section>
 
   <!-- ===== 質問 ===== -->
@@ -415,7 +425,7 @@ a.btn{text-decoration:none;text-align:center;box-sizing:border-box;display:block
 
     <p class="story-note">この診断のもとになった『日本酒三角チャート』は、東京・五反田の日本酒居酒屋 SAKE story の酒場店主が、20年間カウンターで「とりあえず辛口で」と言われ続けた末にたどり着いた、ひとつの答えなんです。<br>→ <a href="https://sake-story.com/" target="_blank" rel="noopener">SAKE story</a></p>
     <p class="x-follow"><a href="https://x.com/motorkey" target="_blank" rel="noopener">酒場店主の独り言をフォロー（X）</a>　<a href="https://www.instagram.com/mr.sake_japan/" target="_blank" rel="noopener">Instagram</a></p>
-    <div class="foot">© SAKE story　日本酒三角チャート®　v11.11.3</div>
+    <div class="foot">© SAKE story　日本酒三角チャート®　v11.12</div>
     <p style="font-size:10.5px;color:#746A5C;margin:4px 0 0;">「日本酒三角チャート」は登録商標です。文章・画像・銘柄データの無断転用はご遠慮ください。</p>
   </section>
 
@@ -1690,6 +1700,57 @@ function homeTop3(r,exclude){
 /* =============================================
    結果描画
    ============================================= */
+
+/* ==== レア演出の設定・共通処理（表示のみ・診断ロジック不変・v11.12） ==== */
+const RARE_TIERS = { 27:"gold", 15:"rare", 25:"rare", 10:"rare" }; /* 番号→区分。ここだけ直せば差し替え可 */
+function rareTierOf(no){ return RARE_TIERS[no] || null; }
+const RARE_LABELS = {
+  gold:{ ja:"★ 激レア ★ 黄金猫", en:"★ ULTRA RARE ★ Golden Cat", zh:"★ 超稀有 ★ 黄金猫", tw:"★ 超稀有 ★ 黃金貓", ko:"★ 초희귀 ★ 황금 고양이" },
+  rare:{ ja:"★ レア ★ めったに出ない猫", en:"★ RARE ★ A rare cat", zh:"★ 稀有 ★ 罕见猫", tw:"★ 稀有 ★ 罕見貓", ko:"★ 레어 ★ 희귀한 고양이" }
+};
+function rareLabel(tier){ const m=RARE_LABELS[tier]||{}; return m[LANG]||m.ja; }
+/* 青いシルエットを金/銀にトーンしたoffscreen canvasを返す（同期で描画可） */
+function tintCatCanvas(imgEl, tier){
+  try{
+    const w=imgEl.naturalWidth||640, h=imgEl.naturalHeight||640;
+    const c=document.createElement("canvas"); c.width=w; c.height=h;
+    const x=c.getContext("2d");
+    x.drawImage(imgEl,0,0,w,h);
+    x.globalCompositeOperation="source-atop"; /* 不透明部分だけ着色・余白は透明のまま */
+    const g=x.createLinearGradient(0,0,w,h);
+    if(tier==="gold"){ g.addColorStop(0,"#F3D877"); g.addColorStop(.5,"#D8A93C"); g.addColorStop(1,"#A9781C"); }
+    else { g.addColorStop(0,"#E9ECF1"); g.addColorStop(.5,"#B7BEC9"); g.addColorStop(1,"#868D99"); }
+    x.globalAlpha=0.86; x.fillStyle=g; x.fillRect(0,0,w,h);
+    x.globalAlpha=1; x.globalCompositeOperation="source-over";
+    return c;
+  }catch(e){ return null; }
+}
+function tintCatSrc(imgEl, tier){ const c=tintCatCanvas(imgEl,tier); try{return c?c.toDataURL("image/png"):null;}catch(e){return null;} }
+/* 結果画面にレア演出を適用（通常タイプなら演出を消す＝再診断対応） */
+function applyRareResult(no){
+  const wrap=document.querySelector(".seal-wrap");
+  const seal=document.querySelector(".seal");
+  const ci=document.getElementById("catImg");
+  if(!wrap) return;
+  const oldBadge=document.getElementById("rareBadge"); if(oldBadge) oldBadge.remove();
+  wrap.querySelectorAll(".spark").forEach(function(e){e.remove();});
+  if(seal) seal.classList.remove("rare-glow");
+  const tier=rareTierOf(no);
+  if(!tier) return;
+  if(seal) seal.classList.add("rare-glow");
+  const paint=function(){ const url=tintCatSrc(ci,tier); if(url) ci.src=url; };
+  if(ci.complete && ci.naturalWidth) paint(); else ci.addEventListener("load",paint,{once:true});
+  const pos=[[6,10],[80,6],[90,64],[10,74],[48,-4]];
+  pos.forEach(function(p,i){ const sp=document.createElement("span"); sp.className="spark";
+    sp.style.left=p[0]+"%"; sp.style.top=p[1]+"%"; sp.style.animationDelay=(i*0.28)+"s";
+    if(tier==="gold"){ sp.style.width="18px"; sp.style.height="18px"; }
+    wrap.appendChild(sp); });
+  const b=document.createElement("div"); b.id="rareBadge";
+  b.className="rare-badge"+(tier==="rare"?" silver":""); b.textContent=rareLabel(tier);
+  wrap.insertAdjacentElement("afterend", b);
+  try{ trackEvent("rare_result_shown",{rare_tier:tier, sake_cat_number:no}); }catch(e){}
+}
+
 function renderResult(){
   const r=result,t=r.type;
   /* 猫画像：cat_XX.png が無ければ共通ロゴに自動フォールバック */
@@ -1697,6 +1758,7 @@ function renderResult(){
   const catFallback=ci.currentSrc||ci.src;
   ci.onerror=function(){this.onerror=null;if(catFallback&&catFallback!==this.src)this.src=catFallback;};
   ci.src=t.catImage;
+  try{applyRareResult(t.no);}catch(e){}
   /* v11.3.11：①酒猫名＋二つ名 ②タイプ固定の統合味わい文＋お店での頼み方。
      旧味覚あるある・動的チェック・中心文・苦手方向は重複を避けて非表示。データと生成関数は保持。 */
   const ex=TYPE_EXTRA[t.no]||{};
@@ -2082,7 +2144,21 @@ function drawCard(r,done){
       const iw=catImg.naturalWidth||catImg.width, ih=catImg.naturalHeight||catImg.height;
       const scale=Math.max((rad*2)/iw,(rad*2)/ih);
       const dw=iw*scale, dh=ih*scale;
-      ctx.drawImage(catImg, cx-dw/2, cy-dh/2, dw, dh);
+      (function(){
+      var _t=(typeof rareTierOf==="function")?rareTierOf(r.type&&r.type.no):null;
+      var _img=catImg;
+      if(_t){ var _c=tintCatCanvas(catImg,_t); if(_c) _img=_c; }
+      ctx.drawImage(_img, cx-dw/2, cy-dh/2, dw, dh);
+      if(_t){
+        ctx.save();
+        ctx.strokeStyle=(_t==="gold")?"#C99B34":"#9AA1AC"; ctx.lineWidth=10;
+        ctx.beginPath(); ctx.arc(cx, cy, dw/2+8, 0, Math.PI*2); ctx.stroke();
+        ctx.fillStyle=(_t==="gold")?"#C99B34":"#8A9099";
+        ctx.font="700 34px 'Noto Serif JP',serif"; ctx.textAlign="center";
+        ctx.fillText((_t==="gold")?"★ 黄金猫 ★":"★ RARE ★", cx, cy-dh/2-22);
+        ctx.restore();
+      }
+    })();
     }else{
       ctx.fillStyle="#EAE1CC"; ctx.fillRect(cx-rad,cy-rad,rad*2,rad*2);
       ctx.fillStyle="#B23A2E"; ctx.font="700 54px 'Noto Serif JP',serif"; ctx.letterSpacing="2px";
