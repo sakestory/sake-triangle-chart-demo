@@ -110,6 +110,34 @@ body{
 .screen.active{display:block;animation:fadeUp .45s ease both;}
 @keyframes fadeUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:none;}}
 
+/* ========== 結果発表のガチャ演出（v11.15） ========== */
+#gachaOverlay{position:fixed;inset:0;z-index:80;background:#F5EFE0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:26px;overflow:hidden;cursor:pointer;opacity:1;transition:opacity .55s ease;}
+#gachaOverlay.gc-hide{opacity:0;pointer-events:none;}
+.gc-rays{position:absolute;left:50%;top:44%;width:170vmax;height:170vmax;margin:-85vmax 0 0 -85vmax;border-radius:50%;
+  background:repeating-conic-gradient(rgba(192,137,60,.16) 0deg 9deg,rgba(245,239,224,0) 9deg 26deg);
+  animation:gcSpin 16s linear infinite;opacity:0;transition:opacity .45s;}
+#gachaOverlay.gc-reveal .gc-rays{opacity:1;}
+@keyframes gcSpin{to{transform:rotate(360deg)}}
+.gc-orb{position:relative;width:210px;height:210px;border-radius:50%;background:#FFFDF7;border:3px solid #C9705F;box-shadow:0 8px 30px rgba(178,58,46,.18);display:flex;align-items:center;justify-content:center;font-size:92px;overflow:hidden;animation:gcRattle .9s ease-in-out infinite;}
+#gachaOverlay.gc-charge2 .gc-orb{animation:gcRattle .34s ease-in-out infinite;}
+#gachaOverlay.gc-reveal .gc-orb{animation:gcPop .62s cubic-bezier(.24,1.6,.4,1) both;}
+@keyframes gcRattle{0%,100%{transform:rotate(0) translateX(0)}20%{transform:rotate(-7deg) translateX(-5px)}45%{transform:rotate(6deg) translateX(5px)}70%{transform:rotate(-4deg) translateX(-3px)}}
+@keyframes gcPop{0%{transform:scale(.25);opacity:0}62%{transform:scale(1.12);opacity:1}82%{transform:scale(.96)}100%{transform:scale(1)}}
+.gc-orb img{width:100%;height:100%;object-fit:cover;display:none;}
+#gachaOverlay.gc-reveal .gc-orb img{display:block;}
+#gachaOverlay.gc-reveal .gc-orb .gc-egg{display:none;}
+.gc-msg{font-family:var(--serif);font-size:18px;color:#5B5247;letter-spacing:1px;text-align:center;animation:gcBreath 1.6s ease-in-out infinite;padding:0 24px;}
+@keyframes gcBreath{0%,100%{opacity:.55}50%{opacity:1}}
+#gachaOverlay.gc-reveal .gc-msg{animation:none;opacity:1;color:#B23A2E;font-weight:700;font-size:20px;}
+.gc-skip{position:absolute;bottom:26px;left:0;right:0;text-align:center;font-size:12px;color:#8A7F6E;letter-spacing:1px;}
+.gc-flash{position:absolute;inset:0;background:#FFFDF7;opacity:0;pointer-events:none;}
+#gachaOverlay.gc-flashing .gc-flash{animation:gcFlash .5s ease-out both;}
+@keyframes gcFlash{0%{opacity:0}18%{opacity:1}100%{opacity:0}}
+.gc-spark{position:absolute;font-size:22px;opacity:0;pointer-events:none;}
+#gachaOverlay.gc-reveal .gc-spark{animation:gcSpark 1.15s ease-out both;}
+@keyframes gcSpark{0%{opacity:0;transform:translate(0,0) scale(.4)}28%{opacity:1}100%{opacity:0;transform:translate(var(--gx),var(--gy)) scale(1.15)}}
+@media (prefers-reduced-motion: reduce){#gachaOverlay{display:none;}}
+
 /* ========== スタート ========== */
 .hero{text-align:center;padding:32px 0 12px;}
 .hero-sub{font-family:var(--serif);font-size:12px;color:var(--shu);letter-spacing:.38em;text-indent:.38em;margin-bottom:24px;}
@@ -341,7 +369,7 @@ a.btn{text-decoration:none;text-align:center;box-sizing:border-box;display:block
       <div style="margin:16px 0 0;padding:12px 14px;border:1px solid var(--line);border-radius:10px;color:var(--sumi-soft);font-size:12.5px;line-height:1.8;text-align:left;"><p style="margin:0;">結果画面では、2つのおすすめをご案内します。ひとつは、このチャートを作った酒場店主の店・日本酒居酒屋 SAKE story（東京・五反田）でいま飲める一杯。もうひとつは、お家や他店で飲むときのおすすめです。どちらも、酒場店主が実際に飲んで確かめた銘柄の中から選んで掲載しています。</p><p style="margin:6px 0 0;font-size:11px;color:#746A5C;text-align:right;">2026年7月22日改訂</p></div>
     </div>
 
-    <div class="foot">v11.14.3</div>
+    <div class="foot">v11.15.0</div>
   </section>
 
   <!-- ===== 質問 ===== -->
@@ -434,7 +462,7 @@ a.btn{text-decoration:none;text-align:center;box-sizing:border-box;display:block
       <a class="visit-gift-map" href="https://www.google.com/maps/search/?api=1&query=SAKE+story+%E4%BA%94%E5%8F%8D%E7%94%B0" target="_blank" rel="noopener">お店の場所を地図で見る</a>
     </div>
     <p class="x-follow"><a href="https://x.com/motorkey" target="_blank" rel="noopener">酒場店主の独り言をフォロー（X）</a>　<a href="https://www.instagram.com/mr.sake_japan/" target="_blank" rel="noopener">Instagram</a></p>
-    <div class="foot">© SAKE story　日本酒三角チャート®　v11.14.3</div>
+    <div class="foot">© SAKE story　日本酒三角チャート®　v11.15.0</div>
     <p style="font-size:10.5px;color:#746A5C;margin:4px 0 0;">「日本酒三角チャート」は登録商標です。文章・画像・銘柄データの無断転用はご遠慮ください。</p>
   </section>
 
@@ -1619,7 +1647,55 @@ function renderQ(){
 function choose(sc,oi){
   answers[qi]={sc:sc,oi:(oi==null?"":oi+1)};
   if(qi<QUESTIONS.length-1){ qi++; renderQ(); }
-  else{ quizDone=true; compute(); show("sc-result"); renderResult(); }
+  else{ quizDone=true; compute(); playGachaReveal(result.type,function(){ show("sc-result"); renderResult(); }); }
+}
+
+/* ==== v11.15 結果発表のガチャ演出 ====
+   スマホゲームのガチャ風：徳利が震える（期待感）→光→酒猫が誕生。
+   ・約3秒・タップでスキップ可・prefers-reduced-motion時は演出なし
+   ・結果画面の描画は演出の裏で先に済ませる（演出が終わると同時に表示） */
+function playGachaReveal(t,done){
+  try{
+    if(window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches){done();return;}
+    const MSG={ja:{wait:"どの酒猫が生まれるかな…",born:"あなたの酒猫は…！",skip:"タップでスキップ"},
+      en:{wait:"Which Sake Cat will be born…",born:"Your Sake Cat is…!",skip:"Tap to skip"},
+      zh:{wait:"会是哪只酒猫呢…",born:"你的酒猫是…！",skip:"点按跳过"},
+      tw:{wait:"會是哪隻酒貓呢…",born:"你的酒貓是…！",skip:"點按跳過"},
+      ko:{wait:"어떤 사케냥이 태어날까…",born:"당신의 사케냥은…!",skip:"탭하여 건너뛰기"}}[LANG]||
+      {wait:"どの酒猫が生まれるかな…",born:"あなたの酒猫は…！",skip:"タップでスキップ"};
+    const ov=document.createElement("div");
+    ov.id="gachaOverlay";
+    ov.innerHTML='<div class="gc-rays"></div>'
+      +'<div class="gc-orb"><span class="gc-egg" aria-hidden="true">🍶</span><img alt=""></div>'
+      +'<div class="gc-msg"></div>'
+      +[["-96px","-120px"],["88px","-104px"],["-120px","36px"],["116px","52px"],["-40px","110px"],["48px","-150px"]]
+        .map(function(p,i){return '<span class="gc-spark" style="--gx:'+p[0]+';--gy:'+p[1]+';animation-delay:'+(i*90)+'ms">✨</span>';}).join("")
+      +'<div class="gc-skip">'+MSG.skip+'</div>'
+      +'<div class="gc-flash"></div>';
+    ov.querySelector(".gc-msg").textContent=MSG.wait;
+    document.body.appendChild(ov);
+    /* 裏で結果画面を用意（猫画像もここで読み込みが始まる） */
+    done();
+    const img=ov.querySelector(".gc-orb img");
+    img.src=t.catImage;
+    let finished=false;
+    const timers=[];
+    function finish(){
+      if(finished)return; finished=true;
+      timers.forEach(clearTimeout);
+      ov.classList.add("gc-hide");
+      setTimeout(function(){ov.remove();},600);
+      window.scrollTo({top:0});
+    }
+    ov.addEventListener("click",finish);
+    timers.push(setTimeout(function(){ov.classList.add("gc-charge2");},1000));       /* 震えが激しく */
+    timers.push(setTimeout(function(){ov.classList.add("gc-flashing");},1500));      /* 光る */
+    timers.push(setTimeout(function(){                                               /* 誕生 */
+      ov.classList.add("gc-reveal");
+      ov.querySelector(".gc-msg").textContent=MSG.born;
+    },1650));
+    timers.push(setTimeout(finish,3300));                                            /* 結果画面へ */
+  }catch(e){try{done();}catch(_){}}
 }
 
 /* ==== v10.8 診断エンジン（複合配点方式）====
