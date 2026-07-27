@@ -70,7 +70,7 @@ jobs:
           find deploy -type f -printf '%f\n' | sort
           count=$(find deploy -type f | wc -l | tr -d ' ')
           echo "staged count: ${count}"
-          test "${count}" -eq 58   # 既存50 + 言語別OGP4 + 言語別入口4。数が合わなければ失敗させる
+          test "${count}" -eq 64   # 既存58（50+言語別OGP4+言語別入口4）+ 酒造りゲーム6（index.html+酒猫5枚）。数が合わなければ失敗させる
 
       - name: lftp を導入
         run: sudo apt-get update && sudo apt-get install -y lftp
