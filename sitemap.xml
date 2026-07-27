@@ -2,17 +2,22 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://shindan.sake-story.com/</loc>
-    <lastmod>2026-07-22</lastmod>
+    <lastmod>2026-07-27</lastmod>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://shindan.sake-story.com/beer/</loc>
-    <lastmod>2026-07-22</lastmod>
+    <lastmod>2026-07-27</lastmod>
     <changefreq>monthly</changefreq>
   </url>
   <url>
     <loc>https://shindan.sake-story.com/wine/</loc>
-    <lastmod>2026-07-22</lastmod>
+    <lastmod>2026-07-27</lastmod>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://shindan.sake-story.com/game/</loc>
+    <lastmod>2026-07-27</lastmod>
     <changefreq>monthly</changefreq>
   </url>
 </urlset>

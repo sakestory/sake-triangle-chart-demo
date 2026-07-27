@@ -21,6 +21,7 @@ on:
       - 'ko/**'
       - 'beer/**'
       - 'wine/**'
+      - 'game/**'
   workflow_dispatch:   # 手動実行も可能（初回はこれで管理者が明示起動する想定）
 
 # 多重デプロイ防止（同時に1本だけ）
@@ -61,6 +62,7 @@ jobs:
           cp -R ko deploy/
           cp -R beer deploy/
           cp -R wine deploy/
+          cp -R game deploy/
           for n in $(seq -w 1 27); do
             cp "cat_${n}.png" deploy/
           done
