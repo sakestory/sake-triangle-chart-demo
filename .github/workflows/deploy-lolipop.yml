@@ -44,6 +44,31 @@ jobs:
       - name: リポジトリを取得
         uses: actions/checkout@v4
 
+      # 調査用（一時）：GitHub Actions実行機からロリポップまでの接続段階を確認する。原因確定後に削除可。
+      - name: SFTP 接続の事前診断（調査用・一時）
+        continue-on-error: true
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_PORT: ${{ secrets.SSH_PORT }}
+        run: |
+          set -u
+          echo "----- GitHub Actions 実行機の外向きIP -----"
+          curl -4fsSL --max-time 10 https://ifconfig.me || echo "(取得失敗)"
+          echo
+          echo "----- TCP 接続（${SSH_HOST}:${SSH_PORT}） -----"
+          if timeout 10 bash -c 'exec 3<>"/dev/tcp/$SSH_HOST/$SSH_PORT"'; then
+            echo "TCP: 接続できた"
+          else
+            echo "TCP: 接続できない"
+          fi
+          echo "----- SSH バナー -----"
+          banner="$(timeout 15 bash -c 'exec 3<>"/dev/tcp/$SSH_HOST/$SSH_PORT"; IFS= read -r line <&3; printf "%s" "$line"' 2>/dev/null || true)"
+          if [ -n "${banner}" ]; then
+            printf 'SSH banner: %s\n' "${banner}"
+          else
+            echo "SSH banner: 返らない"
+          fi
+
       - name: 公開対象ファイルだけを staging に集める
         run: |
           set -euo pipefail
@@ -97,6 +122,8 @@ jobs:
           set net:max-retries 2
           set net:timeout 25
           open -u "${SSH_USERNAME}","${SSH_PASSWORD}" "sftp://${SSH_HOST}:${SSH_PORT}"
+          # 合鍵をログに出さないため、詳細表示は接続（認証）後だけ有効化する。
+          debug 3
           # Web公開エリア(web/)に移動。無ければここで失敗させる＝誤った場所への
           # サイレントアップロードを防ぐ安全弁。
           cd "${REMOTE_PARENT}"
