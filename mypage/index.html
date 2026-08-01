@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>SAKE story マイページ</title>
+<!--
+  SAKE story マイページ（お客様側） v0.1
+  © 2026 SAKE story / 橋野元樹. All rights reserved.
+  「日本酒三角チャート」は登録商標です（登録第6441923号）。無断転用お断り。
+  銘柄座標は 00_永久設定/sake_data/ の正本からの写し（直接編集禁止）。
+-->
+<style>
+  :root{
+    --paper:#faf6ee;
+    --card:#ffffff;
+    --ink:#3b3630;
+    --sub:#8a8177;
+    --line:#e8e0d2;
+    --indigo:#4a6b8a;   /* すっきり */
+    --peach:#c97f6f;    /* フルーティ */
+    --gold:#9a854f;     /* しっかり */
+    --accent:#7a5c3e;
+    --accent-soft:#f3ead9;
+    --shu:#B23A2E;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:"Hiragino Kaku Gothic ProN","Hiragino Sans","Yu Gothic",system-ui,sans-serif;
+    line-height:1.7;
+    padding:16px 10px 48px;
+    -webkit-text-size-adjust:100%;
+  }
+  .wrap{max-width:430px;margin:0 auto;}
+  h1{font-size:18px;text-align:center;letter-spacing:.12em;margin-bottom:2px;}
+  .sub-title{text-align:center;font-size:12px;color:var(--sub);margin-bottom:4px;}
+  .ver{text-align:center;font-size:10px;color:var(--sub);margin-bottom:12px;}
+
+  .tabs{display:flex;gap:6px;margin-bottom:12px;}
+  .tabs button{
+    flex:1;padding:9px 2px;border-radius:10px;border:1px solid var(--line);
+    background:#fbf8f1;color:var(--sub);font-size:13px;cursor:pointer;white-space:nowrap;
+  }
+  .tabs button.on{background:var(--accent-soft);border-color:#d9c9a8;color:var(--accent);font-weight:600;}
+
+  .card{
+    background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:16px;margin-bottom:12px;
+  }
+  .card h2{font-size:15px;margin-bottom:10px;color:var(--accent);}
+  .card p{font-size:13px;}
+  .muted{color:var(--sub);font-size:12px;}
+  .note{
+    background:#fdf3df;border:1px solid #ecd9b0;border-radius:10px;
+    font-size:12px;padding:10px 12px;margin-bottom:14px;color:#7a6a45;
+  }
+
+  .axis{margin:8px 0;}
+  .axis .label{display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px;}
+  .bar{height:10px;border-radius:6px;background:#f0ebdf;overflow:hidden;}
+  .bar i{display:block;height:100%;border-radius:6px;}
+  .a1 i{background:var(--indigo);} .a2 i{background:var(--peach);} .a3 i{background:var(--gold);}
+
+  .sake-row{
+    display:flex;align-items:center;gap:10px;
+    padding:10px 0;border-bottom:1px solid var(--line);
+  }
+  .sake-row:last-child{border-bottom:none;}
+  .sake-info{flex:1;min-width:0;}
+  .sake-name{font-size:14px;font-weight:600;overflow-wrap:anywhere;}
+  .sake-tags{font-size:11px;color:var(--sub);}
+  .mini-bars{display:flex;gap:3px;margin-top:4px;}
+  .mini-bars span{height:6px;border-radius:3px;display:inline-block;}
+  .btn{
+    border:none;border-radius:10px;padding:9px 14px;font-size:13px;cursor:pointer;
+    background:var(--accent);color:#fff;flex-shrink:0;
+  }
+  .btn.ghost{background:#fbf8f1;color:var(--accent);border:1px solid #d9c9a8;}
+  .btn.wide{width:100%;padding:12px;font-size:14px;}
+  .btn:active{opacity:.8;}
+  .in-store-badge{
+    display:inline-block;background:#eef3f7;color:var(--indigo);
+    border:1px solid #cfdde8;border-radius:6px;font-size:10px;padding:0 5px;margin-left:4px;
+    vertical-align:1px;white-space:nowrap;
+  }
+
+  .log-row{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px 0;border-bottom:1px dashed var(--line);font-size:13px;}
+  .log-row:last-child{border-bottom:none;}
+  .log-date{color:var(--sub);font-size:12px;flex-shrink:0;}
+  .log-del{
+    border:none;background:none;color:var(--sub);font-size:14px;cursor:pointer;
+    padding:2px 6px;flex-shrink:0;
+  }
+
+  .big-num{font-size:30px;font-weight:700;color:var(--accent);line-height:1.2;}
+  .stat-row{display:flex;gap:10px;text-align:center;}
+  .stat-row .card{flex:1;margin-bottom:0;padding:12px 6px;}
+  .stat-row .muted{font-size:11px;}
+
+  .type-badge{
+    display:inline-block;background:var(--accent-soft);color:var(--accent);
+    border-radius:999px;padding:4px 14px;font-size:13px;font-weight:600;margin-bottom:8px;
+  }
+  .cat-img{
+    width:96px;height:96px;border-radius:14px;display:block;margin:0 auto 8px;
+    background:#f6f1e6;object-fit:cover;
+  }
+  input[type=text], input[type=email]{
+    width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:10px;
+    font-size:15px;background:#fffdf8;margin-bottom:10px;color:var(--ink);
+  }
+  input:focus{outline:2px solid #d9c9a8;}
+  .search-box{margin-bottom:8px;}
+  .toast{
+    position:fixed;left:50%;bottom:24px;transform:translateX(-50%);
+    background:var(--accent);color:#fff;font-size:13px;
+    padding:10px 18px;border-radius:999px;opacity:0;transition:opacity .3s;
+    pointer-events:none;white-space:nowrap;max-width:92vw;overflow:hidden;text-overflow:ellipsis;
+    z-index:50;
+  }
+  .toast.show{opacity:1;}
+  .hidden{display:none;}
+  .cloud-status{font-size:11px;color:var(--sub);text-align:center;margin-top:4px;}
+  .member-code{
+    font-family:ui-monospace,Menlo,monospace;font-size:16px;letter-spacing:.15em;
+    background:#fbf8f1;border:1px dashed #d9c9a8;border-radius:8px;
+    padding:6px 10px;display:inline-block;color:var(--accent);
+  }
+  .footer{
+    text-align:center;font-size:10px;color:var(--sub);margin-top:20px;line-height:1.9;
+  }
+  .footer a{color:var(--accent);}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>SAKE story</h1>
+  <div class="sub-title">日本酒居酒屋 SAKE story ｜ マイページ</div>
+  <div class="ver">バージョン 0.1（開発中の試作版です）</div>
+
+  <!-- ようこそ（初回のニックネーム登録） -->
+  <div id="viewWelcome" class="hidden">
+    <div class="card">
+      <h2>ようこそ</h2>
+      <p style="margin-bottom:10px;">飲んだ日本酒と診断の結果を、ここに記録できます。<br>
+      はじめに<strong>ニックネーム</strong>だけ教えてください。それだけで始められます。</p>
+      <input type="text" id="inNick" maxlength="12" placeholder="ニックネーム（12文字まで）">
+      <input type="email" id="inMail" maxlength="60" placeholder="メールアドレス（任意・あとでも可）">
+      <button class="btn wide" onclick="registerMember()">はじめる</button>
+      <p class="muted" style="margin-top:8px;">お預かりするのはニックネームと（ご希望の方のみ）メールアドレスだけです。</p>
+    </div>
+    <div class="card" id="welcomeIncoming" class="hidden">
+      <p class="muted" id="welcomeIncomingText"></p>
+    </div>
+  </div>
+
+  <!-- 本体 -->
+  <div id="viewMain" class="hidden">
+    <div class="tabs">
+      <button id="tabT0" class="on" onclick="setTab(0)">診断結果</button>
+      <button id="tabT1" onclick="setTab(1)">記録する</button>
+      <button id="tabT2" onclick="setTab(2)">マイページ</button>
+    </div>
+
+    <!-- 診断結果 -->
+    <div id="pane0">
+      <div id="incomingCard" class="card hidden">
+        <h2>診断結果を受け取りました</h2>
+        <p class="muted" style="margin-bottom:8px;">下の「この結果を保存する」を押すと、診断の履歴に残ります。</p>
+        <div id="incomingBody"></div>
+        <button class="btn wide" style="margin-top:10px;" onclick="saveIncoming()">この結果を保存する</button>
+      </div>
+      <div id="latestCard" class="card hidden">
+        <img id="latestCat" class="cat-img" alt="" onerror="this.style.display='none'">
+        <div style="text-align:center;"><span class="type-badge" id="latestType"></span></div>
+        <div class="axis a1"><div class="label"><span>すっきり</span><span id="lx"></span></div><div class="bar"><i id="bx"></i></div></div>
+        <div class="axis a2"><div class="label"><span>フルーティ</span><span id="ly"></span></div><div class="bar"><i id="by"></i></div></div>
+        <div class="axis a3"><div class="label"><span>しっかり</span><span id="lz"></span></div><div class="bar"><i id="bz"></i></div></div>
+        <p class="muted" id="latestDate" style="margin-top:6px;text-align:center;"></p>
+      </div>
+      <div id="noShindanCard" class="card hidden">
+        <h2>まだ診断結果がありません</h2>
+        <p style="margin-bottom:10px;">日本酒三角チャート診断を受けると、あなたの好みの位置がここに保存できます。</p>
+        <a class="btn wide" style="display:block;text-align:center;text-decoration:none;" href="https://shindan.sake-story.com/">診断してみる（約1〜2分）</a>
+      </div>
+      <div id="recoCard" class="card hidden">
+        <h2>あなたに近い、店の一杯</h2>
+        <p class="muted" style="margin-bottom:4px;">診断結果に近い順です。いま五反田のお店で飲めます。飲んだら「飲んだ」を押してください。</p>
+        <div id="recoList"></div>
+      </div>
+    </div>
+
+    <!-- 記録する -->
+    <div id="pane1" class="hidden">
+      <div class="card">
+        <h2>飲んだお酒を記録</h2>
+        <p class="muted" style="margin-bottom:6px;">銘柄をえらんで「飲んだ」を押すと、マイページに追加されます。</p>
+        <div class="search-box"><input type="text" id="inSearch" placeholder="銘柄名でさがす（例：鍋島）" oninput="renderSakeList()"></div>
+        <div id="sakeList"></div>
+        <p class="muted" id="sakeListMore" style="margin-top:6px;"></p>
+      </div>
+    </div>
+
+    <!-- マイページ -->
+    <div id="pane2" class="hidden">
+      <div class="card" style="text-align:center;">
+        <div style="font-size:16px;font-weight:700;" id="mpNick"></div>
+        <div class="muted">会員コード <span class="member-code" id="mpCode"></span></div>
+        <p class="muted" style="margin-top:6px;">機種変更のときは、この会員コードで記録を引き継げます。</p>
+      </div>
+      <div class="stat-row" style="margin-bottom:12px;">
+        <div class="card"><div class="big-num" id="cupCount">0</div><div class="muted">飲んだ杯数</div></div>
+        <div class="card"><div class="big-num" id="kindCount">0</div><div class="muted">出会った銘柄</div></div>
+        <div class="card"><div class="big-num" id="dayCount">0</div><div class="muted">記録した日</div></div>
+      </div>
+      <div class="card">
+        <h2>あなたの飲んだ傾向</h2>
+        <p class="muted" style="margin-bottom:6px;">上の帯＝診断の結果。下の帯＝実際に飲んだお酒の平均。見くらべてみてください。</p>
+        <div id="trendBody"></div>
+      </div>
+      <div class="card">
+        <h2>飲んだお酒の記録</h2>
+        <div id="myLog"></div>
+      </div>
+      <div class="card">
+        <h2>診断の履歴</h2>
+        <div id="shindanLog"></div>
+      </div>
+      <div class="card">
+        <h2>設定</h2>
+        <input type="text" id="setNick" maxlength="12" placeholder="ニックネーム">
+        <input type="email" id="setMail" maxlength="60" placeholder="メールアドレス（任意）">
+        <button class="btn wide ghost" onclick="saveSettings()">変更を保存</button>
+      </div>
+      <div class="card">
+        <h2>引き継ぎ</h2>
+        <p class="muted" style="margin-bottom:6px;">前のスマホの会員コードを入れると、クラウドから記録を呼び戻します。</p>
+        <input type="text" id="inRestore" maxlength="12" placeholder="会員コード（例：M-A1B2C3）">
+        <button class="btn wide ghost" onclick="restoreFromCloud()">記録を引き継ぐ</button>
+      </div>
+    </div>
+
+    <div class="cloud-status" id="cloudStatus"></div>
+  </div>
+
+  <div class="footer">
+    日本酒居酒屋 SAKE story（東京・五反田）<br>
+    <a href="https://shindan.sake-story.com/" rel="noopener">日本酒三角チャート診断はこちら</a><br>
+    「日本酒三角チャート」は登録商標です。掲載内容の無断転用はお断りします。
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script id="sake-data" type="application/json">[{"n":"〆張鶴","x":9,"y":2,"z":1,"st":true},{"n":"サビ猫ロック","x":8,"y":2,"z":3,"st":true},{"n":"酒場の純大","x":7,"y":3,"z":1,"st":true},{"n":"K","x":1,"y":7,"z":6,"st":true},{"n":"天賦","x":5,"y":6,"z":1,"st":true},{"n":"会津娘無為信","x":5,"y":4,"z":5,"st":true},{"n":"LOHA酒","x":2,"y":10,"z":4,"st":true},{"n":"鍋島","x":4,"y":8,"z":1,"st":true},{"n":"木曽路","x":1,"y":1,"z":10,"st":true},{"n":"喜正","x":4,"y":2,"z":7,"st":true},{"n":"弥右衛門","x":4,"y":6,"z":2,"st":true},{"n":"松の寿","x":3,"y":4,"z":4,"st":true},{"n":"新政","x":6,"y":8,"z":1,"st":true},{"n":"十四代","x":5,"y":8,"z":2,"st":true},{"n":"天明","x":6,"y":4,"z":2,"st":true},{"n":"ロ万","x":4,"y":6,"z":4,"st":true},{"n":"奈良萬","x":2,"y":8,"z":2,"st":true},{"n":"磐城壽夏酒","x":3,"y":2,"z":6,"st":true},{"n":"わかむすめ","x":1,"y":8,"z":3,"st":false},{"n":"残響","x":8,"y":3,"z":1,"st":true},{"n":"田酒","x":4,"y":3,"z":5,"st":false},{"n":"飛露喜","x":3,"y":4,"z":3,"st":false},{"n":"而今","x":3,"y":7,"z":1,"st":false},{"n":"赤武","x":5,"y":7,"z":2,"st":false},{"n":"寫樂","x":4,"y":7,"z":2,"st":false},{"n":"みむろ杉","x":3,"y":7,"z":1,"st":false},{"n":"作","x":5,"y":7,"z":4,"st":false},{"n":"風の森","x":5,"y":7,"z":2,"st":false},{"n":"仙禽","x":4,"y":7,"z":2,"st":false},{"n":"光栄菊","x":2,"y":6,"z":3,"st":false},{"n":"産土","x":3,"y":5,"z":3,"st":false},{"n":"獺祭","x":4,"y":6,"z":1,"st":false},{"n":"黒龍","x":8,"y":4,"z":1,"st":false},{"n":"醸し人九平次","x":2,"y":7,"z":1,"st":false},{"n":"磯自慢","x":6,"y":4,"z":1,"st":false},{"n":"開運","x":5,"y":2,"z":3,"st":false},{"n":"伯楽星","x":7,"y":4,"z":1,"st":false},{"n":"日高見","x":6,"y":2,"z":4,"st":false},{"n":"陸奥八仙","x":2,"y":7,"z":2,"st":false},{"n":"豊盃","x":4,"y":7,"z":4,"st":false},{"n":"春心","x":2,"y":3,"z":8,"st":false},{"n":"くどき上手","x":3,"y":7,"z":1,"st":false},{"n":"龍力","x":4,"y":3,"z":7,"st":false},{"n":"龍力米のささやき","x":4,"y":6,"z":7,"st":false},{"n":"神亀","x":1,"y":1,"z":9,"st":false},{"n":"ゆきの美人","x":3,"y":6,"z":3,"st":false},{"n":"雪の茅舎","x":3,"y":2,"z":7,"st":false},{"n":"天狗舞","x":1,"y":2,"z":8,"st":false},{"n":"菊姫","x":1,"y":2,"z":9,"st":false},{"n":"蒼空","x":6,"y":6,"z":3,"st":false},{"n":"龍勢","x":4,"y":7,"z":6,"st":false},{"n":"黒帯","x":4,"y":1,"z":7,"st":false},{"n":"川鶴くらうでぃ","x":7,"y":8,"z":1,"st":false},{"n":"長陽福娘","x":3,"y":7,"z":6,"st":false},{"n":"勝駒","x":6,"y":4,"z":1,"st":false},{"n":"羽根屋","x":7,"y":7,"z":1,"st":false},{"n":"立山","x":7,"y":2,"z":2,"st":false},{"n":"久保田","x":8,"y":2,"z":1,"st":false},{"n":"八海山","x":7,"y":1,"z":1,"st":false},{"n":"酒屋八兵衛","x":3,"y":2,"z":6,"st":false},{"n":"鶴齢","x":4,"y":2,"z":4,"st":false},{"n":"村祐","x":1,"y":8,"z":6,"st":false},{"n":"加茂錦","x":4,"y":8,"z":1,"st":false},{"n":"日置櫻neko","x":2,"y":2,"z":8,"st":false},{"n":"あべ","x":2,"y":6,"z":2,"st":false},{"n":"十九","x":2,"y":8,"z":2,"st":false},{"n":"真澄","x":7,"y":4,"z":2,"st":false},{"n":"信州亀齢","x":3,"y":7,"z":1,"st":false},{"n":"王祿","x":3,"y":6,"z":5,"st":false},{"n":"七本鎗","x":2,"y":1,"z":8,"st":false},{"n":"不老泉","x":1,"y":3,"z":9,"st":false},{"n":"石鎚","x":6,"y":2,"z":5,"st":false},{"n":"玉川","x":1,"y":2,"z":9,"st":false},{"n":"こなき爺ぃ","x":1,"y":2,"z":7,"st":false},{"n":"群馬泉","x":2,"y":3,"z":8,"st":false},{"n":"旭若松","x":2,"y":4,"z":9,"st":false},{"n":"南","x":4,"y":3,"z":4,"st":false},{"n":"悦・凱陣","x":2,"y":2,"z":9,"st":false},{"n":"雅山流","x":4,"y":6,"z":3,"st":false},{"n":"屋守","x":4,"y":7,"z":2,"st":false},{"n":"花陽浴","x":2,"y":8,"z":2,"st":false},{"n":"寒菊","x":2,"y":8,"z":2,"st":false},{"n":"木戸泉","x":1,"y":2,"z":8,"st":false},{"n":"一ノ蔵","x":6,"y":2,"z":2,"st":false},{"n":"萩の鶴猫ラベル","x":3,"y":6,"z":2,"st":false},{"n":"浦霞","x":5,"y":2,"z":3,"st":false},{"n":"南部美人","x":4,"y":2,"z":3,"st":false},{"n":"大七","x":1,"y":2,"z":8,"st":false},{"n":"奥の松","x":5,"y":3,"z":2,"st":false},{"n":"上喜元","x":4,"y":3,"z":2,"st":false},{"n":"飛良泉","x":1,"y":2,"z":9,"st":false},{"n":"義侠","x":1,"y":2,"z":8,"st":false},{"n":"るみ子の酒","x":2,"y":2,"z":5,"st":false},{"n":"敷嶋","x":6,"y":3,"z":6,"st":false},{"n":"会津娘","x":3,"y":4,"z":5,"st":false},{"n":"会津中将","x":4,"y":5,"z":3,"st":false},{"n":"泉川","x":4,"y":5,"z":2,"st":false},{"n":"山の井","x":2,"y":7,"z":1,"st":false},{"n":"国権","x":4,"y":4,"z":2,"st":false},{"n":"名倉山","x":3,"y":5,"z":2,"st":false},{"n":"末廣","x":1,"y":2,"z":7,"st":false},{"n":"榮川","x":4,"y":3,"z":3,"st":false},{"n":"一歩己","x":3,"y":5,"z":2,"st":false},{"n":"廣戸川","x":4,"y":5,"z":5,"st":false},{"n":"風が吹く","x":6,"y":5,"z":5,"st":false},{"n":"大和屋善内","x":3,"y":4,"z":3,"st":false},{"n":"上善如水","x":9,"y":2,"z":1,"st":false},{"n":"麒麟山","x":8,"y":1,"z":1,"st":false},{"n":"越乃景虎","x":9,"y":1,"z":1,"st":false},{"n":"菊水ふな口","x":1,"y":6,"z":8,"st":false},{"n":"雪中梅","x":3,"y":8,"z":6,"st":false},{"n":"吉乃川","x":8,"y":1,"z":1,"st":false},{"n":"越の寒中梅","x":8,"y":1,"z":1,"st":false},{"n":"刈穂","x":6,"y":1,"z":4,"st":false},{"n":"墨廼江","x":6,"y":2,"z":2,"st":false},{"n":"いづみ","x":2,"y":6,"z":9,"st":false},{"n":"金鶴","x":6,"y":2,"z":2,"st":false},{"n":"菊正宗樽酒","x":4,"y":3,"z":6,"st":false},{"n":"白鹿","x":4,"y":1,"z":4,"st":false},{"n":"剣菱","x":5,"y":2,"z":7,"st":false},{"n":"菊正宗金パック","x":6,"y":7,"z":5,"st":false},{"n":"澪","x":5,"y":10,"z":1,"st":false},{"n":"白鶴","x":8,"y":1,"z":1,"st":false},{"n":"月桂冠","x":8,"y":1,"z":1,"st":false},{"n":"松竹梅白壁蔵","x":3,"y":1,"z":5,"st":false},{"n":"黄桜","x":8,"y":1,"z":1,"st":false},{"n":"賀茂鶴","x":6,"y":2,"z":1,"st":false},{"n":"松竹梅","x":8,"y":1,"z":1,"st":false},{"n":"福寿","x":5,"y":2,"z":2,"st":false},{"n":"三千櫻","x":5,"y":6,"z":3,"st":false},{"n":"銀盤","x":7,"y":2,"z":1,"st":false},{"n":"菊正宗銀パック","x":6,"y":7,"z":1,"st":false},{"n":"白牡丹","x":5,"y":2,"z":2,"st":false},{"n":"大関 金冠","x":8,"y":1,"z":1,"st":false},{"n":"大関 銀冠","x":7,"y":1,"z":1,"st":false}]</script>
+<script id="type-data" type="application/json">[{"no":1,"name":"とりあえず辛口、卒業生","cat":"cat_01.png"},{"no":2,"name":"キレの中に、ひと香り","cat":"cat_02.png"},{"no":3,"name":"はずむソーダ水","cat":"cat_03.png"},{"no":4,"name":"静かなる実力派","cat":"cat_04.png"},{"no":5,"name":"風の調律師","cat":"cat_05.png"},{"no":6,"name":"切れ味も、深みも","cat":"cat_06.png"},{"no":7,"name":"するする、軽やか派","cat":"cat_07.png"},{"no":8,"name":"ほどよきを知る人","cat":"cat_08.png"},{"no":9,"name":"食中酒の美学","cat":"cat_09.png"},{"no":10,"name":"グラスの前で、深呼吸","cat":"cat_10.png"},{"no":11,"name":"甘い顔、潔い後味","cat":"cat_11.png"},{"no":12,"name":"香りの奥に、飲みごたえ","cat":"cat_12.png"},{"no":13,"name":"うっとり、濃厚派","cat":"cat_13.png"},{"no":14,"name":"迷ったら、両方","cat":"cat_14.png"},{"no":15,"name":"やさしい甘さ党","cat":"cat_15.png"},{"no":16,"name":"気分屋という名の自由人","cat":"cat_16.png"},{"no":17,"name":"じんわり幸せ収集家","cat":"cat_17.png"},{"no":18,"name":"入口は甘く、奥は深い","cat":"cat_18.png"},{"no":19,"name":"旨味ひとすじ","cat":"cat_19.png"},{"no":20,"name":"黙って旨いを知る人","cat":"cat_20.png"},{"no":21,"name":"もう一段、深くへ","cat":"cat_21.png"},{"no":22,"name":"今夜も、いつもの一杯","cat":"cat_22.png"},{"no":23,"name":"中庸の狙撃手","cat":"cat_23.png"},{"no":24,"name":"濃いのに、爽やか","cat":"cat_24.png"},{"no":25,"name":"全部盛りの器","cat":"cat_25.png"},{"no":26,"name":"華やか上級者","cat":"cat_26.png"},{"no":27,"name":"まっさらな盃","cat":"cat_27.png"}]</script>
+<script>
+"use strict";
+/* ===== 設定 =====
+   gasUrl：クラウド保存の窓口（GAS）のURL。空のあいだはこの端末の中だけに保存される。
+   GASを公開したらここに貼る（gas/README参照）。 */
+var CONFIG = {
+  gasUrl: "https://script.google.com/macros/s/AKfycbyvvk4ijDFZVNgSfCNsWVGt5V0KBvH1rPO0AmwCjZxCB9f1BgwAzzlUmdMrSQKE-uX9Zw/exec",
+  catImageBase: "https://shindan.sake-story.com/"
+};
+
+var SAKES = JSON.parse(document.getElementById("sake-data").textContent);
+var TYPES = JSON.parse(document.getElementById("type-data").textContent);
+var STORAGE_KEY = "sakestory_mypage_v1";
+
+/* ===== 保存データ ===== */
+var state = load();
+function load(){
+  try{
+    var raw = localStorage.getItem(STORAGE_KEY);
+    if(raw){ var s = JSON.parse(raw); if(s && s.member) return s; }
+  }catch(e){}
+  return { member:null, shindan:[], drinks:[] };
+}
+function persist(){
+  try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }catch(e){}
+  scheduleSync();
+}
+
+/* ===== 道具 ===== */
+function esc(s){
+  return String(s==null?"":s).replace(/[&<>"']/g, function(c){
+    return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];
+  });
+}
+function todayStr(){
+  var d = new Date();
+  return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+}
+function fmtDate(iso){
+  if(!iso) return "-";
+  var p = iso.split("-");
+  return p.length===3 ? (Number(p[1])+"/"+Number(p[2])) : iso;
+}
+function toast(msg){
+  var t = document.getElementById("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  clearTimeout(t._tm); t._tm = setTimeout(function(){ t.classList.remove("show"); }, 2000);
+}
+function newCode(){
+  var chars = "ABCDEFGHJKMNPQRSTUVWXYZ23456789"; /* 見間違いやすい I L O 0 1 は除外 */
+  var s = "";
+  for(var i=0;i<6;i++) s += chars.charAt(Math.floor(Math.random()*chars.length));
+  return "M-"+s;
+}
+function typeOf(no){
+  for(var i=0;i<TYPES.length;i++) if(TYPES[i].no===no) return TYPES[i];
+  return null;
+}
+
+/* ===== 橋の受け取り（?t=タイプ番号&x=&y=&z=） ===== */
+var incoming = null;
+(function(){
+  var q = new URLSearchParams(location.search);
+  if(!q.has("t")) return;
+  var t = parseInt(q.get("t"),10);
+  var x = parseFloat(q.get("x")), y = parseFloat(q.get("y")), z = parseFloat(q.get("z"));
+  var okAxis = function(v){ return isFinite(v) && v>=0 && v<=10; };
+  if(t>=1 && t<=27 && okAxis(x) && okAxis(y) && okAxis(z)){
+    incoming = { d:todayStr(), t:t, x:Math.round(x*10)/10, y:Math.round(y*10)/10, z:Math.round(z*10)/10 };
+  }
+  /* URLから引数を消す（再読み込みで二重受け取りしないため） */
+  try{ history.replaceState(null,"",location.pathname); }catch(e){}
+})();
+
+/* ===== 画面切り替え ===== */
+function show(id, on){ document.getElementById(id).classList.toggle("hidden", !on); }
+function setTab(n){
+  for(var i=0;i<3;i++){
+    document.getElementById("pane"+i).classList.toggle("hidden", i!==n);
+    document.getElementById("tabT"+i).classList.toggle("on", i===n);
+  }
+}
+
+/* ===== 会員登録 ===== */
+function registerMember(){
+  var nick = document.getElementById("inNick").value.trim();
+  if(!nick){ toast("ニックネームを入れてください"); return; }
+  var mail = document.getElementById("inMail").value.trim();
+  state.member = { id:newCode(), nick:nick, email:mail, created:todayStr() };
+  persist();
+  render();
+  if(incoming){ toast("ようこそ、"+nick+"さん"); } else { toast("ようこそ、"+nick+"さん"); }
+}
+function saveSettings(){
+  var nick = document.getElementById("setNick").value.trim();
+  if(!nick){ toast("ニックネームは空にできません"); return; }
+  state.member.nick = nick;
+  state.member.email = document.getElementById("setMail").value.trim();
+  persist(); render();
+  toast("変更を保存しました");
+}
+
+/* ===== 診断結果の保存 ===== */
+function saveIncoming(){
+  if(!incoming) return;
+  var tp = typeOf(incoming.t);
+  incoming.tn = tp ? tp.name : ("タイプ"+incoming.t);
+  state.shindan.unshift(incoming);
+  incoming = null;
+  persist(); render();
+  toast("診断結果を保存しました");
+}
+
+/* ===== 飲んだ記録 ===== */
+function addDrink(name){
+  var s = null;
+  for(var i=0;i<SAKES.length;i++) if(SAKES[i].n===name){ s=SAKES[i]; break; }
+  if(!s) return;
+  state.drinks.unshift({ d:todayStr(), n:s.n, x:s.x, y:s.y, z:s.z });
+  persist(); renderMyPage(); renderReco(); renderSakeList();
+  toast(s.n+" を記録しました");
+}
+function delDrink(i){
+  var d = state.drinks[i];
+  if(!d) return;
+  state.drinks.splice(i,1);
+  persist(); renderMyPage();
+  toast(d.n+" の記録を取り消しました");
+}
+
+/* ===== 描画 ===== */
+function axisRow(cls, label, v){
+  return '<div class="axis '+cls+'"><div class="label"><span>'+label+'</span><span>'+v+'</span></div>'
+    + '<div class="bar"><i style="width:'+(v*10)+'%"></i></div></div>';
+}
+function miniBars(x,y,z){
+  var c = ["var(--indigo)","var(--peach)","var(--gold)"];
+  var v = [x,y,z], html = '<div class="mini-bars">';
+  for(var i=0;i<3;i++) html += '<span style="width:'+(v[i]*4)+'px;background:'+c[i]+'"></span>';
+  return html+'</div>';
+}
+function render(){
+  var hasMember = !!state.member;
+  show("viewWelcome", !hasMember);
+  show("viewMain", hasMember);
+  if(!hasMember){
+    var w = document.getElementById("welcomeIncomingText");
+    if(incoming){
+      var tp = typeOf(incoming.t);
+      w.textContent = "診断結果（"+(tp?tp.name:"タイプ"+incoming.t)+"）をお預かりしています。登録するとそのまま保存できます。";
+      w.parentElement.classList.remove("hidden");
+    } else {
+      w.parentElement.classList.add("hidden");
+    }
+    return;
+  }
+  renderShindanPane();
+  renderReco();
+  renderSakeList();
+  renderMyPage();
+  document.getElementById("setNick").value = state.member.nick;
+  document.getElementById("setMail").value = state.member.email||"";
+  renderCloudStatus();
+}
+function renderShindanPane(){
+  show("incomingCard", !!incoming);
+  if(incoming){
+    var tp = typeOf(incoming.t);
+    document.getElementById("incomingBody").innerHTML =
+      '<div style="text-align:center;"><span class="type-badge">'+esc(tp?tp.name:"タイプ"+incoming.t)+'</span></div>'
+      + axisRow("a1","すっきり",incoming.x) + axisRow("a2","フルーティ",incoming.y) + axisRow("a3","しっかり",incoming.z);
+  }
+  var latest = state.shindan[0];
+  show("latestCard", !!latest && !incoming);
+  show("noShindanCard", !latest && !incoming);
+  if(latest && !incoming){
+    var tp2 = typeOf(latest.t);
+    var img = document.getElementById("latestCat");
+    img.style.display = "";
+    img.src = CONFIG.catImageBase + (tp2?tp2.cat:"cat_01.png");
+    document.getElementById("latestType").textContent = tp2?tp2.name:("タイプ"+latest.t);
+    document.getElementById("lx").textContent = latest.x; document.getElementById("bx").style.width = (latest.x*10)+"%";
+    document.getElementById("ly").textContent = latest.y; document.getElementById("by").style.width = (latest.y*10)+"%";
+    document.getElementById("lz").textContent = latest.z; document.getElementById("bz").style.width = (latest.z*10)+"%";
+    document.getElementById("latestDate").textContent = fmtDate(latest.d)+" の診断結果";
+  }
+}
+/* おすすめは「店内◯」の銘柄だけ（市販酒を混ぜない：店内版の鉄則） */
+function renderReco(){
+  var latest = state.shindan[0] || incoming;
+  show("recoCard", !!latest);
+  if(!latest) return;
+  var pool = SAKES.filter(function(s){ return s.st; });
+  pool.sort(function(a,b){
+    var da = Math.pow(a.x-latest.x,2)+Math.pow(a.y-latest.y,2)+Math.pow(a.z-latest.z,2);
+    var db = Math.pow(b.x-latest.x,2)+Math.pow(b.y-latest.y,2)+Math.pow(b.z-latest.z,2);
+    return da-db;
+  });
+  var html = "";
+  pool.slice(0,3).forEach(function(s){
+    html += '<div class="sake-row"><div class="sake-info">'
+      + '<div class="sake-name">'+esc(s.n)+'</div>'
+      + '<div class="sake-tags">すっきり'+s.x+' / フルーティ'+s.y+' / しっかり'+s.z+'</div>'
+      + miniBars(s.x,s.y,s.z) + '</div>'
+      + '<button class="btn" onclick="addDrink(\''+esc(s.n).replace(/'/g,"\\'")+'\')">飲んだ</button></div>';
+  });
+  document.getElementById("recoList").innerHTML = html;
+}
+function renderSakeList(){
+  var q = (document.getElementById("inSearch").value||"").trim();
+  var list, moreMsg = "";
+  if(q){
+    list = SAKES.filter(function(s){ return s.n.indexOf(q)>=0; });
+    if(!list.length) moreMsg = "見つかりませんでした。ひらがな・カタカナ・漢字を変えて試してください。";
+  } else {
+    list = SAKES.filter(function(s){ return s.st; });
+    moreMsg = "ここに出ているのは、いま五反田のお店で飲める銘柄です。ほかのお酒は上の検索でさがせます（全"+SAKES.length+"銘柄）。";
+  }
+  var html = "";
+  list.slice(0,40).forEach(function(s){
+    html += '<div class="sake-row"><div class="sake-info">'
+      + '<div class="sake-name">'+esc(s.n)+(s.st?'<span class="in-store-badge">店で飲める</span>':"")+'</div>'
+      + '<div class="sake-tags">すっきり'+s.x+' / フルーティ'+s.y+' / しっかり'+s.z+'</div>'
+      + miniBars(s.x,s.y,s.z) + '</div>'
+      + '<button class="btn" onclick="addDrink(\''+esc(s.n).replace(/'/g,"\\'")+'\')">飲んだ</button></div>';
+  });
+  document.getElementById("sakeList").innerHTML = html || "";
+  document.getElementById("sakeListMore").textContent = moreMsg;
+}
+function renderMyPage(){
+  document.getElementById("mpNick").textContent = state.member.nick+" さん";
+  document.getElementById("mpCode").textContent = state.member.id;
+  document.getElementById("cupCount").textContent = state.drinks.length;
+  var kinds = {}, days = {};
+  state.drinks.forEach(function(d){ kinds[d.n]=1; days[d.d]=1; });
+  document.getElementById("kindCount").textContent = Object.keys(kinds).length;
+  document.getElementById("dayCount").textContent = Object.keys(days).length;
+
+  /* 傾向：診断（上の帯）と飲んだ平均（下の帯） */
+  var latest = state.shindan[0];
+  var tHtml = "";
+  var labels = [["すっきり","a1"],["フルーティ","a2"],["しっかり","a3"]];
+  var keys = ["x","y","z"];
+  var avg = null;
+  if(state.drinks.length){
+    avg = [0,0,0];
+    state.drinks.forEach(function(d){ avg[0]+=d.x; avg[1]+=d.y; avg[2]+=d.z; });
+    for(var i=0;i<3;i++) avg[i] = Math.round(avg[i]/state.drinks.length*10)/10;
+  }
+  if(!latest && !avg){
+    tHtml = '<p class="muted">診断を受けるか、お酒を記録すると、ここに傾向が出ます。</p>';
+  } else {
+    for(var i=0;i<3;i++){
+      tHtml += '<div style="margin-bottom:10px;">'
+        + '<div style="font-size:12px;margin-bottom:2px;">'+labels[i][0]+'</div>';
+      if(latest){
+        tHtml += '<div class="axis '+labels[i][1]+'" style="margin:2px 0;"><div class="label"><span class="muted" style="font-size:10px;">診断</span><span>'+latest[keys[i]]+'</span></div><div class="bar"><i style="width:'+(latest[keys[i]]*10)+'%"></i></div></div>';
+      }
+      if(avg){
+        tHtml += '<div class="axis '+labels[i][1]+'" style="margin:2px 0;"><div class="label"><span class="muted" style="font-size:10px;">飲んだ平均</span><span>'+avg[i]+'</span></div><div class="bar"><i style="width:'+(avg[i]*10)+'%;opacity:.45;"></i></div></div>';
+      }
+      tHtml += '</div>';
+    }
+  }
+  document.getElementById("trendBody").innerHTML = tHtml;
+
+  var html = "";
+  state.drinks.forEach(function(d,i){
+    html += '<div class="log-row"><span>'+esc(d.n)+'</span>'
+      + '<span class="log-date">'+fmtDate(d.d)+'</span>'
+      + '<button class="log-del" onclick="delDrink('+i+')" aria-label="取り消し">×</button></div>';
+  });
+  document.getElementById("myLog").innerHTML = html || '<p class="muted">まだ記録がありません。「記録する」タブからどうぞ。</p>';
+
+  var sHtml = "";
+  state.shindan.forEach(function(s){
+    var tp = typeOf(s.t);
+    sHtml += '<div class="log-row"><span>'+esc(tp?tp.name:"タイプ"+s.t)+'</span><span class="log-date">'+fmtDate(s.d)+'</span></div>';
+  });
+  document.getElementById("shindanLog").innerHTML = sHtml || '<p class="muted">まだ診断の履歴がありません。</p>';
+}
+function renderCloudStatus(){
+  var el = document.getElementById("cloudStatus");
+  if(!CONFIG.gasUrl){
+    el.textContent = "記録はこのスマホの中に保存されています（クラウド保存は準備中）";
+  } else {
+    el.textContent = state._synced ? "クラウドに保存済み" : "クラウドに保存します…";
+  }
+}
+
+/* ===== クラウド同期（GAS）。gasUrlが空のあいだは何もしない ===== */
+var syncTimer = null;
+function scheduleSync(){
+  if(!CONFIG.gasUrl || !state.member) return;
+  state._synced = false; renderCloudStatus();
+  clearTimeout(syncTimer);
+  syncTimer = setTimeout(doSync, 1200);
+}
+function doSync(){
+  if(!CONFIG.gasUrl || !state.member) return;
+  var payload = {
+    action:"save",
+    member: state.member,
+    shindan: state.shindan,
+    drinks: state.drinks
+  };
+  fetch(CONFIG.gasUrl, { method:"POST", mode:"no-cors", headers:{"Content-Type":"text/plain"}, body: JSON.stringify(payload) })
+    .then(function(){ state._synced = true; try{localStorage.setItem(STORAGE_KEY, JSON.stringify(state));}catch(e){} renderCloudStatus(); })
+    .catch(function(){ renderCloudStatus(); });
+}
+function restoreFromCloud(){
+  var code = document.getElementById("inRestore").value.trim().toUpperCase();
+  if(!code){ toast("会員コードを入れてください"); return; }
+  if(!CONFIG.gasUrl){ toast("クラウド保存はただいま準備中です"); return; }
+  fetch(CONFIG.gasUrl + "?action=restore&id=" + encodeURIComponent(code))
+    .then(function(r){ return r.json(); })
+    .then(function(j){
+      if(!j.ok || !j.member){ toast("その会員コードは見つかりませんでした"); return; }
+      state = { member:j.member, shindan:j.shindan||[], drinks:j.drinks||[] };
+      persist(); render();
+      toast("おかえりなさい、"+j.member.nick+"さん");
+    })
+    .catch(function(){ toast("通信できませんでした。電波の良い場所でもう一度どうぞ"); });
+}
+
+/* ===== 起動 ===== */
+render();
+if(CONFIG.gasUrl && state.member) scheduleSync();
+</script>
+</body>
+</html>
