@@ -22,6 +22,7 @@ on:
       - 'beer/**'
       - 'wine/**'
       - 'game/**'
+      - 'mypage/**'
   workflow_dispatch:   # 手動実行も可能（初回はこれで管理者が明示起動する想定）
 
 # 多重デプロイ防止（同時に1本だけ）
@@ -88,6 +89,7 @@ jobs:
           cp -R beer deploy/
           cp -R wine deploy/
           cp -R game deploy/
+          cp -R mypage deploy/
           for n in $(seq -w 1 27); do
             cp "cat_${n}.png" deploy/
           done
@@ -95,7 +97,7 @@ jobs:
           find deploy -type f -printf '%f\n' | sort
           count=$(find deploy -type f | wc -l | tr -d ' ')
           echo "staged count: ${count}"
-          test "${count}" -eq 65   # 既存58（50+言語別OGP4+言語別入口4）+ 酒造りゲーム7（index.html+酒猫5枚+OGP画像）。数が合わなければ失敗させる
+          test "${count}" -eq 67   # 既存58（50+言語別OGP4+言語別入口4）+ 酒造りゲーム7（index.html+酒猫5枚+OGP画像）+ マイページ2（index.html+store.html）。数が合わなければ失敗させる
 
       - name: lftp を導入
         run: sudo apt-get update && sudo apt-get install -y lftp
