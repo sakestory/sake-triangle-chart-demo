@@ -131,7 +131,7 @@ body{
 .gc-msg{font-family:var(--serif);font-size:18px;color:#5B5247;letter-spacing:1px;text-align:center;animation:gcBreath 1.6s ease-in-out infinite;padding:0 24px;}
 @keyframes gcBreath{0%,100%{opacity:.55}50%{opacity:1}}
 #gachaOverlay.gc-reveal .gc-msg{animation:none;opacity:1;color:#B23A2E;font-weight:700;font-size:20px;}
-.gc-skip{position:absolute;bottom:26px;left:0;right:0;text-align:center;font-size:12px;color:#8A7F6E;letter-spacing:1px;}
+.gc-skip{position:absolute;bottom:26px;left:50%;transform:translateX(-50%);text-align:center;font-size:12px;color:#5B5247;letter-spacing:1px;padding:8px 16px;border:1px solid #D8CDB5;border-radius:999px;background:rgba(255,253,247,.82);white-space:nowrap;}
 .gc-flash{position:absolute;inset:0;background:#FFFDF7;opacity:0;pointer-events:none;}
 #gachaOverlay.gc-flashing .gc-flash{animation:gcFlash .85s ease-out both;}
 @keyframes gcFlash{0%{opacity:0}12%{opacity:1}30%{opacity:.25}46%{opacity:1}100%{opacity:0}}
@@ -202,13 +202,18 @@ body{
 /* チャート */
 .chart-card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px 4px 6px;margin-top:12px;}
 .chart-card svg{width:100%;height:auto;display:block;}
-.chart-legend{text-align:center;font-size:11px;color:var(--sumi-soft);line-height:1.8;margin:4px 8px 6px;}
+.chart-legend{text-align:center;font-size:12px;color:var(--sumi-soft);line-height:1.8;margin:4px 8px 6px;}
 .chart-legend strong{color:var(--sumi);font-weight:700;}
+.chart-hint{font-size:11.5px;color:var(--sumi-soft);line-height:1.75;text-align:center;margin:6px 12px 2px;}
+.chart-help{margin:8px 8px 0;border-top:1px solid var(--line);padding-top:7px;}
+.chart-help summary{cursor:pointer;text-align:center;color:var(--shu);font-family:var(--serif);font-size:12px;letter-spacing:.08em;}
+.chart-help p{font-size:12px;color:var(--sumi-soft);line-height:1.8;margin:8px 4px 2px;}
 
 /* おすすめ */
 .rec{display:flex;align-items:flex-start;gap:13px;background:var(--card);border:1px solid var(--line);border-radius:13px;padding:14px 16px;margin-bottom:10px;}
-.rec-rank{font-family:var(--serif);font-weight:700;font-size:14px;color:var(--shu);min-width:34px;flex:none;padding-top:1px;white-space:nowrap;}
+.rec-intro{font-size:12.5px;color:var(--sumi-soft);line-height:1.8;margin:-3px 2px 12px;}
 .rec-body{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px;}
+.rec-guide{font-family:var(--serif);font-size:12.5px;font-weight:700;color:var(--shu);line-height:1.55;letter-spacing:.02em;margin-bottom:1px;}
 .rec-name{font-family:var(--serif);font-weight:700;font-size:16px;color:var(--sumi);line-height:1.5;}
 .rec-reason{font-size:13px;color:var(--sumi-soft);line-height:1.85;}
 .rec-coord{font-size:11px;color:var(--sumi-soft);}
@@ -328,7 +333,7 @@ a.btn{text-decoration:none;text-align:center;box-sizing:border-box;display:block
       <div class="hero-sub">SAKE story</div>
       <h1 style="font-size:clamp(28px,8.6vw,38px);letter-spacing:0.06em;">日本酒三角チャート診断</h1>
       <div class="hero-cat">好きな日本酒と、あなたの&#8220;酒猫&#8221;が見つかる</div>
-      <p style="margin:9px 0 0;font-size:11.5px;letter-spacing:.08em;color:#746A5C;">最終更新 2026.8.1</p>
+      <p style="margin:9px 0 0;font-size:11.5px;letter-spacing:.08em;color:#746A5C;">最終更新 2026.8.2</p>
     </div>
 
     <div class="start-chips">
@@ -377,16 +382,16 @@ a.btn{text-decoration:none;text-align:center;box-sizing:border-box;display:block
       </svg>
 
       <p class="hero-desc">簡単な質問に答えると、独自開発の三角チャートであなたの日本酒の好みの傾向を診断。飲食20年の酒場店主が実際に飲んで確かめた銘柄の中から、おすすめを提案します。</p>
-      <div style="margin:16px 0 0;padding:12px 14px;border:1px solid var(--line);border-radius:10px;color:var(--sumi-soft);font-size:12.5px;line-height:1.8;text-align:left;"><p style="margin:0;">結果画面では、2つのおすすめをご案内します。ひとつは、このチャートを作った酒場店主の店・日本酒居酒屋 SAKE story（東京・五反田）でいま飲める一杯。もうひとつは、お家や他店で飲むときのおすすめです。どちらも、酒場店主が実際に飲んで確かめた銘柄の中から選んで掲載しています。</p><p style="margin:6px 0 0;font-size:11px;color:#746A5C;text-align:right;">2026年8月1日改訂</p></div>
+      <div style="margin:16px 0 0;padding:12px 14px;border:1px solid var(--line);border-radius:10px;color:var(--sumi-soft);font-size:12.5px;line-height:1.8;text-align:left;"><p style="margin:0;">結果画面では、2種類のおすすめをご案内します。店内で飲める候補を3本、お家や他店で探しやすい候補を3本ご紹介します。どちらも、酒場店主が実際に飲んで確かめた銘柄の中から選んで掲載しています。</p><p style="margin:6px 0 0;font-size:11px;color:#746A5C;text-align:right;">2026年8月2日改訂</p></div>
     </div>
 
-    <div class="foot">v11.18</div>
+    <div class="foot">v11.22 座標マスターv4.2反映版</div>
   </section>
 
   <!-- ===== 質問 ===== -->
   <section id="sc-quiz" class="screen">
     <div class="q-head">
-      <span class="q-num" id="qNum">1 / 9</span>
+      <span class="q-num" id="qNum">1 / 10</span>
       <div class="q-bar"><div class="q-bar-fill" id="qFill" style="width:0%"></div></div>
     </div>
     <div id="qTag" class="q-tag"></div>
@@ -419,12 +424,15 @@ a.btn{text-decoration:none;text-align:center;box-sizing:border-box;display:block
     <div class="sec">あなたの味わいと近い銘柄</div>
     <div class="chart-card"><div id="chart"></div>
       <p class="chart-legend"><strong>赤</strong> 店内おすすめ　／　<strong>茶</strong> お家や他店で飲むなら</p>
+      <p class="chart-hint">上部が「すっきり」、右下が「フルーティー」、左下が「しっかり」です。</p>
+      <details class="chart-help"><summary>チャートの見方をひらく</summary><p>赤い点は店内で飲めるおすすめ3本、茶色の記号はお家や他店で探しやすい候補3本です。「あなた」の位置は、3つの味わいのバランスを表します。</p></details>
     </div>
 
-    <div class="sec">あなたに近い、店の一杯</div>
+    <div class="sec">あなたから広がる、店の三杯</div>
+    <p id="storeIntro" class="rec-intro">いちばん近い1本と、結果から別の味わいへ広がる2本です。</p>
     <div id="storeList"></div>
     <!-- v11.10：店内の全銘柄メニュー（橋野さん発案 2026-07-19）。店で見せる用途を想定し、
-         おすすめ5本の外にある銘柄も読めるようにする。一言コメントが入ればそちらを優先表示 -->
+         おすすめ3本の外にある銘柄も読めるようにする。一言コメントが入ればそちらを優先表示 -->
     <button id="menuToggle" class="menu-toggle" type="button" aria-expanded="false" aria-controls="menuList"></button>
     <div id="menuList" class="menu-list" hidden></div>
     <div class="sec">お家や他店で飲むなら</div>
@@ -490,7 +498,7 @@ a.btn{text-decoration:none;text-align:center;box-sizing:border-box;display:block
       <a class="visit-gift-map" href="https://www.google.com/maps/search/?api=1&query=SAKE+story+%E4%BA%94%E5%8F%8D%E7%94%B0" target="_blank" rel="noopener">お店の場所を地図で見る</a>
     </div>
     <p class="x-follow"><a href="https://x.com/motorkey" target="_blank" rel="noopener">酒場店主の独り言をフォロー（X）</a>　<a href="https://www.instagram.com/mr.sake_japan/" target="_blank" rel="noopener">Instagram</a></p>
-    <div class="foot">© SAKE story　日本酒三角チャート®　v11.18</div>
+    <div class="foot">© SAKE story　日本酒三角チャート®　v11.22</div>
     <p style="font-size:10.5px;color:#746A5C;margin:4px 0 0;">「日本酒三角チャート」は登録商標です。文章・画像・銘柄データの無断転用はご遠慮ください。</p>
   </section>
 
@@ -499,32 +507,34 @@ a.btn{text-decoration:none;text-align:center;box-sizing:border-box;display:block
 /* =============================================
    設定（ここを編集すれば内容を変えられます）
    ============================================= */
-/* 店の銘柄（STORE_SAKE） ── SAKE story 店内の21銘柄（Numbers正本 v4.1（2026-08-01更新）と一致確認済み）。
+/* 店の銘柄（STORE_SAKE） ── SAKE story 店内の23銘柄（Numbers正本 v4.2（2026-08-02更新）と一致確認済み）。
    座標はすっきりX / フルーティーY / しっかりZ ＝ 各0〜10。
-   Numbers正本の店内◯と1対1で一致（正本はNumbers、これは写し）。
+   Numbers正本の店内チェックと1対1で一致（正本はNumbers、これは写し）。
    comment：橋野さん本人の一言コメント欄。空文字なら自動生成の理由文を表示する。 */
 const STORE_SAKE = [
-  {"name": "〆張鶴", "x": 9, "y": 2, "z": 1, "comment": "淡麗辛口の代表格の一つ 鮭の酒浸しがおすすめです", "mark": "◎"},
-  {"name": "サビ猫ロック", "x": 8, "y": 2, "z": 3, "comment": "季節によりリリースされるお酒が変わります。今回はsuperDRY！", "mark": "☆"},
-  {"name": "酒場の純大", "x": 7, "y": 3, "z": 1, "comment": "残響・伯楽星の新澤醸造店に特注した宮城の７軒の日本酒居酒屋と当店でしか飲めない貴重酒", "mark": "◎"},
-  {"name": "玄宰", "x": 3, "y": 6, "z": 6, "comment": "会津の大手蔵の息子さんが頑張って作ったお酒、かなり良いですよ", "mark": "◎"},
-  {"name": "天賦", "x": 5, "y": 6, "z": 1, "comment": "鹿児島で日本酒！？と思うでしょうが、うちのソムリエ一推しの綺麗なお酒ですよ", "mark": "☆"},
-  {"name": "会津娘", "x": 5, "y": 4, "z": 5, "comment": "米から作る会津娘の有機栽培米のお酒 店主もソムリエも大好きで自腹で家用に買うほど。試して欲しいです。", "mark": "◎"},
-  {"name": "LOHA酒", "x": 1, "y": 10, "z": 6, "comment": "有機栽培米の甘みがとろりと広がって、後からレモンのような酸がすっと締めます。ジューシー！", "mark": "☆"},
-  {"name": "鍋島", "x": 4, "y": 8, "z": 1, "comment": "熟れた果実を思わせる香りと、みずみずしい甘み。旨みは軽く、上品に切れていきます。", "mark": "☆"},
-  {"name": "木曽路", "x": 1, "y": 1, "z": 10, "comment": "旨みがどっしりと厚い一本。香りは静かで、しっかり目の味わいのお料理と一緒にゆっくり味わう晩酌の酒。", "mark": "◎"},
-  {"name": "喜正", "x": 4, "y": 2, "z": 7, "comment": "多摩の伏流水で仕込む東京の地酒。米の旨みのあとに辛みの余韻が残ります。かなり流通量少なめかと", "mark": "◎"},
-  {"name": "弥右衛門", "x": 7, "y": 9, "z": 2, "comment": "りんご酸を使用した超フルーティな味わい", "mark": "◎"},
-  {"name": "松の寿", "x": 3, "y": 4, "z": 4, "comment": "超軟水仕込みのやわらかな口当たり。原酒の厚みがありながら、酸がすっと切ってくれます。", "mark": "◎"},
-  {"name": "新政", "x": 6, "y": 8, "z": 1, "comment": "六号酵母が生む瑞々しい酸と、白ワインのような甘み。軽やかで、後口は驚くほど潔い。", "mark": "☆"},
-  {"name": "十四代", "x": 5, "y": 8, "z": 2, "comment": "豊潤な香りと甘みがとろり。甘口・華やかの代名詞といえる日本酒界のレジェンド。", "mark": "☆"},
-  {"name": "鶴齢(純吟)", "x": 6, "y": 4, "z": 5, "comment": "雪室で丁寧に貯蔵されたバランスの良さの奥に余韻を感じる味わい", "mark": "◎"},
-  {"name": "七ロ万", "x": 4, "y": 6, "z": 4, "comment": "もち米四段仕込みのやさしい甘みとコク。夏の一本は香りも味も穏やかで、冷やすと締まります。自然豊かな南会津で造られてます、また旅行に行きたいな。", "mark": "◎"},
-  {"name": "奈良萬", "x": 2, "y": 8, "z": 2, "comment": "メロンやバナナを思わせるジューシーな香り。ふくらむ甘みを、酸がきちんと締めます。", "mark": "◎"},
-  {"name": "磐城壽夏酒", "x": 5, "y": 6, "z": 3, "comment": "「海の男酒」と呼ばれる蔵の夏仕様。爽やかさの奥に、米の旨みがしっかり残っています。3.11で全てを流されたかと思われた後に、酵母がたまたま見つかり復活された奇跡と情熱の塊のお酒です。", "mark": "◎"},
-  {"name": "雪男", "x": 9, "y": 2, "z": 2, "comment": "新潟の雪深い街で愛される透明感だけではない奥行きを感じます", "mark": "◎"},
-  {"name": "残響", "x": 8, "y": 3, "z": 1, "comment": "精米歩合7％まで磨いた日本最高峰のお酒。マスカットのような上品な香りがスッと消えるのですが、余韻が喉ではなく後頭部に残ります。（店主談）", "mark": "☆"},
-  {"name": "鶴齢(純米)", "x": 3, "y": 2, "z": 7, "comment": "", "mark": "◎"}
+  {"name":"〆張鶴","x":9,"y":2,"z":1,"comment":"淡麗辛口の代表格の一つ 鮭の酒浸しがおすすめです","mark":"◎"},
+  {"name":"サビ猫ロック","x":8,"y":2,"z":3,"comment":"季節によりリリースされるお酒が変わります。今回はsuperDRY！","mark":"☆"},
+  {"name":"酒場の純大","x":7,"y":3,"z":1,"comment":"残響・伯楽星の新澤醸造店に特注した宮城の７軒の日本酒居酒屋と当店でしか飲めない貴重酒","mark":"◎"},
+  {"name":"玄宰","x":3,"y":6,"z":6,"comment":"会津の大手蔵の息子さんが頑張って作ったお酒、かなり良いですよ","mark":"◎"},
+  {"name":"天賦","x":5,"y":6,"z":1,"comment":"鹿児島で日本酒！？と思うでしょうが、うちのソムリエ一推しの綺麗なお酒ですよ","mark":"☆"},
+  {"name":"会津娘","x":5,"y":4,"z":5,"comment":"米から作る会津娘の有機栽培米のお酒 店主もソムリエも大好きで自腹で家用に買うほど。試して欲しいです。","mark":"◎"},
+  {"name":"LOHA酒","x":1,"y":10,"z":6,"comment":"有機栽培米の甘みがとろりと広がって、後からレモンのような酸がすっと締めます。ジューシー！","mark":"☆"},
+  {"name":"鍋島","x":4,"y":8,"z":1,"comment":"熟れた果実を思わせる香りと、みずみずしい甘み。旨みは軽く、上品に切れていきます。","mark":"☆"},
+  {"name":"木曽路","x":1,"y":1,"z":10,"comment":"旨みがどっしりと厚い一本。香りは静かで、しっかり目の味わいのお料理と一緒にゆっくり味わう晩酌の酒。","mark":"◎"},
+  {"name":"喜正","x":4,"y":2,"z":7,"comment":"多摩の伏流水で仕込む東京の地酒。米の旨みのあとに辛みの余韻が残ります。かなり流通量少なめかと","mark":"◎"},
+  {"name":"弥右衛門(りんごver)","x":7,"y":9,"z":2,"comment":"りんご酸を使用した超フルーティな味わい","mark":"◎"},
+  {"name":"松の寿","x":3,"y":4,"z":4,"comment":"超軟水仕込みのやわらかな口当たり。原酒の厚みがありながら、酸がすっと切ってくれます。","mark":"◎"},
+  {"name":"新政","x":6,"y":8,"z":1,"comment":"六号酵母が生む瑞々しい酸と、白ワインのような甘み。軽やかで、後口は驚くほど潔い。","mark":"☆"},
+  {"name":"十四代","x":5,"y":8,"z":2,"comment":"豊潤な香りと甘みがとろり。甘口・華やかの代名詞といえる日本酒界のレジェンド。","mark":"☆"},
+  {"name":"鶴齢(純吟)","x":6,"y":4,"z":5,"comment":"雪室で丁寧に貯蔵されたバランスの良さの奥に余韻を感じる味わい","mark":"◎"},
+  {"name":"七ロ万","x":4,"y":6,"z":4,"comment":"もち米四段仕込みのやさしい甘みとコク。夏の一本は香りも味も穏やかで、冷やすと締まります。自然豊かな南会津で造られてます、また旅行に行きたいな。","mark":"◎"},
+  {"name":"奈良萬","x":2,"y":8,"z":2,"comment":"メロンやバナナを思わせるジューシーな香り。ふくらむ甘みを、酸がきちんと締めます。","mark":"◎"},
+  {"name":"磐城壽夏酒","x":5,"y":6,"z":3,"comment":"「海の男酒」と呼ばれる蔵の夏仕様。爽やかさの奥に、米の旨みがしっかり残っています。3.11で全てを流されたかと思われた後に、酵母がたまたま見つかり復活された奇跡と情熱の塊のお酒です。","mark":"◎"},
+  {"name":"雪男","x":9,"y":2,"z":2,"comment":"新潟の雪深い街で愛される透明感だけではない奥行きを感じます","mark":"◎"},
+  {"name":"残響","x":8,"y":3,"z":1,"comment":"精米歩合7％まで磨いた日本最高峰のお酒。マスカットのような上品な香りがスッと消えるのですが、余韻が喉ではなく後頭部に残ります。（店主談）","mark":"☆"},
+  {"name":"みむろ杉","x":3,"y":7,"z":1,"comment":"","mark":"☆"},
+  {"name":"鶴齢(純米)","x":3,"y":2,"z":7,"comment":"","mark":"◎"},
+  {"name":"敷嶋","x":6,"y":3,"z":6,"comment":"","mark":"◎"}
 ];
 
 /* ==== v11.0 タイプ追加文章（酒猫名cat／味覚あるあるaru）
@@ -626,13 +636,13 @@ const CROSS_DRINKS={
   27:{beer:["ピルスナー／すっきりラガー","味の基準をつかみやすい、軽快で親しみやすい一杯。ここから苦味や香りの好みを探せます。"],wine:["辛口スパークリング","泡の軽さで入りやすく、食事にも合わせやすい一本。ここから白・ロゼ・赤へ自由に広げられます。"]}
 };
 /* ==== v11.0 全国銘柄（「お家や他店で飲むなら」専用。☆=なかなか出会えないかも（レア）／◎=酒屋・オンライン／◇=普及酒（スーパー・コンビニ）（三選用・2026-07-18マーク改訂）。
-   Numbers正本「銘柄座標マスター v4.1（2026-08-01更新）」の店内◯以外114銘柄の写し。店内おすすめ欄には絶対に使わないこと（混入事故防止） */
-const NATL_SAKE=[{"name": "田酒", "x": 4, "y": 3, "z": 5, "mark": "☆"}, {"name": "飛露喜", "x": 3, "y": 4, "z": 3, "mark": "☆"}, {"name": "而今", "x": 3, "y": 7, "z": 1, "mark": "☆"}, {"name": "赤武", "x": 5, "y": 7, "z": 2, "mark": "◎"}, {"name": "寫樂", "x": 4, "y": 7, "z": 2, "mark": "☆"}, {"name": "みむろ杉", "x": 3, "y": 7, "z": 1, "mark": "☆"}, {"name": "作", "x": 5, "y": 7, "z": 4, "mark": "☆"}, {"name": "風の森", "x": 5, "y": 7, "z": 2, "mark": "◎"}, {"name": "仙禽", "x": 4, "y": 7, "z": 2, "mark": "☆"}, {"name": "光栄菊", "x": 2, "y": 6, "z": 3, "mark": "◎"}, {"name": "産土", "x": 3, "y": 5, "z": 3, "mark": "☆"}, {"name": "獺祭", "x": 4, "y": 6, "z": 1, "mark": "◇"}, {"name": "黒龍", "x": 8, "y": 4, "z": 1, "mark": "◎"}, {"name": "醸し人九平次", "x": 2, "y": 7, "z": 1, "mark": "◎"}, {"name": "磯自慢", "x": 6, "y": 4, "z": 1, "mark": "☆"}, {"name": "伯楽星", "x": 7, "y": 4, "z": 1, "mark": "◎"}, {"name": "日高見", "x": 6, "y": 2, "z": 4, "mark": "◎"}, {"name": "陸奥八仙", "x": 2, "y": 7, "z": 2, "mark": "◎"}, {"name": "豊盃", "x": 4, "y": 7, "z": 4, "mark": "◎"}, {"name": "春心", "x": 2, "y": 3, "z": 8, "mark": "◎"}, {"name": "くどき上手", "x": 3, "y": 7, "z": 1, "mark": "◎"}, {"name": "龍力", "x": 4, "y": 3, "z": 7, "mark": "◎"}, {"name": "龍力米のささやき", "x": 4, "y": 6, "z": 7, "mark": "☆"}, {"name": "神亀", "x": 1, "y": 1, "z": 9, "mark": "◎"}, {"name": "ゆきの美人", "x": 3, "y": 6, "z": 3, "mark": "◎"}, {"name": "雪の茅舎", "x": 3, "y": 2, "z": 7, "mark": "◎"}, {"name": "天狗舞", "x": 1, "y": 2, "z": 8, "mark": "◎"}, {"name": "菊姫", "x": 1, "y": 2, "z": 9, "mark": "◎"}, {"name": "蒼空", "x": 6, "y": 6, "z": 3, "mark": "◎"}, {"name": "龍勢", "x": 4, "y": 7, "z": 6, "mark": "◎"}, {"name": "黒帯", "x": 4, "y": 1, "z": 7, "mark": "◇"}, {"name": "川鶴くらうでぃ", "x": 7, "y": 8, "z": 1, "mark": "◎"}, {"name": "長陽福娘", "x": 3, "y": 7, "z": 6, "mark": "◎"}, {"name": "勝駒", "x": 6, "y": 4, "z": 1, "mark": "☆"}, {"name": "羽根屋", "x": 7, "y": 7, "z": 1, "mark": "◎"}, {"name": "立山", "x": 7, "y": 2, "z": 2, "mark": "◎"}, {"name": "久保田", "x": 8, "y": 2, "z": 1, "mark": "◎"}, {"name": "八海山", "x": 7, "y": 1, "z": 1, "mark": "◎"}, {"name": "酒屋八兵衛", "x": 3, "y": 2, "z": 6, "mark": "◎"}, {"name": "鶴齢", "x": 4, "y": 2, "z": 4, "mark": "◎"}, {"name": "村祐", "x": 1, "y": 8, "z": 6, "mark": "☆"}, {"name": "加茂錦", "x": 4, "y": 8, "z": 1, "mark": "◎"}, {"name": "日置櫻neko", "x": 2, "y": 2, "z": 8, "mark": "◎"}, {"name": "あべ", "x": 2, "y": 6, "z": 2, "mark": "☆"}, {"name": "十九", "x": 2, "y": 8, "z": 2, "mark": "◎"}, {"name": "真澄", "x": 7, "y": 4, "z": 2, "mark": "◎"}, {"name": "信州亀齢", "x": 3, "y": 7, "z": 1, "mark": "☆"}, {"name": "王祿", "x": 3, "y": 6, "z": 5, "mark": "☆"}, {"name": "七本鎗", "x": 2, "y": 1, "z": 8, "mark": "◎"}, {"name": "不老泉", "x": 1, "y": 3, "z": 9, "mark": "◎"}, {"name": "石鎚", "x": 6, "y": 2, "z": 5, "mark": "◎"}, {"name": "玉川", "x": 1, "y": 2, "z": 9, "mark": "◎"}, {"name": "こなき爺ぃ", "x": 1, "y": 2, "z": 7, "mark": "◎"}, {"name": "群馬泉", "x": 2, "y": 3, "z": 8, "mark": "◎"}, {"name": "旭若松", "x": 2, "y": 4, "z": 9, "mark": "☆"}, {"name": "南", "x": 4, "y": 3, "z": 4, "mark": "◎"}, {"name": "悦・凱陣", "x": 2, "y": 2, "z": 9, "mark": "☆"}, {"name": "雅山流", "x": 4, "y": 6, "z": 3, "mark": "☆"}, {"name": "屋守", "x": 4, "y": 7, "z": 2, "mark": "◎"}, {"name": "花陽浴", "x": 2, "y": 8, "z": 2, "mark": "☆"}, {"name": "寒菊", "x": 2, "y": 8, "z": 2, "mark": "◎"}, {"name": "木戸泉", "x": 1, "y": 2, "z": 8, "mark": "◎"}, {"name": "一ノ蔵", "x": 6, "y": 2, "z": 2, "mark": "◎"}, {"name": "萩の鶴猫ラベル", "x": 3, "y": 6, "z": 2, "mark": "☆"}, {"name": "浦霞", "x": 5, "y": 2, "z": 3, "mark": "◎"}, {"name": "南部美人", "x": 4, "y": 2, "z": 3, "mark": "◎"}, {"name": "大七", "x": 1, "y": 2, "z": 8, "mark": "◎"}, {"name": "奥の松", "x": 5, "y": 3, "z": 2, "mark": "◎"}, {"name": "上喜元", "x": 4, "y": 3, "z": 2, "mark": "◎"}, {"name": "飛良泉", "x": 1, "y": 2, "z": 9, "mark": "◎"}, {"name": "義侠", "x": 1, "y": 2, "z": 8, "mark": "◎"}, {"name": "るみ子の酒", "x": 2, "y": 2, "z": 5, "mark": "◎"}, {"name": "敷嶋", "x": 6, "y": 3, "z": 6, "mark": "◎"}, {"name": "会津娘(純米)", "x": 3, "y": 4, "z": 5, "mark": "◎"}, {"name": "会津中将", "x": 4, "y": 5, "z": 3, "mark": "◎"}, {"name": "泉川", "x": 4, "y": 5, "z": 2, "mark": "◎"}, {"name": "山の井", "x": 2, "y": 7, "z": 1, "mark": "◎"}, {"name": "国権", "x": 4, "y": 4, "z": 2, "mark": "◎"}, {"name": "名倉山", "x": 3, "y": 5, "z": 2, "mark": "◎"}, {"name": "末廣", "x": 1, "y": 2, "z": 7, "mark": "◎"}, {"name": "榮川", "x": 4, "y": 3, "z": 3, "mark": "◎"}, {"name": "一歩己", "x": 3, "y": 5, "z": 2, "mark": "◎"}, {"name": "廣戸川", "x": 4, "y": 5, "z": 5, "mark": "◎"}, {"name": "風が吹く", "x": 6, "y": 5, "z": 5, "mark": "◎"}, {"name": "大和屋善内", "x": 3, "y": 4, "z": 3, "mark": "◎"}, {"name": "上善如水", "x": 9, "y": 2, "z": 1, "mark": "◎"}, {"name": "麒麟山", "x": 8, "y": 1, "z": 1, "mark": "◎"}, {"name": "越乃景虎", "x": 9, "y": 1, "z": 1, "mark": "◎"}, {"name": "菊水ふな口", "x": 1, "y": 6, "z": 8, "mark": "◇"}, {"name": "雪中梅", "x": 3, "y": 8, "z": 6, "mark": "◎"}, {"name": "吉乃川", "x": 8, "y": 1, "z": 1, "mark": "◎"}, {"name": "越の寒中梅", "x": 8, "y": 1, "z": 1, "mark": "◎"}, {"name": "刈穂", "x": 6, "y": 1, "z": 4, "mark": "◎"}, {"name": "墨廼江", "x": 6, "y": 2, "z": 2, "mark": "◎"}, {"name": "いづみ", "x": 2, "y": 6, "z": 9, "mark": "◇"}, {"name": "金鶴", "x": 6, "y": 2, "z": 2, "mark": "◎"}, {"name": "菊正宗樽酒", "x": 4, "y": 3, "z": 6, "mark": "◇"}, {"name": "白鹿", "x": 4, "y": 1, "z": 4, "mark": "◇"}, {"name": "剣菱", "x": 5, "y": 2, "z": 7, "mark": "◇"}, {"name": "菊正宗金パック", "x": 6, "y": 7, "z": 5, "mark": "◇"}, {"name": "澪", "x": 5, "y": 10, "z": 1, "mark": "◇"}, {"name": "白鶴", "x": 8, "y": 1, "z": 1, "mark": "◇"}, {"name": "月桂冠", "x": 8, "y": 1, "z": 1, "mark": "◇"}, {"name": "松竹梅白壁蔵", "x": 3, "y": 1, "z": 5, "mark": "◇"}, {"name": "黄桜", "x": 8, "y": 1, "z": 1, "mark": "◇"}, {"name": "賀茂鶴", "x": 6, "y": 2, "z": 1, "mark": "◇"}, {"name": "松竹梅", "x": 8, "y": 1, "z": 1, "mark": "◇"}, {"name": "福寿", "x": 5, "y": 2, "z": 2, "mark": "◇"}, {"name": "三千櫻", "x": 5, "y": 6, "z": 3, "mark": "◎"}, {"name": "銀盤", "x": 7, "y": 2, "z": 1, "mark": "◇"}, {"name": "菊正宗銀パック", "x": 6, "y": 7, "z": 1, "mark": "◇"}, {"name": "白牡丹", "x": 5, "y": 2, "z": 2, "mark": "◇"}, {"name": "大関 金冠", "x": 8, "y": 1, "z": 1, "mark": "◇"}, {"name": "大関 銀冠", "x": 7, "y": 1, "z": 1, "mark": "◇"}];
+   Numbers正本「銘柄座標マスター v4.2（2026-08-02更新）」の店内チェックなし112銘柄の写し。店内おすすめ欄には絶対に使わないこと（混入事故防止） */
+const NATL_SAKE=[{"name":"田酒","x":4,"y":3,"z":5,"mark":"☆"},{"name":"飛露喜","x":3,"y":4,"z":3,"mark":"☆"},{"name":"而今","x":3,"y":7,"z":1,"mark":"☆"},{"name":"赤武","x":5,"y":7,"z":2,"mark":"◎"},{"name":"寫樂","x":4,"y":7,"z":2,"mark":"☆"},{"name":"作","x":5,"y":7,"z":4,"mark":"☆"},{"name":"風の森","x":5,"y":7,"z":2,"mark":"◎"},{"name":"仙禽","x":4,"y":7,"z":2,"mark":"☆"},{"name":"光栄菊","x":2,"y":6,"z":3,"mark":"◎"},{"name":"産土","x":3,"y":5,"z":3,"mark":"☆"},{"name":"獺祭","x":4,"y":6,"z":1,"mark":"◇"},{"name":"黒龍","x":8,"y":4,"z":1,"mark":"◎"},{"name":"醸し人九平次","x":2,"y":7,"z":1,"mark":"◎"},{"name":"磯自慢","x":6,"y":4,"z":1,"mark":"☆"},{"name":"伯楽星","x":7,"y":4,"z":1,"mark":"◎"},{"name":"日高見","x":6,"y":2,"z":4,"mark":"◎"},{"name":"陸奥八仙","x":2,"y":7,"z":2,"mark":"◎"},{"name":"豊盃","x":4,"y":7,"z":4,"mark":"◎"},{"name":"春心","x":2,"y":3,"z":8,"mark":"◎"},{"name":"くどき上手","x":3,"y":7,"z":1,"mark":"◎"},{"name":"龍力","x":4,"y":3,"z":7,"mark":"◎"},{"name":"龍力米のささやき","x":4,"y":6,"z":7,"mark":"☆"},{"name":"神亀","x":1,"y":1,"z":9,"mark":"◎"},{"name":"ゆきの美人","x":3,"y":6,"z":3,"mark":"◎"},{"name":"雪の茅舎","x":3,"y":2,"z":7,"mark":"◎"},{"name":"天狗舞","x":1,"y":2,"z":8,"mark":"◎"},{"name":"菊姫","x":1,"y":2,"z":9,"mark":"◎"},{"name":"蒼空","x":6,"y":6,"z":3,"mark":"◎"},{"name":"龍勢","x":4,"y":7,"z":6,"mark":"◎"},{"name":"黒帯","x":4,"y":1,"z":7,"mark":"☆"},{"name":"川鶴くらうでぃ","x":7,"y":8,"z":1,"mark":"◎"},{"name":"長陽福娘","x":3,"y":7,"z":6,"mark":"◎"},{"name":"勝駒","x":6,"y":4,"z":1,"mark":"☆"},{"name":"羽根屋","x":7,"y":7,"z":1,"mark":"◎"},{"name":"立山","x":7,"y":2,"z":2,"mark":"◎"},{"name":"久保田","x":8,"y":2,"z":1,"mark":"◎"},{"name":"八海山","x":7,"y":1,"z":1,"mark":"◎"},{"name":"酒屋八兵衛","x":3,"y":2,"z":6,"mark":"◎"},{"name":"鶴齢","x":4,"y":2,"z":4,"mark":"◎"},{"name":"村祐","x":1,"y":8,"z":6,"mark":"☆"},{"name":"加茂錦","x":4,"y":8,"z":1,"mark":"◎"},{"name":"日置櫻neko","x":2,"y":2,"z":8,"mark":"◎"},{"name":"あべ","x":2,"y":6,"z":2,"mark":"☆"},{"name":"十九","x":2,"y":8,"z":2,"mark":"◎"},{"name":"真澄","x":7,"y":4,"z":2,"mark":"◎"},{"name":"信州亀齢","x":3,"y":7,"z":1,"mark":"☆"},{"name":"王祿","x":3,"y":6,"z":5,"mark":"☆"},{"name":"七本鎗","x":2,"y":1,"z":8,"mark":"◎"},{"name":"不老泉","x":1,"y":3,"z":9,"mark":"◎"},{"name":"石鎚","x":6,"y":2,"z":5,"mark":"◎"},{"name":"玉川","x":1,"y":2,"z":9,"mark":"◎"},{"name":"こなき爺ぃ","x":1,"y":2,"z":7,"mark":"◎"},{"name":"群馬泉","x":2,"y":3,"z":8,"mark":"◎"},{"name":"旭若松","x":2,"y":4,"z":9,"mark":"☆"},{"name":"南","x":4,"y":3,"z":4,"mark":"◎"},{"name":"悦・凱陣","x":2,"y":2,"z":9,"mark":"☆"},{"name":"雅山流","x":4,"y":6,"z":3,"mark":"☆"},{"name":"屋守","x":4,"y":7,"z":2,"mark":"◎"},{"name":"花陽浴","x":2,"y":8,"z":2,"mark":"☆"},{"name":"寒菊","x":2,"y":8,"z":2,"mark":"◎"},{"name":"木戸泉","x":1,"y":2,"z":8,"mark":"◎"},{"name":"一ノ蔵","x":6,"y":2,"z":2,"mark":"◎"},{"name":"萩の鶴猫ラベル","x":4,"y":6,"z":2,"mark":"☆"},{"name":"浦霞","x":5,"y":2,"z":3,"mark":"◎"},{"name":"南部美人","x":4,"y":2,"z":3,"mark":"◎"},{"name":"大七","x":1,"y":2,"z":8,"mark":"◎"},{"name":"奥の松","x":5,"y":3,"z":2,"mark":"◎"},{"name":"上喜元","x":4,"y":3,"z":2,"mark":"◎"},{"name":"飛良泉","x":1,"y":2,"z":9,"mark":"◎"},{"name":"義侠","x":1,"y":2,"z":8,"mark":"◎"},{"name":"るみ子の酒","x":2,"y":2,"z":5,"mark":"◎"},{"name":"会津娘(純米)","x":3,"y":4,"z":5,"mark":"◎"},{"name":"会津中将","x":4,"y":5,"z":3,"mark":"◎"},{"name":"泉川","x":4,"y":5,"z":2,"mark":"◎"},{"name":"山の井","x":5,"y":6,"z":1,"mark":"◎"},{"name":"国権","x":4,"y":4,"z":2,"mark":"◎"},{"name":"名倉山","x":3,"y":5,"z":2,"mark":"◎"},{"name":"末廣","x":1,"y":2,"z":7,"mark":"◎"},{"name":"榮川","x":4,"y":3,"z":3,"mark":"◎"},{"name":"一歩己","x":3,"y":5,"z":2,"mark":"◎"},{"name":"廣戸川","x":4,"y":5,"z":5,"mark":"◎"},{"name":"風が吹く","x":6,"y":5,"z":5,"mark":"◎"},{"name":"大和屋善内","x":3,"y":4,"z":3,"mark":"◎"},{"name":"上善如水","x":9,"y":2,"z":1,"mark":"◎"},{"name":"麒麟山","x":8,"y":1,"z":1,"mark":"◎"},{"name":"越乃景虎","x":9,"y":1,"z":1,"mark":"◎"},{"name":"菊水ふな口","x":1,"y":6,"z":8,"mark":"◇"},{"name":"雪中梅","x":3,"y":8,"z":6,"mark":"◎"},{"name":"吉乃川","x":8,"y":1,"z":1,"mark":"◎"},{"name":"越の寒中梅","x":8,"y":1,"z":1,"mark":"◎"},{"name":"刈穂","x":6,"y":1,"z":4,"mark":"◎"},{"name":"墨廼江","x":6,"y":2,"z":2,"mark":"◎"},{"name":"いづみ","x":2,"y":6,"z":9,"mark":"◇"},{"name":"金鶴","x":6,"y":2,"z":2,"mark":"◎"},{"name":"菊正宗樽酒","x":4,"y":3,"z":6,"mark":"◇"},{"name":"白鹿","x":4,"y":1,"z":4,"mark":"◇"},{"name":"剣菱","x":5,"y":2,"z":7,"mark":"◇"},{"name":"菊正宗金パック","x":6,"y":7,"z":5,"mark":"◇"},{"name":"澪","x":5,"y":10,"z":1,"mark":"◇"},{"name":"白鶴","x":8,"y":1,"z":1,"mark":"◇"},{"name":"月桂冠","x":8,"y":1,"z":1,"mark":"◇"},{"name":"松竹梅白壁蔵","x":3,"y":1,"z":5,"mark":"◇"},{"name":"黄桜","x":8,"y":1,"z":1,"mark":"◇"},{"name":"賀茂鶴","x":6,"y":2,"z":1,"mark":"◇"},{"name":"松竹梅","x":8,"y":1,"z":1,"mark":"◇"},{"name":"福寿","x":5,"y":2,"z":2,"mark":"◇"},{"name":"三千櫻","x":5,"y":6,"z":3,"mark":"◎"},{"name":"銀盤","x":7,"y":2,"z":1,"mark":"◇"},{"name":"菊正宗銀パック","x":6,"y":7,"z":1,"mark":"◇"},{"name":"白牡丹","x":5,"y":2,"z":2,"mark":"◇"},{"name":"大関 金冠","x":8,"y":1,"z":1,"mark":"◇"},{"name":"大関 銀冠","x":7,"y":1,"z":1,"mark":"◇"}];
 /* ==== チャート表示の絞り込み（銘柄座標マスター「チャート表示」列＝チェックボックス）====
    チェックを外した銘柄名を CHART_HIDDEN に列挙すると、三角チャート・シェア画像・おすすめ表示から
    まとめて除外される（診断の27タイプ判定には影響しない）。正本のNumbersを直したら、
    Claudeが JSON詰め替え時にこの配列を更新する。手で直す場合は ["銘柄名","銘柄名"] の形式。 */
-const CHART_HIDDEN=["いづみ", "一ノ蔵", "一歩己", "上喜元", "刈穂", "南部美人", "吉乃川", "名倉山", "国権", "墨廼江", "大七", "大和屋善内", "大関 金冠", "大関 銀冠", "奥の松", "寒菊", "山の井", "月桂冠", "木戸泉", "末廣", "松竹梅", "松竹梅白壁蔵", "榮川", "浦霞", "白牡丹", "白鶴", "白鹿", "福寿", "菊水ふな口", "賀茂鶴", "越の寒中梅", "越乃景虎", "金鶴", "飛良泉", "鶴齢", "麒麟山", "黄桜", "黒帯"];
+const CHART_HIDDEN=["鶴齢","寒菊","木戸泉","一ノ蔵","浦霞","大七","奥の松","上喜元","飛良泉","国権","名倉山","末廣","榮川","一歩己","大和屋善内","麒麟山","越乃景虎","菊水ふな口","吉乃川","越の寒中梅","刈穂","墨廼江","いづみ","金鶴","白鹿","白鶴","月桂冠","松竹梅白壁蔵","黄桜","賀茂鶴","松竹梅","福寿","白牡丹","大関 金冠","大関 銀冠"];
 (function(){const h=new Set(CHART_HIDDEN);[STORE_SAKE,NATL_SAKE].forEach(function(arr){for(let i=arr.length-1;i>=0;i--){if(h.has(arr[i].name))arr.splice(i,1);}});})();
 /* タイプ（TYPES） ── 27タイプ・スプレッドシートと1対1対応 */
 const LV={"低":1.5,"中":5,"高":8.5};
@@ -829,7 +839,7 @@ const TYPES = [
 ];
 
 
-/* ── v10.9：銘柄データは正本「◎銘柄座標マスター_v2.3_正本.numbers」(sake_data)の店内◯21銘柄の写し(2026-08-01同期・正本v4.1)。
+/* ── v10.9：銘柄データは正本「◎銘柄座標マスター_v3.3正本.numbers」(sake_data)の店内チェックあり23銘柄の写し(2026-08-02同期・正本v4.2)。
    ── v10.8：占い版の全国市販酒リスト（RECS3）は撤去。
    店内版は STORE_SAKE から診断座標に近い順で提示する（下の compute / renderResult 参照）── */
 
@@ -1006,7 +1016,7 @@ const EN_TASTE={
  26:"A light finish and a bright bouquet, with real thickness of flavor. An elegant, satisfying glass suits you.",
  27:"No fixed preferences yet — the perfect time to try everything. Start wherever your curiosity points."
 };
-const ROMAJI={"〆張鶴":"Shimeharitsuru","サビ猫ロック":"Sabineko Rock","酒場の純大":"Sakaba no Jundai","K":"K","天賦":"Tenbu","会津娘無為信":"Aizu Musume Muishin","LOHA酒":"LOHA-shu","鍋島":"Nabeshima","木曽路":"Kisoji","喜正":"Kisho","弥右衛門":"Yauemon","松の寿":"Matsunokotobuki","新政":"Aramasa","十四代":"Juyondai","天明":"Tenmei","ロ万":"Roman","奈良萬":"Naraman","磐城壽夏酒":"Iwaki Kotobuki Summer","わかむすめ":"Wakamusume","田酒":"Denshu","飛露喜":"Hiroki","而今":"Jikon","赤武":"Akabu","寫樂":"Sharaku","みむろ杉":"Mimurosugi","作":"Zaku","風の森":"Kaze no Mori","仙禽":"Senkin","光栄菊":"Koeigiku","産土":"Ubusuna","敷嶋":"Shikishima","獺祭":"Dassai","黒龍":"Kokuryu","醸し人九平次":"Kamoshibito Kuheiji","磯自慢":"Isojiman","開運":"Kaiun","伯楽星":"Hakurakusei","日高見":"Hitakami","陸奥八仙":"Mutsu Hassen","豊盃":"Houhai","楯野川":"Tatenokawa","くどき上手":"Kudoki Jozu","出羽桜":"Dewazakura","一白水成":"Ippaku Suisei","山本":"Yamamoto","ゆきの美人":"Yuki no Bijin","雪の茅舎":"Yuki no Bosha","天狗舞":"Tengumai","菊姫":"Kikuhime","手取川":"Tedorigawa","加賀鳶":"Kagatobi","黒帯":"Kuroobi","川鶴":"Kawatsuru","満寿泉":"Masuizumi","勝駒":"Kachikoma","羽根屋":"Haneya","立山":"Tateyama","久保田":"Kubota","八海山":"Hakkaisan","越乃寒梅":"Koshi no Kanbai","鶴齢":"Kakurei","村祐":"Murayu","加茂錦":"Kamo Nishiki","至":"Itaru","あべ":"Abe","たかちよ":"Takachiyo","真澄":"Masumi","信州亀齢":"Shinshu Kirei","王祿":"Oroku","七本鎗":"Shichihon-yari","不老泉":"Furosen","澤屋まつもと":"Sawaya Matsumoto","玉川":"Tamagawa","秋鹿":"Akishika","群馬泉":"Gunma Izumi","奥播磨":"Okuharima","花巴":"Hanatomoe","悦・凱陣":"Yorokobi Gaijin","紀土":"Kid","屋守":"Okunokami","花陽浴":"Hanaabi","寒菊":"Kankiku","木戸泉":"Kidoizumi","一ノ蔵":"Ichinokura","萩の鶴猫ラベル":"Hagi no Tsuru Neko Label","浦霞":"Urakasumi","南部美人":"Nanbu Bijin","大七":"Daishichi","奥の松":"Okunomatsu","上喜元":"Jokigen","飛良泉":"Hiraizumi","義侠":"Gikyo","るみ子の酒":"Rumiko no Sake","残響":"Zankyo","会津娘":"Aizu Musume","会津中将":"Aizu Chujo","泉川":"Izumikawa","山の井":"Yamanoi","国権":"Kokken","名倉山":"Nagurayama","末廣":"Suehiro","榮川":"Eisen","一歩己":"Ibuki","廣戸川":"Hirotogawa","風が吹く":"Kaze ga Fuku","大和屋善内":"Yamatoya Zennai","上善如水":"Jozen Mizunogotoshi","麒麟山":"Kirinzan","越乃景虎":"Koshi no Kagetora","菊水":"Kikusui","雪中梅":"Setchubai","吉乃川":"Yoshinogawa","越の寒中梅":"Koshi no Kanchubai","刈穂":"Kariho","墨廼江":"Suminoe","菊水ふな口":"Kikusui Funaguchi","金鶴":"Kintsuru","菊正宗樽酒":"Kiku-Masamune Taruzake","白鹿":"Hakushika","剣菱":"Kenbishi","菊正宗金パック":"Kiku-Masamune Gold Pack","大関":"Ozeki","白鶴":"Hakutsuru","月桂冠":"Gekkeikan","松竹梅":"Sho Chiku Bai","黄桜":"Kizakura","賀茂鶴":"Kamotsuru","白壁蔵":"Shirakabegura","福寿":"Fukuju","三千櫻":"Michizakura","銀盤":"Ginban","菊正宗銀パック":"Kiku-Masamune Silver Pack","白牡丹":"Hakubotan","大関 金冠":"Ozeki Kinkan","大関 銀冠":"Ozeki Ginkan","雅山流":"Gasanryu","旭若松":"Asahi Wakamatsu","龍力":"Tatsuriki","神亀":"Shinkame","龍力米のささやき":"Tatsuriki Kome no Sasayaki","蒼空":"Sora","龍勢":"Ryusei","十九":"Juku","南":"Minami","石鎚":"Ishizuchi","長陽福娘":"Choyo Fukumusume","いづみ":"Izumi","春心":"Shunshin","松竹梅白壁蔵":"Sho Chiku Bai Shirakabegura","澪":"Mio","川鶴くらうでぃ":"Kawatsuru Cloudy","酒屋八兵衛":"Sakaya Hachibee","こなき爺ぃ":"Konaki Jii","日置櫻neko":"Hioki Zakura Neko","玄宰":"Gensai","鶴齢(純吟)":"Kakurei Jungin","鶴齢(純米)":"Kakurei Junmai","七ロ万":"Nana Roman","雪男":"Yukiotoko","会津娘(純米)":"Aizu Musume Junmai"};
+const ROMAJI={"〆張鶴":"Shimeharitsuru","サビ猫ロック":"Sabineko Rock","酒場の純大":"Sakaba no Jundai","K":"K","天賦":"Tenbu","会津娘無為信":"Aizu Musume Muishin","LOHA酒":"LOHA-shu","鍋島":"Nabeshima","木曽路":"Kisoji","喜正":"Kisho","弥右衛門(りんごver)":"Yauemon Ringo ver","松の寿":"Matsunokotobuki","新政":"Aramasa","十四代":"Juyondai","天明":"Tenmei","ロ万":"Roman","奈良萬":"Naraman","磐城壽夏酒":"Iwaki Kotobuki Summer","わかむすめ":"Wakamusume","田酒":"Denshu","飛露喜":"Hiroki","而今":"Jikon","赤武":"Akabu","寫樂":"Sharaku","みむろ杉":"Mimurosugi","作":"Zaku","風の森":"Kaze no Mori","仙禽":"Senkin","光栄菊":"Koeigiku","産土":"Ubusuna","敷嶋":"Shikishima","獺祭":"Dassai","黒龍":"Kokuryu","醸し人九平次":"Kamoshibito Kuheiji","磯自慢":"Isojiman","開運":"Kaiun","伯楽星":"Hakurakusei","日高見":"Hitakami","陸奥八仙":"Mutsu Hassen","豊盃":"Houhai","楯野川":"Tatenokawa","くどき上手":"Kudoki Jozu","出羽桜":"Dewazakura","一白水成":"Ippaku Suisei","山本":"Yamamoto","ゆきの美人":"Yuki no Bijin","雪の茅舎":"Yuki no Bosha","天狗舞":"Tengumai","菊姫":"Kikuhime","手取川":"Tedorigawa","加賀鳶":"Kagatobi","黒帯":"Kuroobi","川鶴":"Kawatsuru","満寿泉":"Masuizumi","勝駒":"Kachikoma","羽根屋":"Haneya","立山":"Tateyama","久保田":"Kubota","八海山":"Hakkaisan","越乃寒梅":"Koshi no Kanbai","鶴齢":"Kakurei","村祐":"Murayu","加茂錦":"Kamo Nishiki","至":"Itaru","あべ":"Abe","たかちよ":"Takachiyo","真澄":"Masumi","信州亀齢":"Shinshu Kirei","王祿":"Oroku","七本鎗":"Shichihon-yari","不老泉":"Furosen","澤屋まつもと":"Sawaya Matsumoto","玉川":"Tamagawa","秋鹿":"Akishika","群馬泉":"Gunma Izumi","奥播磨":"Okuharima","花巴":"Hanatomoe","悦・凱陣":"Yorokobi Gaijin","紀土":"Kid","屋守":"Okunokami","花陽浴":"Hanaabi","寒菊":"Kankiku","木戸泉":"Kidoizumi","一ノ蔵":"Ichinokura","萩の鶴猫ラベル":"Hagi no Tsuru Neko Label","浦霞":"Urakasumi","南部美人":"Nanbu Bijin","大七":"Daishichi","奥の松":"Okunomatsu","上喜元":"Jokigen","飛良泉":"Hiraizumi","義侠":"Gikyo","るみ子の酒":"Rumiko no Sake","残響":"Zankyo","会津娘":"Aizu Musume","会津中将":"Aizu Chujo","泉川":"Izumikawa","山の井":"Yamanoi","国権":"Kokken","名倉山":"Nagurayama","末廣":"Suehiro","榮川":"Eisen","一歩己":"Ibuki","廣戸川":"Hirotogawa","風が吹く":"Kaze ga Fuku","大和屋善内":"Yamatoya Zennai","上善如水":"Jozen Mizunogotoshi","麒麟山":"Kirinzan","越乃景虎":"Koshi no Kagetora","菊水":"Kikusui","雪中梅":"Setchubai","吉乃川":"Yoshinogawa","越の寒中梅":"Koshi no Kanchubai","刈穂":"Kariho","墨廼江":"Suminoe","菊水ふな口":"Kikusui Funaguchi","金鶴":"Kintsuru","菊正宗樽酒":"Kiku-Masamune Taruzake","白鹿":"Hakushika","剣菱":"Kenbishi","菊正宗金パック":"Kiku-Masamune Gold Pack","大関":"Ozeki","白鶴":"Hakutsuru","月桂冠":"Gekkeikan","松竹梅":"Sho Chiku Bai","黄桜":"Kizakura","賀茂鶴":"Kamotsuru","白壁蔵":"Shirakabegura","福寿":"Fukuju","三千櫻":"Michizakura","銀盤":"Ginban","菊正宗銀パック":"Kiku-Masamune Silver Pack","白牡丹":"Hakubotan","大関 金冠":"Ozeki Kinkan","大関 銀冠":"Ozeki Ginkan","雅山流":"Gasanryu","旭若松":"Asahi Wakamatsu","龍力":"Tatsuriki","神亀":"Shinkame","龍力米のささやき":"Tatsuriki Kome no Sasayaki","蒼空":"Sora","龍勢":"Ryusei","十九":"Juku","南":"Minami","石鎚":"Ishizuchi","長陽福娘":"Choyo Fukumusume","いづみ":"Izumi","春心":"Shunshin","松竹梅白壁蔵":"Sho Chiku Bai Shirakabegura","澪":"Mio","川鶴くらうでぃ":"Kawatsuru Cloudy","酒屋八兵衛":"Sakaya Hachibee","こなき爺ぃ":"Konaki Jii","日置櫻neko":"Hioki Zakura Neko","玄宰":"Gensai","鶴齢(純吟)":"Kakurei Jungin","鶴齢(純米)":"Kakurei Junmai","七ロ万":"Nana Roman","雪男":"Yukiotoko","会津娘(純米)":"Aizu Musume Junmai"};
 /* ==== v11.11 多言語パック（简体・繁體・한국어） ====
    出典＝翻訳シートv1.0（CODEX訳・218行）＋追加分v2.0（Claude訳・2026-07-19）。
    日本語はこのパックを通らない（従来コードのまま）。英語は従来のEN_*定数を参照する。
@@ -1117,7 +1127,7 @@ zh:{htmlLang:"zh-Hans",param:"zh-CN",langName:"中文（简体）",romaji:false,
   "日本酒三角チャート診断":"清酒三角图诊断",
   "好きな日本酒と、あなたの“酒猫”が見つかる":"找到喜欢的清酒，也遇见你的‘酒猫’",
   "簡単な質問に答えると、独自開発の三角チャートであなたの日本酒の好みの傾向を診断。飲食20年の酒場店主が実際に飲んで確かめた銘柄の中から、おすすめを提案します。":"回答几个简单问题，独家研发的三角图就会呈现你的清酒口味倾向。再从拥有20年餐饮经验的酒吧老板亲自喝过、确认过的酒款中，为你推荐合适的一款。",
-  "結果画面では、2つのおすすめをご案内します。ひとつは、このチャートを作った酒場店主の店・日本酒居酒屋 SAKE story（東京・五反田）でいま飲める一杯。もうひとつは、お家や他店で飲むときのおすすめです。どちらも、酒場店主が実際に飲んで確かめた銘柄の中から選んで掲載しています。":"结果画面会为你推荐两种选择。一种是现在就能在制作这张图的酒吧老板所经营的清酒居酒屋 SAKE story（东京・五反田）喝到的一杯；另一种是在家或其他店喝时的推荐。所有酒款都由老板亲自喝过、确认后选出。",
+  "結果画面では、2種類のおすすめをご案内します。店内で飲める候補を3本、お家や他店で探しやすい候補を3本ご紹介します。どちらも、酒場店主が実際に飲んで確かめた銘柄の中から選んで掲載しています。":"结果页面会为你介绍两类推荐：店内现在可以喝到的3款，以及在家或其他店更容易找到的3款。所有酒款都由老板亲自喝过、确认后选出。",
   "⏱ 約1〜2分でわかる":"⏱ 约1～2分钟即可完成",
   "10問で診断":"10道题完成诊断",
   "三角チャートで見える化":"用三角图直观呈现",
@@ -1129,11 +1139,11 @@ zh:{htmlLang:"zh-Hans",param:"zh-CN",langName:"中文（简体）",romaji:false,
   "あなたの酒猫は":"你的酒猫是",
   "あなたの味わい傾向":"你的口味倾向",
   "あなたの味わいと近い銘柄":"与你口味接近的酒款",
-  "あなたに近い、店の一杯":"店内与你最接近的一杯",
+  "あなたから広がる、店の三杯":"从你的结果延伸出的店内三杯",
   "お家や他店で飲むなら":"在家或其他店喝的话",
   "「日本酒三角チャート」は登録商標です。文章・画像・銘柄データの無断転用はご遠慮ください。":"‘清酒三角图’为注册商标。请勿擅自转载或使用文字、图片及酒款数据。",
-  "2026年8月1日改訂":"2026年8月1日修订",
-  "最終更新 2026.8.1":"最后更新 2026.8.1",
+  "2026年8月2日改訂":"2026年8月2日修订",
+  "最終更新 2026.8.2":"最后更新 2026.8.2",
   "☆ なかなか出会えないかも　／　◎ 酒屋・オンラインで探しやすい　／　◇ スーパー・コンビニで見つけやすい":"☆ 也许不太容易遇到　／　◎ 酒铺・网购较容易找到　／　◇ 超市・便利店较容易找到",
   "日本酒は各銘柄にも多様な味わいがあります。作者の独断で各銘柄の代表的なお酒を基に結果に反映しています。":"同一品牌的清酒也有多种风味。本结果由制作者根据个人判断，以各品牌的代表性酒款为基础呈现。",
   "シェア用カード":"分享卡片",
@@ -1237,7 +1247,7 @@ tw:{htmlLang:"zh-Hant",param:"zh-TW",langName:"中文（繁體）",romaji:false,
   "日本酒三角チャート診断":"清酒三角圖診斷",
   "好きな日本酒と、あなたの“酒猫”が見つかる":"找到喜歡的清酒，也遇見你的「酒貓」",
   "簡単な質問に答えると、独自開発の三角チャートであなたの日本酒の好みの傾向を診断。飲食20年の酒場店主が実際に飲んで確かめた銘柄の中から、おすすめを提案します。":"回答幾個簡單問題，獨家研發的三角圖就會呈現你的清酒口味傾向。再從擁有20年餐飲經驗的酒吧老闆親自喝過、確認過的酒款中，為你推薦合適的一款。",
-  "結果画面では、2つのおすすめをご案内します。ひとつは、このチャートを作った酒場店主の店・日本酒居酒屋 SAKE story（東京・五反田）でいま飲める一杯。もうひとつは、お家や他店で飲むときのおすすめです。どちらも、酒場店主が実際に飲んで確かめた銘柄の中から選んで掲載しています。":"結果畫面會為你推薦兩種選擇。一種是現在就能在製作這張圖的酒吧老闆所經營的清酒居酒屋 SAKE story（東京・五反田）喝到的一杯；另一種是在家或其他店喝時的推薦。所有酒款都由老闆親自喝過、確認後選出。",
+  "結果画面では、2種類のおすすめをご案内します。店内で飲める候補を3本、お家や他店で探しやすい候補を3本ご紹介します。どちらも、酒場店主が実際に飲んで確かめた銘柄の中から選んで掲載しています。":"結果畫面會介紹兩類推薦：店內現在可以喝到的3款，以及在家或其他店更容易找到的3款。所有酒款都由老闆親自喝過、確認後選出。",
   "⏱ 約1〜2分でわかる":"⏱ 約1～2分鐘即可完成",
   "10問で診断":"10道題完成診斷",
   "三角チャートで見える化":"用三角圖直觀呈現",
@@ -1249,11 +1259,11 @@ tw:{htmlLang:"zh-Hant",param:"zh-TW",langName:"中文（繁體）",romaji:false,
   "あなたの酒猫は":"你的酒貓是",
   "あなたの味わい傾向":"你的口味傾向",
   "あなたの味わいと近い銘柄":"與你口味接近的酒款",
-  "あなたに近い、店の一杯":"店內與你最接近的一杯",
+  "あなたから広がる、店の三杯":"從你的結果延伸出的店內三杯",
   "お家や他店で飲むなら":"在家或其他店喝的話",
   "「日本酒三角チャート」は登録商標です。文章・画像・銘柄データの無断転用はご遠慮ください。":"「清酒三角圖」為註冊商標。請勿擅自轉載或使用文字、圖片及酒款資料。",
-  "2026年8月1日改訂":"2026年8月1日修訂",
-  "最終更新 2026.8.1":"最後更新 2026.8.1",
+  "2026年8月2日改訂":"2026年8月2日修訂",
+  "最終更新 2026.8.2":"最後更新 2026.8.2",
   "☆ なかなか出会えないかも　／　◎ 酒屋・オンラインで探しやすい　／　◇ スーパー・コンビニで見つけやすい":"☆ 也許不太容易遇到　／　◎ 酒鋪・網購較容易找到　／　◇ 超市・便利商店較容易找到",
   "日本酒は各銘柄にも多様な味わいがあります。作者の独断で各銘柄の代表的なお酒を基に結果に反映しています。":"同一品牌的清酒也有多種風味。本結果由製作者依個人判斷，以各品牌的代表性酒款為基礎呈現。",
   "シェア用カード":"分享卡片",
@@ -1357,7 +1367,7 @@ ko:{htmlLang:"ko",param:"ko",langName:"한국어",romaji:true,
   "日本酒三角チャート診断":"사케 삼각 차트 진단",
   "好きな日本酒と、あなたの“酒猫”が見つかる":"좋아하는 사케와 나의 ‘사케냥’을 찾아보세요",
   "簡単な質問に答えると、独自開発の三角チャートであなたの日本酒の好みの傾向を診断。飲食20年の酒場店主が実際に飲んで確かめた銘柄の中から、おすすめを提案します。":"간단한 질문에 답하면 독자 개발한 삼각 차트로 사케 취향을 보여 드려요. 20년 경력의 술집 주인이 직접 마시고 확인한 술 가운데 잘 맞는 사케를 추천합니다.",
-  "結果画面では、2つのおすすめをご案内します。ひとつは、このチャートを作った酒場店主の店・日本酒居酒屋 SAKE story（東京・五反田）でいま飲める一杯。もうひとつは、お家や他店で飲むときのおすすめです。どちらも、酒場店主が実際に飲んで確かめた銘柄の中から選んで掲載しています。":"결과 화면에서는 두 가지 추천을 안내해 드려요. 하나는 이 차트를 만든 술집 주인의 사케 이자카야 SAKE story(도쿄 고탄다)에서 지금 마실 수 있는 한 잔, 다른 하나는 집이나 다른 가게에서 마실 때의 추천입니다. 모두 주인이 직접 마시고 확인한 술 가운데 골랐어요.",
+  "結果画面では、2種類のおすすめをご案内します。店内で飲める候補を3本、お家や他店で探しやすい候補を3本ご紹介します。どちらも、酒場店主が実際に飲んで確かめた銘柄の中から選んで掲載しています。":"결과 화면에서는 두 종류의 추천을 안내해 드려요. 가게에서 지금 마실 수 있는 3병과 집이나 다른 가게에서 찾기 쉬운 3병입니다. 모두 주인이 직접 마시고 확인한 술 가운데 골랐어요.",
   "⏱ 約1〜2分でわかる":"⏱ 약 1~2분이면 알 수 있어요",
   "10問で診断":"10문항으로 진단",
   "三角チャートで見える化":"삼각 차트로 한눈에",
@@ -1369,11 +1379,11 @@ ko:{htmlLang:"ko",param:"ko",langName:"한국어",romaji:true,
   "あなたの酒猫は":"당신의 사케냥은",
   "あなたの味わい傾向":"당신의 맛 취향",
   "あなたの味わいと近い銘柄":"당신의 취향과 가까운 사케",
-  "あなたに近い、店の一杯":"가게에서 만나는, 당신과 가까운 한 잔",
+  "あなたから広がる、店の三杯":"당신의 결과에서 펼쳐지는 가게의 세 잔",
   "お家や他店で飲むなら":"집이나 다른 가게에서 마신다면",
   "「日本酒三角チャート」は登録商標です。文章・画像・銘柄データの無断転用はご遠慮ください。":"‘사케 삼각 차트’는 등록상표입니다. 글·이미지·사케 데이터의 무단 사용은 삼가 주세요.",
-  "2026年8月1日改訂":"2026년 8월 1일 개정",
-  "最終更新 2026.8.1":"최종 업데이트 2026.8.1",
+  "2026年8月2日改訂":"2026년 8월 2일 개정",
+  "最終更新 2026.8.2":"최종 업데이트 2026.8.2",
   "☆ なかなか出会えないかも　／　◎ 酒屋・オンラインで探しやすい　／　◇ スーパー・コンビニで見つけやすい":"☆ 만나기 어려울 수 있어요　／　◎ 주류점・온라인에서 찾기 쉬워요　／　◇ 마트・편의점에서 찾기 쉬워요",
   "日本酒は各銘柄にも多様な味わいがあります。作者の独断で各銘柄の代表的なお酒を基に結果に反映しています。":"같은 브랜드의 사케도 맛은 다양합니다. 제작자가 각 브랜드의 대표적인 술을 직접 판단해 결과에 반영했습니다.",
   "シェア用カード":"공유 카드",
@@ -1408,6 +1418,17 @@ ko:{htmlLang:"ko",param:"ko",langName:"한국어",romaji:true,
 };
 const PACK=(LANG==="ja")?null:PACKS[LANG];
 function bn(name){return (PACK&&PACK.romaji)?(ROMAJI[name]||name):name;}
+const REC_GUIDE_TEXT={
+  ja:{axis:{x:"すっきり",y:"フルーティー",z:"しっかり"},nearest:"いちばん近い一杯（{axis}寄り）",direction:"{axis}方向の一杯",intro:"いちばん近い1本と、結果から別の味わいへ広がる2本です。"},
+  en:{axis:{x:"Crisp",y:"Fruity",z:"Rich"},nearest:"Closest Match ({axis}-leaning)",direction:"A {axis}-direction Pick",intro:"Your closest match, plus two picks that branch from your result toward different flavors."},
+  zh:{axis:{x:"清爽",y:"果香",z:"醇厚"},nearest:"最接近的一杯（偏{axis}）",direction:"偏{axis}方向的一杯",intro:"一款最接近你的酒，再加上从结果朝另外两种风味延伸的两款。"},
+  tw:{axis:{x:"清爽",y:"果香",z:"醇厚"},nearest:"最接近的一杯（偏{axis}）",direction:"偏{axis}方向的一杯",intro:"一款最接近你的酒，再加上從結果朝另外兩種風味延伸的兩款。"},
+  ko:{axis:{x:"깔끔함",y:"과일향",z:"진한 맛"},nearest:"가장 가까운 한 잔({axis} 쪽)",direction:"{axis} 방향의 한 잔",intro:"가장 가까운 한 병과, 결과에서 다른 맛으로 넓어지는 두 병입니다."}
+};
+function recGuideLabel(b){
+  const t=REC_GUIDE_TEXT[LANG]||REC_GUIDE_TEXT.ja,axis=t.axis[b.recAxis]||t.axis.x;
+  return (b.recKind==="nearest"?t.nearest:t.direction).replace("{axis}",axis);
+}
 /* シェアカード・シェア文で共通の「おすすめ4本」：店内1位＋全国☆◎◇の最寄り各1本 */
 function cardFour(r){
   const nearMark=function(mk){
@@ -1474,13 +1495,13 @@ function applyEnUI(){
     "日本酒三角チャート診断":"Sake Triangle Chart Quiz",
     "好きな日本酒と、あなたの“酒猫”が見つかる":"Find your favorite sake — and your Sake Cat",
     "簡単な質問に答えると、独自開発の三角チャートであなたの日本酒の好みの傾向を診断。飲食20年の酒場店主が実際に飲んで確かめた銘柄の中から、おすすめを提案します。":"Answer a few quick questions and our original Triangle Chart will map your sake preferences — then recommend bottles the owner, with 20 years behind the bar, has personally tasted and trusts.",
-    "結果画面では、2つのおすすめをご案内します。ひとつは、このチャートを作った酒場店主の店・日本酒居酒屋 SAKE story（東京・五反田）でいま飲める一杯。もうひとつは、お家や他店で飲むときのおすすめです。どちらも、酒場店主が実際に飲んで確かめた銘柄の中から選んで掲載しています。":"Your results come in two parts: a glass you can enjoy right now at SAKE story, the owner's sake izakaya in Gotanda, Tokyo, and picks for drinking at home or at other bars. Every bottle listed is one the owner has personally tasted and chosen.",
+    "結果画面では、2種類のおすすめをご案内します。店内で飲める候補を3本、お家や他店で探しやすい候補を3本ご紹介します。どちらも、酒場店主が実際に飲んで確かめた銘柄の中から選んで掲載しています。":"Your results come in two kinds of picks: three bottles available at our bar, and three bottles that are easier to find at home or elsewhere. Every bottle listed is one the owner has personally tasted and chosen.",
     "⏱ 約1〜2分でわかる":"⏱ About 1–2 minutes","10問で診断":"10 questions","三角チャートで見える化":"Mapped on the Triangle Chart",
     "診断を始める":"Start the Quiz","← ひとつ戻る":"← Back",
     "すっきり":"Crisp","フルーティー":"Fruity","しっかり":"Rich",
     "あなたの酒猫は":"Your Sake Cat is...",
     "あなたの味わい傾向":"Your Flavor Profile","あなたの味わいと近い銘柄":"Labels Close to Your Taste",
-    "あなたに近い、店の一杯":"Your Matches on Our Menu","お家や他店で飲むなら":"To Enjoy at Home or Other Bars","「日本酒三角チャート」は登録商標です。文章・画像・銘柄データの無断転用はご遠慮ください。":"“Sake Triangle Chart” is a registered trademark. Please do not copy or reuse the text, images, or data without permission.","2026年8月1日改訂":"Updated: Aug 1, 2026","最終更新 2026.8.1":"Last updated Aug 1, 2026","🍺 ビール版をやってみる":"🍺 Try the Beer version","🍷 ワイン版をやってみる":"🍷 Try the Wine version",
+    "あなたから広がる、店の三杯":"Three Ways to Explore Our Menu","お家や他店で飲むなら":"To Enjoy at Home or Other Bars","「日本酒三角チャート」は登録商標です。文章・画像・銘柄データの無断転用はご遠慮ください。":"“Sake Triangle Chart” is a registered trademark. Please do not copy or reuse the text, images, or data without permission.","2026年8月2日改訂":"Updated: Aug 2, 2026","最終更新 2026.8.2":"Last updated Aug 2, 2026","🍺 ビール版をやってみる":"🍺 Try the Beer version","🍷 ワイン版をやってみる":"🍷 Try the Wine version",
     "☆ なかなか出会えないかも　／　◎ 酒屋・オンラインで探しやすい　／　◇ スーパー・コンビニで見つけやすい":"☆ Rare finds / ◎ Easy at sake shops & online / ◇ Easy at supermarkets & convenience stores",
     "日本酒は各銘柄にも多様な味わいがあります。作者の独断で各銘柄の代表的なお酒を基に結果に反映しています。":"Every label has many expressions. Results reflect each brand’s representative style, chosen at the author’s discretion.",
     "シェア用カード":"Share Card","この診断を作った人":"The person behind this quiz","🍺🍷 現在、ビール版・ワイン版なども製作中！続報は酒場店主のXで。":"🍺🍷 Beer & wine versions are in the works! Updates on the owner\u2019s X.","🍶 酒場店主の独り言をのぞく（X）":"🍶 Peek at the owner\u2019s X (mostly musings)","お店のことを見る":"See the bar","酒場店主の独り言をフォロー（X）":"Follow the owner’s X (mostly musings)","画像つきでシェア":"Share with Image","画像を保存":"Save Image","もう一度、診断する":"Take the Quiz Again"
@@ -1520,7 +1541,7 @@ function applyPackUI(){
   if(legend)legend.innerHTML=PACK.legendHTML;
 }
 applyPackUI();
-/* 言語切替（右上固定・5言語のプルダウン。v11.11でトグルボタンから変更） */
+/* 言語切替（ページ上部に置く5言語のプルダウン。結果を読む途中で内容に重ならないようスクロールに追従させない） */
 (function(){
   const sel=document.createElement("select");
   sel.id="langToggle";
@@ -1532,7 +1553,7 @@ applyPackUI();
     o.value=v[0];o.textContent=v[1];if(v[0]===cur)o.selected=true;
     sel.appendChild(o);
   });
-  sel.setAttribute("style","position:fixed;top:10px;right:10px;z-index:60;font-family:var(--sans);font-size:12.5px;padding:6px 10px;border-radius:999px;border:1px solid var(--line);background:var(--card);color:var(--sumi-soft);cursor:pointer;box-shadow:0 1px 5px rgba(0,0,0,.08);-webkit-appearance:none;appearance:none;");
+  sel.setAttribute("style","position:absolute;top:10px;right:10px;z-index:60;font-family:var(--sans);font-size:12.5px;padding:6px 10px;border-radius:999px;border:1px solid var(--line);background:var(--card);color:var(--sumi-soft);cursor:pointer;box-shadow:0 1px 5px rgba(0,0,0,.08);-webkit-appearance:none;appearance:none;");
   sel.onchange=function(){
     if(typeof trackEvent==="function")trackEvent("language_change",{from_language:cur,to_language:sel.value,transport_type:"beacon"});
     if(typeof sendActionLog==="function")sendActionLog("language_change",null,cur+"→"+sel.value);
@@ -1574,6 +1595,8 @@ function sendLog(payload){
    数字が取れない間（GAS側doGet未設置・通信失敗・シート権限変更）は要素ごと非表示のまま
    ＝結果画面の表示はブロックしない。更新間隔はGAS側のキャッシュ（基本1時間）で調整する。 ==== */
 (function(){
+  /* v11.22：ローカル検証では外部通信を行わない。公開環境の累計表示は従来どおり。 */
+  if(isTestRun())return;
   /* v11.14.1：「人」→「延べ◯件」表記へ（広報の定義と統一。同一人の再診断を含むため「人」は不正確） */
   var texts={
     ja:function(n){return '<span class="tc-seg">これまでに延べ <strong>'+n+'件</strong></span> <span class="tc-seg">の診断が完了しました</span>';},
@@ -1719,14 +1742,14 @@ function playGachaReveal(t,done){
       window.scrollTo({top:0});
     }
     ov.addEventListener("click",finish);
-    timers.push(setTimeout(function(){ov.classList.add("gc-charge2");},1300));       /* 震えが激しく */
-    timers.push(setTimeout(function(){ov.classList.add("gc-charge3");},2600));       /* タメ：静止して光をためる */
-    timers.push(setTimeout(function(){ov.classList.add("gc-flashing");},3150));      /* ピカー（2連フラッシュ＋光の輪） */
+    timers.push(setTimeout(function(){ov.classList.add("gc-charge2");},900));        /* 震えが激しく */
+    timers.push(setTimeout(function(){ov.classList.add("gc-charge3");},1700));       /* タメ：静止して光をためる */
+    timers.push(setTimeout(function(){ov.classList.add("gc-flashing");},2150));      /* ピカー（2連フラッシュ＋光の輪） */
     timers.push(setTimeout(function(){                                               /* 誕生 */
       ov.classList.add("gc-reveal");
       ov.querySelector(".gc-msg").textContent=MSG.born;
-    },3350));
-    timers.push(setTimeout(finish,5100));                                            /* 結果画面へ */
+    },2350));
+    timers.push(setTimeout(finish,3800));                                            /* 結果画面へ */
   }catch(e){try{done();}catch(_){}}
 }
 
@@ -1737,6 +1760,68 @@ function playGachaReveal(t,done){
    ・v11.9（2026-07-18）：Q10追加に伴いYの補正を7→10へ（3軸統一）。Q9「香水」はX-1,Y-1へ。
      全1,048,576通りの自動検証で27タイプ全到達・Y全11段階を確認済み */
 const DIV = { x:10, y:10, z:10 };
+
+/* v11.22 店内3本の選び方
+   1本目：診断座標から3次元距離が最も近い1本。
+   2・3本目：1本目が代表する軸以外の2頂点へ向かう銘柄を分け、
+              それぞれの方向グループ内で診断座標に最も近い1本。
+   結果の最大軸が同点のときは、1本目の銘柄で最も強い軸を代表軸にする。 */
+const TASTE_AXES=["x","y","z"];
+const TASTE_VERTICES={x:{x:10,y:0,z:0},y:{x:0,y:10,z:0},z:{x:0,y:0,z:10}};
+/* Lunaの10回試験を受け、ラベルに十分な方向性がある候補を先に選ぶ。
+   cos=0.5 は頂点方向との角度60度以内。候補がなければ従来どおり距離優先へ戻す。 */
+const DIRECTION_COS_MIN=0.5;
+function answerSeed(){
+  let n=0;
+  answers.forEach(function(a){const oi=Number(a&&a.oi)||1;n=n*4+Math.max(0,oi-1);});
+  return n;
+}
+function strongestAxis(v,seed){
+  const max=Math.max(v.x,v.y,v.z);
+  const ties=TASTE_AXES.filter(function(k){return v[k]===max;});
+  return ties[(seed||0)%ties.length];
+}
+function directionCosine(sc,b,axis){
+  const vertex=TASTE_VERTICES[axis];
+  const a={x:b.x-sc.x,y:b.y-sc.y,z:b.z-sc.z};
+  const v={x:vertex.x-sc.x,y:vertex.y-sc.y,z:vertex.z-sc.z};
+  const al=Math.hypot(a.x,a.y,a.z),vl=Math.hypot(v.x,v.y,v.z);
+  if(al===0||vl===0)return 0;
+  return (a.x*v.x+a.y*v.y+a.z*v.z)/(al*vl);
+}
+function selectStoreRecommendations(sc,ranked,seed){
+  const nearest=ranked[0];
+  const scoreMax=Math.max(sc.x,sc.y,sc.z);
+  const scoreTies=TASTE_AXES.filter(function(k){return sc[k]===scoreMax;});
+  const baseAxis=scoreTies.length===1?scoreTies[0]:strongestAxis(nearest,seed);
+  const targetAxes=TASTE_AXES.filter(function(k){return k!==baseAxis;});
+  const pool=ranked.slice(1).map(function(b,order){
+    const cos={};targetAxes.forEach(function(k){cos[k]=directionCosine(sc,b,k);});
+    let target=targetAxes[0];
+    if(cos[targetAxes[1]]>cos[targetAxes[0]])target=targetAxes[1];
+    return {b:b,order:order,cos:cos,target:target};
+  });
+  const used=new Set([nearest.name]);
+  const picks=[Object.assign({},nearest,{recKind:"nearest",recAxis:baseAxis})];
+  targetAxes.forEach(function(axis){
+    const available=pool.filter(function(c){return !used.has(c.b.name);});
+    let cands=available.filter(function(c){return c.target===axis&&c.cos[axis]>=DIRECTION_COS_MIN;});
+    if(!cands.length)cands=available.filter(function(c){return c.cos[axis]>=DIRECTION_COS_MIN;});
+    if(!cands.length)cands=available.filter(function(c){return c.target===axis&&c.cos[axis]>0;});
+    if(!cands.length)cands=available.filter(function(c){return c.cos[axis]>0;});
+    if(!cands.length)cands=available.slice();
+    cands.sort(function(a,b){
+      if(a.b.d!==b.b.d)return a.b.d-b.b.d;
+      if(a.cos[axis]!==b.cos[axis])return b.cos[axis]-a.cos[axis];
+      return a.order-b.order;
+    });
+    const chosen=cands[0];
+    if(!chosen)return;
+    used.add(chosen.b.name);
+    picks.push(Object.assign({},chosen.b,{recKind:"direction",recAxis:axis,recCos:chosen.cos[axis]}));
+  });
+  return picks;
+}
 
 function compute(){
   let s={x:0,y:0,z:0};
@@ -1759,20 +1844,21 @@ function compute(){
     const d=(LV[t.lv[0]]-sc.x)**2+(LV[t.lv[1]]-sc.y)**2+(LV[t.lv[2]]-sc.z)**2;
     if(d<best){best=d;type=t;}
   });
-  /* 店の銘柄ランキング（店内21銘柄のみ）。
+  /* 店の銘柄ランキング（店内23銘柄のみ）。
      ユーザー座標 (sc.x, sc.y, sc.z) と各銘柄の3次元ユークリッド距離を計算し、近い順に並べる。
      チャート描画も同じ ranked を使うので、表示位置とランキングが一致する。 */
-  const ranked=STORE_SAKE.map(b=>({...b,
+  const ranked=STORE_SAKE.map((b,storeOrder)=>({...b,storeOrder,
     d:Math.sqrt((b.x-sc.x)**2+(b.y-sc.y)**2+(b.z-sc.z)**2)
-  })).sort((a,b)=>a.d-b.d);
-  const recStore=ranked.slice(0,5);  /* 近い順の上位5本 */
+  })).sort((a,b)=>a.d-b.d||a.storeOrder-b.storeOrder);
+  const directionSeed=answerSeed();
+  const recStore=selectStoreRecommendations(sc,ranked,directionSeed);
   /* 同点銘柄の振り分け用シード：回答の組み合わせ番号（同じ回答→同じ値。ランダムは使わない） */
   let seed=0;
   answers.forEach(function(a,i){
     const oi=QUESTIONS[i]?QUESTIONS[i].opts.indexOf(a):-1;
     seed=seed*4+(oi>0?oi:0);
   });
-  result={X:sc.x,Y:sc.y,Z:sc.z,type,ranked,recStore,orderPhrase:type.orderPhrase,seed:seed};
+  result={X:sc.x,Y:sc.y,Z:sc.z,type,ranked,recStore,orderPhrase:type.orderPhrase,seed:seed,directionSeed:directionSeed};
 }
 
 /* ==== v11.0 「あなたの味わい傾向」動的生成（D案：3軸動的＋タイプ固定の締め） ====
@@ -1920,15 +2006,18 @@ function renderResult(){
   document.getElementById("tasteMessage").textContent=
     en?(tasteBase+PACK.orderScreen(en.ord||""))
       :(tasteBase+" お店で頼むなら、「"+t.orderPhrase+"」と伝えてみてください。");
-  /* 店の一杯：診断座標に近い順の上位5本を、順位・銘柄名・理由文で表示 */
+  const guideText=REC_GUIDE_TEXT[LANG]||REC_GUIDE_TEXT.ja;
+  const storeIntro=document.getElementById("storeIntro");
+  if(storeIntro)storeIntro.textContent=guideText.intro;
+  /* 店の三杯：最寄り1本＋残る2頂点方向の各1本。順位ではなく役割を表示 */
   document.getElementById("storeList").innerHTML=r.recStore.map((b,i)=>
     '<div class="rec'+(i===0?" top1":"")+'">'
-      +'<span class="rec-rank">'+(PACK?PACK.rank(i):((i+1)+"位"))+'</span>'
-      +'<span class="rec-body"><span class="rec-name">'+bn(b.name)+'</span>'
+      +'<span class="rec-body"><span class="rec-guide">'+recGuideLabel(b)+'</span>'
+      +'<span class="rec-name">'+bn(b.name)+'</span>'
       +'<span class="rec-reason">'+reasonFor(b,r.X,r.Y,r.Z,i)+'</span></span>'
     +'</div>').join("");
   /* v11.10：店内の全銘柄メニュー。すっきりの強い順（軽い→重い）に並べ、
-     おすすめ5本には印を添える。説明は一言コメント優先、無ければ自動生成 */
+     おすすめ3本には印を添える。説明は一言コメント優先、無ければ自動生成 */
   (function(){
     const btn=document.getElementById("menuToggle"), box=document.getElementById("menuList");
     if(!btn||!box) return;
@@ -2022,7 +2111,7 @@ function renderResult(){
 /* 各銘柄の理由文。
    ・橋野さん本人のコメント（comment）があれば、それを最優先で表示する。
    ・無ければ、ユーザーと銘柄で最も強く重なる軸（共通軸）から自動生成する（仮の文章）。
-   ※将来、21銘柄に橋野さんが一言ずつ comment を書き加えれば、そのまま置き換わる。 */
+   ※将来、23銘柄に橋野さんが一言ずつ comment を書き加えれば、そのまま置き換わる。 */
 function reasonFor(b,X,Y,Z,i){
   if(PACK) return reasonForEn(b,X,Y,Z,i);
   if(b.comment&&b.comment.trim()) return b.comment.trim();
@@ -2101,7 +2190,7 @@ function buildChart(r){
   /* v11.3: ユーザーも銘柄と同じ変換式（+1補正を撤去）。X+Y+Z=0のときだけ重心に置く */
   const me=(r.X+r.Y+r.Z===0)?{x:(top.x+bl.x+br.x)/3,y:(top.y+bl.y+br.y)/3}:pos(r.X,r.Y,r.Z);
   const ranked=r.ranked;
-  const labeled=new Set(ranked.slice(0,5).map(b=>b.name));  /* おすすめ5本と一致させ、ラベル密集を緩和(2026-07-10) */
+  const labeled=new Set(r.recStore.map(b=>b.name));  /* v11.22の店内3本と一致させる */
   const FS=12.5,PAD=1.5;
   const overlap=(a,b)=>!(a.r+PAD<b.l||a.l-PAD>b.r||a.b+PAD<b.t||a.t-PAD>b.b);
   const inBounds=bx=>bx.l>=4&&bx.r<=W-4&&bx.t>=4&&bx.b<=H-4;
@@ -2192,14 +2281,14 @@ function buildChart(r){
   return s;
 }
 
-/* v11.3.3：位置と銘柄に役割を絞った地図。名前は下の一覧へ任せ、番号と記号で重なりを防ぐ */
+/* v11.3.3：位置と銘柄に役割を絞った地図。名前は下の一覧へ任せ、色と記号で重なりを防ぐ */
 function buildPositionChart(r){
   const W=400,H=392;
   const top={x:200,y:58},bl={x:64,y:322},br={x:336,y:322};
   const pos=function(x,y,z){const sum=x+y+z||1;return{x:(x*top.x+y*br.x+z*bl.x)/sum,y:(x*top.y+y*br.y+z*bl.y)/sum};};
   const me=(r.X+r.Y+r.Z===0)?{x:200,y:234}:pos(r.X,r.Y,r.Z);
   let s='<svg viewBox="0 0 '+W+' '+H+'" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="positionChartTitle positionChartDesc">';
-  s+='<title id="positionChartTitle">あなたの位置と近い銘柄</title><desc id="positionChartDesc">店内おすすめ5本を1から5、家飲み候補を☆◎◇で示した三角チャート</desc>';
+  s+='<title id="positionChartTitle">あなたの位置とおすすめ銘柄</title><desc id="positionChartDesc">店内おすすめ3本を赤い点、家飲み候補を☆◎◇で示した三角チャート</desc>';
   s+='<g stroke="#E8DEC8" stroke-width="0.8">';
   for(let k=1;k<=3;k++){const f=k/4;
     const a={x:top.x+(bl.x-top.x)*f,y:top.y+(bl.y-top.y)*f};
@@ -2213,7 +2302,7 @@ function buildPositionChart(r){
   const placed=[{x:me.x,y:me.y,r:17}];
   const offsets=[[0,0]];for(let rad=16;rad<=80;rad+=13)for(let ai=0;ai<16;ai++){const ang=Math.PI*2*ai/16;offsets.push([Math.cos(ang)*rad,Math.sin(ang)*rad]);}
   const place=function(base){for(const o of offsets){const q={x:base.x+o[0],y:base.y+o[1],r:10};if(q.x<76||q.x>324||q.y<70||q.y>310)continue;if(!placed.some(function(a){return Math.hypot(a.x-q.x,a.y-q.y)<a.r+q.r+2;})){placed.push(q);return q;}}const q={x:base.x,y:base.y,r:10};placed.push(q);return q;};
-  r.recStore.slice(0,5).forEach(function(b,i){const base=pos(b.x,b.y,b.z),q=place(base);if(Math.hypot(base.x-q.x,base.y-q.y)>2)s+='<line x1="'+base.x.toFixed(1)+'" y1="'+base.y.toFixed(1)+'" x2="'+q.x.toFixed(1)+'" y2="'+q.y.toFixed(1)+'" stroke="#C9705F" stroke-width="0.8"/>';s+='<circle cx="'+q.x.toFixed(1)+'" cy="'+q.y.toFixed(1)+'" r="9" fill="#B23A2E"/><text x="'+q.x.toFixed(1)+'" y="'+(q.y+4.2).toFixed(1)+'" text-anchor="middle" font-family="sans-serif" font-size="11" font-weight="700" fill="#fff">'+(i+1)+'</text>';});
+  r.recStore.forEach(function(b){const base=pos(b.x,b.y,b.z),q=place(base);if(Math.hypot(base.x-q.x,base.y-q.y)>2)s+='<line x1="'+base.x.toFixed(1)+'" y1="'+base.y.toFixed(1)+'" x2="'+q.x.toFixed(1)+'" y2="'+q.y.toFixed(1)+'" stroke="#C9705F" stroke-width="0.8"/>';s+='<circle cx="'+q.x.toFixed(1)+'" cy="'+q.y.toFixed(1)+'" r="9" fill="#B23A2E"/>';});
   const home=homeTop3(r,r.recStore.map(function(b){return b.name;}));
   home.forEach(function(b){const base=pos(b.x,b.y,b.z),q=place(base);if(Math.hypot(base.x-q.x,base.y-q.y)>2)s+='<line x1="'+base.x.toFixed(1)+'" y1="'+base.y.toFixed(1)+'" x2="'+q.x.toFixed(1)+'" y2="'+q.y.toFixed(1)+'" stroke="#A98B56" stroke-width="0.8"/>';s+='<circle cx="'+q.x.toFixed(1)+'" cy="'+q.y.toFixed(1)+'" r="9.5" fill="#FFFDF7" stroke="#8A6E3C" stroke-width="1.5"/><text x="'+q.x.toFixed(1)+'" y="'+(q.y+4).toFixed(1)+'" text-anchor="middle" font-family="serif" font-size="11.5" font-weight="700" fill="#6F5428">'+b.mark+'</text>';});
   s+='<g><circle cx="'+me.x.toFixed(1)+'" cy="'+me.y.toFixed(1)+'" r="12" fill="#FFFDF7" stroke="#2C2620" stroke-width="2.6"/><circle cx="'+me.x.toFixed(1)+'" cy="'+me.y.toFixed(1)+'" r="4" fill="#2C2620"/><text x="'+(me.x+18).toFixed(1)+'" y="'+(me.y+5).toFixed(1)+'" font-family="serif" font-size="14" font-weight="700" fill="#2C2620" stroke="#FFFDF7" stroke-width="4" paint-order="stroke">あなた</text></g></svg>';
@@ -2249,15 +2338,16 @@ function buildUnifiedChart(r){
   const me={x:(score[0].x+score[1].x+score[2].x)/3,y:(score[0].y+score[1].y+score[2].y)/3};
   const home=homeTop3(r,r.recStore.map(function(b){return b.name;}));
   const esc=function(v){return String(v).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");};
-  const items=r.recStore.slice(0,5).map(function(b){return{b:b,label:bn(b.name),color:"#B23A2E",kind:"store"};})
+  const items=r.recStore.map(function(b){return{b:b,label:bn(b.name),color:"#B23A2E",kind:"store"};})
     .concat(home.map(function(b){return{b:b,label:b.mark+" "+bn(b.name),color:"#6F5428",kind:"home"};}));
   items.forEach(function(v){v.p=pos(v.b.x,v.b.y,v.b.z);});
   items.sort(function(a,b){return a.p.x-b.p.x;});
-  const left=items.slice(0,4).sort(function(a,b){return a.p.y-b.p.y;});
-  const right=items.slice(4).sort(function(a,b){return a.p.y-b.p.y;});
+  const split=Math.ceil(items.length/2);
+  const left=items.slice(0,split).sort(function(a,b){return a.p.y-b.p.y;});
+  const right=items.slice(split).sort(function(a,b){return a.p.y-b.p.y;});
   const rows=[118,184,250,316];
   let s='<svg viewBox="0 0 '+W+' '+H+'" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="unifiedTitle unifiedDesc">';
-  s+='<title id="unifiedTitle">あなたの味わいと近い銘柄</title><desc id="unifiedDesc">3軸の点数、あなたの味わいの形と中心、SAKE storyのおすすめ5本と家飲み候補3本を一枚に表示</desc>';
+  s+='<title id="unifiedTitle">あなたの味わいとおすすめ銘柄</title><desc id="unifiedDesc">3軸の点数、あなたの味わいの形と中心、SAKE storyの店内おすすめ3本と家飲み候補3本を一枚に表示</desc>';
   s+='<g fill="none" stroke="#E8DEC8" stroke-width="0.8">';
   [0.25,0.5,0.75].forEach(function(f){const a=toward(top,f),b=toward(br,f),c=toward(bl,f);s+='<polygon points="'+a.x+','+a.y+' '+b.x+','+b.y+' '+c.x+','+c.y+'"/>';});
   s+='</g><polygon points="'+top.x+','+top.y+' '+br.x+','+br.y+' '+bl.x+','+bl.y+'" fill="none" stroke="#2C2620" stroke-width="1.7"/>';
@@ -2414,14 +2504,15 @@ function drawCard(r,done){
     const pos2=function(x,y,z){const s2=x+y+z||1;return{x:(x*top.x+y*br.x+z*bl.x)/s2,y:(x*top.y+y*br.y+z*bl.y)/s2};};
     STORE_SAKE.forEach(function(b){const p=pos2(b.x,b.y,b.z);ctx.fillStyle="#CBBB9E";ctx.beginPath();ctx.arc(p.x,p.y,3,0,Math.PI*2);ctx.fill();});
     const home3=homeTop3(r,r.recStore.map(function(b){return b.name;}));
-    /* 店内5本＋お家3本を左右4本ずつ枠外へ整列。点から名前まで必ず引き出し線で結ぶ。 */
-    const cardItems=r.recStore.slice(0,5).map(function(b){return{b:b,label:bn(b.name),color:"#B23A2E"};})
+    /* 店内3本＋お家3本を左右3本ずつ枠外へ整列。点から名前まで必ず引き出し線で結ぶ。 */
+    const cardItems=r.recStore.map(function(b){return{b:b,label:bn(b.name),color:"#B23A2E"};})
       .concat(home3.map(function(b){return{b:b,label:b.mark+" "+bn(b.name),color:"#6F5428"};}));
     cardItems.forEach(function(v){v.p=pos2(v.b.x,v.b.y,v.b.z);});
     cardItems.sort(function(a,b){return a.p.x-b.p.x;});
     const cardRows=[585,655,725,795];
     const drawCardSide=function(list,side){list.sort(function(a,b){return a.p.y-b.p.y;}).forEach(function(v,i){const y=cardRows[i],edge=side==="left"?265:735,labelX=side==="left"?40:960;ctx.strokeStyle=v.color;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(v.p.x,v.p.y);ctx.lineTo(edge,y);ctx.lineTo(side==="left"?245:755,y);ctx.stroke();ctx.fillStyle=v.color;ctx.beginPath();ctx.arc(v.p.x,v.p.y,5,0,Math.PI*2);ctx.fill();ctx.font="600 30px 'Noto Sans JP',sans-serif";var tw=ctx.measureText(v.label).width;var lfs=tw>200?Math.max(16,Math.floor(30*200/tw)):30;ctx.font="600 "+lfs+"px 'Noto Sans JP',sans-serif";ctx.textAlign=side==="left"?"left":"right";ctx.fillText(v.label,labelX,y+Math.round(lfs*0.35));});};
-    drawCardSide(cardItems.slice(0,4),"left");drawCardSide(cardItems.slice(4),"right");
+    const cardSplit=Math.ceil(cardItems.length/2);
+    drawCardSide(cardItems.slice(0,cardSplit),"left");drawCardSide(cardItems.slice(cardSplit),"right");
     ctx.fillStyle="#FFFDF7";ctx.strokeStyle="#2C2620";ctx.lineWidth=2.2;ctx.beginPath();ctx.arc(mePos.x,mePos.y,12,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.fillStyle="#2C2620";ctx.beginPath();ctx.arc(mePos.x,mePos.y,4,0,Math.PI*2);ctx.fill();
     ctx.fillStyle="#5B5247";ctx.font="500 16px 'Noto Sans JP',sans-serif";ctx.textAlign="center";
     ctx.fillText(PACK?PACK.card.posLegend:"赤＝診断で近かったお店で飲める銘柄　茶＝その他のおすすめ銘柄　白黒＝あなたの診断結果の中心",W/2,905);
@@ -2492,7 +2583,7 @@ function shareX(){
   window.open("https://twitter.com/intent/tweet?text="+encodeURIComponent(text),"_blank");
 }
 
-function restart(){ trackEvent("quiz_restart",result?{sake_cat_number:result.type.no,sake_cat_name:result.type.name}:{}); sendActionLog("quiz_restart",result); show("sc-start"); window.scrollTo({top:0,behavior:"smooth"}); }
+function restart(){ trackEvent("quiz_restart",result?{sake_cat_number:result.type.no,sake_cat_name:result.type.name}:{}); sendActionLog("quiz_restart",result); startQuiz(); }
 
 function show(id){
   document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
