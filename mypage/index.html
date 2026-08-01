@@ -6,7 +6,8 @@
 <meta name="robots" content="noindex">
 <title>SAKE story マイページ</title>
 <!--
-  SAKE story マイページ（お客様側） v0.1
+  SAKE story マイページ（お客様側） v0.2
+  v0.2（2026-08-01）：メール欄にご案内の誘い文（任意のまま・橋野さん決定）。この文面が配信同意を兼ねる。
   © 2026 SAKE story / 橋野元樹. All rights reserved.
   「日本酒三角チャート」は登録商標です（登録第6441923号）。無断転用お断り。
   銘柄座標は 00_永久設定/sake_data/ の正本からの写し（直接編集禁止）。
@@ -114,6 +115,11 @@
   }
   input:focus{outline:2px solid #d9c9a8;}
   .search-box{margin-bottom:8px;}
+  .mail-perk{
+    background:#f6f2e8;border:1px solid #e8e0d2;border-radius:10px;
+    font-size:11.5px;color:#6f6557;line-height:1.7;padding:8px 10px;margin:-2px 0 12px;
+  }
+  .mail-perk strong{color:var(--accent);}
   .toast{
     position:fixed;left:50%;bottom:24px;transform:translateX(-50%);
     background:var(--accent);color:#fff;font-size:13px;
@@ -139,7 +145,7 @@
 <div class="wrap">
   <h1>SAKE story</h1>
   <div class="sub-title">日本酒居酒屋 SAKE story ｜ マイページ</div>
-  <div class="ver">バージョン 0.1（開発中の試作版です）</div>
+  <div class="ver">バージョン 0.2（開発中の試作版です）</div>
 
   <!-- ようこそ（初回のニックネーム登録） -->
   <div id="viewWelcome" class="hidden">
@@ -148,7 +154,8 @@
       <p style="margin-bottom:10px;">飲んだ日本酒と診断の結果を、ここに記録できます。<br>
       はじめに<strong>ニックネーム</strong>だけ教えてください。それだけで始められます。</p>
       <input type="text" id="inNick" maxlength="12" placeholder="ニックネーム（12文字まで）">
-      <input type="email" id="inMail" maxlength="60" placeholder="メールアドレス（任意・あとでも可）">
+      <input type="email" id="inMail" maxlength="60" placeholder="メールアドレス（任意）">
+      <p class="mail-perk">✉️ メールを入れておくと、店主・橋野から<strong>新酒の入荷や、限定イベント・季節のおすすめのご案内</strong>が届きます（月1〜2通ほど・いつでも解除できます）</p>
       <button class="btn wide" onclick="registerMember()">はじめる</button>
       <p class="muted" style="margin-top:8px;">お預かりするのはニックネームと（ご希望の方のみ）メールアドレスだけです。</p>
     </div>
@@ -233,6 +240,7 @@
         <h2>設定</h2>
         <input type="text" id="setNick" maxlength="12" placeholder="ニックネーム">
         <input type="email" id="setMail" maxlength="60" placeholder="メールアドレス（任意）">
+        <p class="mail-perk">✉️ メールを入れておくと、店主・橋野から<strong>新酒の入荷や、限定イベント・季節のおすすめのご案内</strong>が届きます（月1〜2通ほど・いつでも解除できます）</p>
         <button class="btn wide ghost" onclick="saveSettings()">変更を保存</button>
       </div>
       <div class="card">
