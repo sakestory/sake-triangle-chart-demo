@@ -25,7 +25,10 @@
     window.dataLayer=window.dataLayer||[];
     window.gtag=window.gtag||function(){window.dataLayer.push(arguments);};
     window.gtag("js",new Date());
-    window.gtag("config","G-NK2MW06S5P",{allow_google_signals:false,allow_ad_personalization_signals:false});
+    var gaOpt={allow_google_signals:false,allow_ad_personalization_signals:false};
+    /* 2つのプロパティへ同時送信（2026-08-10）。橋野さんのアカウントで見られるプロパティを追加 */
+    window.gtag("config","G-NK2MW06S5P",gaOpt);
+    window.gtag("config","G-98BQ8NC620",gaOpt);
     var s=document.createElement("script");
     s.async=true;
     s.src="https://www.googletagmanager.com/gtag/js?id=G-NK2MW06S5P";
