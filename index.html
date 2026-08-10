@@ -273,6 +273,19 @@ body{
 .cross-reason{font-size:11.5px;color:var(--sumi-soft);line-height:1.7;margin:0;}
 .cross-note{font-size:10px;color:#8A8071;line-height:1.65;margin:7px 3px 0;}
 .brew-game{margin-top:26px;}
+/* v11.23：姉妹版「居酒屋探訪帳」へのバナー（2026-08-10・橋野さん指示）。
+   トップと結果の2か所。日本語のみのため外国語表示では隠す。 */
+.izakaya-banner{display:block;text-decoration:none;margin:22px 0 0;padding:15px 16px;
+  background:linear-gradient(180deg,#FDFAF3,#F7F0DF);border:1px solid #E0CFA6;border-radius:12px;
+  box-shadow:0 1px 2px rgba(44,38,32,.05),0 6px 16px rgba(44,38,32,.06);text-align:left;transition:.15s;}
+.izakaya-banner:hover{border-color:#C0893C;transform:translateY(-1px);}
+.izakaya-banner[hidden]{display:none;}   /* display:block が hidden を打ち消すのを防ぐ */
+.ib-head{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.ib-label{flex:0 0 auto;font-size:10px;font-weight:700;letter-spacing:.1em;color:#FFFDF8;
+  background:#C0893C;border-radius:3px;padding:3px 7px;}
+.ib-title{font-family:var(--serif,serif);font-size:19px;font-weight:700;color:var(--sumi);line-height:1.4;}
+.ib-sub{display:block;margin:8px 0 0;font-size:12px;line-height:1.75;color:var(--sumi-soft);}
+.ib-go{display:block;margin:10px 0 0;font-size:12.5px;font-weight:500;color:#B23A2E;text-align:right;}
 .btn-mypage{background:#165E83;color:#FFFDF8;box-shadow:0 3px 10px rgba(22,94,131,.25);}
 .mypage-save{margin-top:4px;}
 .mypage-save .cross-jump .btn{font-size:14px;padding:14px 8px;}
@@ -385,9 +398,14 @@ a.btn{text-decoration:none;text-align:center;box-sizing:border-box;display:block
 
       <p class="hero-desc">簡単な質問に答えると、独自開発の三角チャートであなたの日本酒の好みの傾向を診断。飲食20年の酒場店主が実際に飲んで確かめた銘柄の中から、おすすめを提案します。</p>
       <div style="margin:16px 0 0;padding:12px 14px;border:1px solid var(--line);border-radius:10px;color:var(--sumi-soft);font-size:12.5px;line-height:1.8;text-align:left;"><p style="margin:0;">結果画面では、2種類のおすすめをご案内します。店内で飲める候補を3本、お家や他店で探しやすい候補を3本ご紹介します。どちらも、酒場店主が実際に飲んで確かめた銘柄の中から選んで掲載しています。</p><p style="margin:6px 0 0;font-size:11px;color:#746A5C;text-align:right;">2026年8月10日改訂</p></div>
+      <a class="izakaya-banner" id="izakayaBannerTop" href="https://sake-story.com/izakaya/" target="_blank" rel="noopener" onclick="trackEvent('izakaya_click',{from:'start'})">
+        <span class="ib-head"><span class="ib-label">姉妹版</span><span class="ib-title">居酒屋探訪帳</span></span>
+        <span class="ib-sub">太田和彦さんが番組と本で訪れたお店を近い順、地域、作品から探せます。行きたいお店や行ったお店の記録も♩</span>
+        <span class="ib-go">開いてみる →</span>
+      </a>
     </div>
 
-    <div class="foot">v11.22 座標マスターv4.2反映版</div>
+    <div class="foot">v11.23 座標マスターv4.2反映版</div>
   </section>
 
   <!-- ===== 質問 ===== -->
@@ -469,6 +487,18 @@ a.btn{text-decoration:none;text-align:center;box-sizing:border-box;display:block
       <p class="cross-intro">米づくりから貯蔵まで、十一の工程を選びながら一本の酒を仕込む体験ゲームです。造り方が変わると味がどう動くのか、手を動かして確かめられます。</p>
       <div class="cross-jump"><a class="btn btn-ghost cross-jump-btn" href="game/" onclick="trackEvent('brew_game_click',{from:'result'})">🍶 酒造りゲームで遊ぶ（5〜10分）</a></div>
       <p class="cross-note">遊び終わると、あなたが仕込んだ一本も日本酒三角チャートの上に置かれます。</p>
+    </div>
+
+    <!-- v11.23：姉妹版「居酒屋探訪帳」への相互リンク（2026-08-10・橋野さん指示）。
+         日本語のみのため、外国語表示のときは酒造りゲームと同じく自動で隠す。 -->
+    <div id="izakayaSection" class="brew-game">
+      <div class="sec"><span class="new-badge">New！</span>その一杯を、旅先で</div>
+      <a class="izakaya-banner" id="izakayaBannerResult" href="https://sake-story.com/izakaya/" target="_blank" rel="noopener" onclick="trackEvent('izakaya_click',{from:'result'})">
+        <span class="ib-head"><span class="ib-label">姉妹版</span><span class="ib-title">居酒屋探訪帳</span></span>
+        <span class="ib-sub">太田和彦さんが番組と本で訪れたお店を近い順、地域、作品から探せます。行きたいお店や行ったお店の記録も♩</span>
+        <span class="ib-go">開いてみる →</span>
+      </a>
+      <p class="cross-note">非公式のファンガイドです。太田和彦さんご本人・出版社・放送局とは関係がありません。</p>
     </div>
 
     <button class="btn btn-shu" onclick="restart()" style="margin-top:22px;">もう一度、診断する</button>
@@ -1527,6 +1557,9 @@ applyEnUI();
    チャート凡例（赤／茶）とページ名は、子要素があって文字置換で届かないため全外国語でここで差し替える */
 function applyPackUI(){
   if(!PACK)return;
+  /* v11.23：居酒屋探訪帳は日本語のみ。外国語ではトップも結果も最初から隠す */
+  const izaTop0=document.getElementById("izakayaBannerTop");if(izaTop0)izaTop0.hidden=true;
+  const izaSec0=document.getElementById("izakayaSection");if(izaSec0)izaSec0.hidden=true;
   if(PACK.ui){
     document.querySelectorAll(".wrap *").forEach(function(el){
       if(el.children.length)return;
@@ -2063,6 +2096,9 @@ function renderResult(){
   const giftBox=document.getElementById("visitGift");if(giftBox)giftBox.hidden=!!PACK;
   /* v11.15：酒造りゲームは日本語のみのため、外国語表示では隠す */
   const brewBox=document.getElementById("brewGameSection");if(brewBox)brewBox.hidden=!!PACK;
+  /* v11.23：居酒屋探訪帳も日本語のみのため、外国語表示では隠す（結果画面・トップの2か所） */
+  const izaBox=document.getElementById("izakayaSection");if(izaBox)izaBox.hidden=!!PACK;
+  const izaTop=document.getElementById("izakayaBannerTop");if(izaTop)izaTop.hidden=!!PACK;
   /* v11.17：マイページ保存ボタン。結果をURL引数で引き継ぐ（日本語のみ・外国語では隠す） */
   const mpBox=document.getElementById("mypageSection");
   if(mpBox){
