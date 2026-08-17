@@ -416,7 +416,7 @@ a.btn{text-decoration:none;text-align:center;box-sizing:border-box;display:block
       </a>
     </div>
 
-    <div class="foot">v11.25 座標マスターv4.2反映版</div>
+    <div class="foot">v11.24 座標マスターv4.2反映版</div>
   </section>
 
   <!-- ===== 質問 ===== -->
@@ -553,17 +553,14 @@ a.btn{text-decoration:none;text-align:center;box-sizing:border-box;display:block
       <a class="visit-gift-map" href="https://www.google.com/maps/search/?api=1&query=SAKE+story+%E4%BA%94%E5%8F%8D%E7%94%B0" target="_blank" rel="noopener">お店の場所を地図で見る</a>
     </div>
     <p class="x-follow"><a href="https://x.com/motorkey" target="_blank" rel="noopener">酒場店主の独り言をフォロー（X）</a>　<a href="https://www.instagram.com/mr.sake_japan/" target="_blank" rel="noopener">Instagram</a></p>
-    <div class="foot">© SAKE story　日本酒三角チャート®　v11.25</div>
+    <div class="foot">© SAKE story　日本酒三角チャート®　v11.22</div>
     <p style="font-size:10.5px;color:#746A5C;margin:4px 0 0;">「日本酒三角チャート」は登録商標です。文章・画像・銘柄データの無断転用はご遠慮ください。</p>
   </section>
 
 </div>
-<script src="shindan_core.js?v=11.25"></script>
 <script>
 /* =============================================
    設定（ここを編集すれば内容を変えられます）
-   ※診断の「計算」本体は v11.25（2026-08-18）で shindan_core.js へ分離した。
-     このファイルはデータ（質問・タイプ・銘柄座標）と画面（表示・演出）を持つ。
    ============================================= */
 /* 店の銘柄（STORE_SAKE） ── SAKE story 店内の23銘柄（Numbers正本 v4.2（2026-08-02更新）と一致確認済み）。
    座標はすっきりX / フルーティーY / しっかりZ ＝ 各0〜10。
@@ -1844,17 +1841,106 @@ function playGachaReveal(t,done){
    ・DIVは理論満点ではなく実効満点。値を変える時は全通り再検証すること
    ・v11.9（2026-07-18）：Q10追加に伴いYの補正を7→10へ（3軸統一）。Q9「香水」はX-1,Y-1へ。
      全1,048,576通りの自動検証で27タイプ全到達・Y全11段階を確認済み */
-/* =============================================
-   診断の「計算」本体は shindan_core.js へ分離（v11.25・2026-08-18）
-   ここにあった compute / answerSeed / strongestAxis / directionCosine /
-   selectStoreRecommendations と定数（DIV・TASTE_AXES・TASTE_VERTICES・
-   DIRECTION_COS_MIN）は、式・順序・同点処理を一切変えずにそのまま移した
-   （全1,048,576通りの回答で新旧一致を機械照合済み）。
-   データはこれまでどおりこのファイルが持ち、下のshindanData()で渡す。
-   sake-master-sync（座標マスター反映）の手順も従来どおりこのファイルを直す。 */
-function shindanData(){return {QUESTIONS:QUESTIONS,TYPES:TYPES,LV:LV,STORE_SAKE:STORE_SAKE,NATL_SAKE:NATL_SAKE,TYPE_EXTRA:TYPE_EXTRA,TASTE_MESSAGE:TASTE_MESSAGE};}
+const DIV = { x:10, y:10, z:10 };
+
+/* v11.22 店内3本の選び方
+   1本目：診断座標から3次元距離が最も近い1本。
+   2・3本目：1本目が代表する軸以外の2頂点へ向かう銘柄を分け、
+              それぞれの方向グループ内で診断座標に最も近い1本。
+   結果の最大軸が同点のときは、1本目の銘柄で最も強い軸を代表軸にする。 */
+const TASTE_AXES=["x","y","z"];
+const TASTE_VERTICES={x:{x:10,y:0,z:0},y:{x:0,y:10,z:0},z:{x:0,y:0,z:10}};
+/* Lunaの10回試験を受け、ラベルに十分な方向性がある候補を先に選ぶ。
+   cos=0.5 は頂点方向との角度60度以内。候補がなければ従来どおり距離優先へ戻す。 */
+const DIRECTION_COS_MIN=0.5;
+function answerSeed(){
+  let n=0;
+  answers.forEach(function(a){const oi=Number(a&&a.oi)||1;n=n*4+Math.max(0,oi-1);});
+  return n;
+}
+function strongestAxis(v,seed){
+  const max=Math.max(v.x,v.y,v.z);
+  const ties=TASTE_AXES.filter(function(k){return v[k]===max;});
+  return ties[(seed||0)%ties.length];
+}
+function directionCosine(sc,b,axis){
+  const vertex=TASTE_VERTICES[axis];
+  const a={x:b.x-sc.x,y:b.y-sc.y,z:b.z-sc.z};
+  const v={x:vertex.x-sc.x,y:vertex.y-sc.y,z:vertex.z-sc.z};
+  const al=Math.hypot(a.x,a.y,a.z),vl=Math.hypot(v.x,v.y,v.z);
+  if(al===0||vl===0)return 0;
+  return (a.x*v.x+a.y*v.y+a.z*v.z)/(al*vl);
+}
+function selectStoreRecommendations(sc,ranked,seed){
+  const nearest=ranked[0];
+  const scoreMax=Math.max(sc.x,sc.y,sc.z);
+  const scoreTies=TASTE_AXES.filter(function(k){return sc[k]===scoreMax;});
+  const baseAxis=scoreTies.length===1?scoreTies[0]:strongestAxis(nearest,seed);
+  const targetAxes=TASTE_AXES.filter(function(k){return k!==baseAxis;});
+  const pool=ranked.slice(1).map(function(b,order){
+    const cos={};targetAxes.forEach(function(k){cos[k]=directionCosine(sc,b,k);});
+    let target=targetAxes[0];
+    if(cos[targetAxes[1]]>cos[targetAxes[0]])target=targetAxes[1];
+    return {b:b,order:order,cos:cos,target:target};
+  });
+  const used=new Set([nearest.name]);
+  const picks=[Object.assign({},nearest,{recKind:"nearest",recAxis:baseAxis})];
+  targetAxes.forEach(function(axis){
+    const available=pool.filter(function(c){return !used.has(c.b.name);});
+    let cands=available.filter(function(c){return c.target===axis&&c.cos[axis]>=DIRECTION_COS_MIN;});
+    if(!cands.length)cands=available.filter(function(c){return c.cos[axis]>=DIRECTION_COS_MIN;});
+    if(!cands.length)cands=available.filter(function(c){return c.target===axis&&c.cos[axis]>0;});
+    if(!cands.length)cands=available.filter(function(c){return c.cos[axis]>0;});
+    if(!cands.length)cands=available.slice();
+    cands.sort(function(a,b){
+      if(a.b.d!==b.b.d)return a.b.d-b.b.d;
+      if(a.cos[axis]!==b.cos[axis])return b.cos[axis]-a.cos[axis];
+      return a.order-b.order;
+    });
+    const chosen=cands[0];
+    if(!chosen)return;
+    used.add(chosen.b.name);
+    picks.push(Object.assign({},chosen.b,{recKind:"direction",recAxis:axis,recCos:chosen.cos[axis]}));
+  });
+  return picks;
+}
+
 function compute(){
-  result=ShindanCore.computeResult(answers,shindanData());
+  let s={x:0,y:0,z:0};
+  answers.forEach(a=>{
+    if(!a.sc) return;
+    s.x+=a.sc.x||0; s.y+=a.sc.y||0; s.z+=a.sc.z||0;
+  });
+  /* 嫌い減点後の下限0 */
+  s.x=Math.max(0,s.x); s.y=Math.max(0,s.y); s.z=Math.max(0,s.z);
+  /* 正規化：0〜10座標（上限10） */
+  let sc={
+    x:Math.min(10,Math.round(s.x/DIV.x*10)),
+    y:Math.min(10,Math.round(s.y/DIV.y*10)),
+    z:Math.min(10,Math.round(s.z/DIV.z*10)),
+  };
+  if(sc.x+sc.y+sc.z===0) sc={x:2,y:2,z:2};
+  /* 27タイプ判定（低1.5/中5/高8.5の代表座標に最近傍） */
+  let type=TYPES[0],best=1e9;
+  TYPES.forEach(t=>{
+    const d=(LV[t.lv[0]]-sc.x)**2+(LV[t.lv[1]]-sc.y)**2+(LV[t.lv[2]]-sc.z)**2;
+    if(d<best){best=d;type=t;}
+  });
+  /* 店の銘柄ランキング（店内23銘柄のみ）。
+     ユーザー座標 (sc.x, sc.y, sc.z) と各銘柄の3次元ユークリッド距離を計算し、近い順に並べる。
+     チャート描画も同じ ranked を使うので、表示位置とランキングが一致する。 */
+  const ranked=STORE_SAKE.map((b,storeOrder)=>({...b,storeOrder,
+    d:Math.sqrt((b.x-sc.x)**2+(b.y-sc.y)**2+(b.z-sc.z)**2)
+  })).sort((a,b)=>a.d-b.d||a.storeOrder-b.storeOrder);
+  const directionSeed=answerSeed();
+  const recStore=selectStoreRecommendations(sc,ranked,directionSeed);
+  /* 同点銘柄の振り分け用シード：回答の組み合わせ番号（同じ回答→同じ値。ランダムは使わない） */
+  let seed=0;
+  answers.forEach(function(a,i){
+    const oi=QUESTIONS[i]?QUESTIONS[i].opts.indexOf(a):-1;
+    seed=seed*4+(oi>0?oi:0);
+  });
+  result={X:sc.x,Y:sc.y,Z:sc.z,type,ranked,recStore,orderPhrase:type.orderPhrase,seed:seed,directionSeed:directionSeed};
 }
 
 /* ==== v11.0 「あなたの味わい傾向」動的生成（D案：3軸動的＋タイプ固定の締め） ====
@@ -1909,10 +1995,26 @@ function buildTrend(r,t){
 }
 /* シェア文用：全国銘柄から近い順に2本（2026-07-13指示書：店内2本＋全国2本）。
    店内おすすめと同名の銘柄は飛ばす（シェア4本の重複防止）。おすすめ欄には使わない */
-function natlTop2(r,exclude){ return ShindanCore.natlTop2(r,exclude,NATL_SAKE); }  /* 本体はshindan_core.js（v11.25分離） */
+function natlTop2(r,exclude){
+  const ex=exclude||[];
+  return NATL_SAKE.filter(function(b){return ex.indexOf(b.name)<0;})
+    .map(function(b){return {b:b,d:(b.x-r.X)*(b.x-r.X)+(b.y-r.Y)*(b.y-r.Y)+(b.z-r.Z)*(b.z-r.Z)};})
+    .sort(function(p,q){return p.d-q.d;}).slice(0,2).map(function(p){return p.b;});
+}
 
 /* 家飲み候補：☆◎◇から診断座標に最も近い1本ずつ。店内おすすめとの重複は避ける */
-function homeTop3(r,exclude){ return ShindanCore.homeTop3(r,exclude,NATL_SAKE); }  /* 本体はshindan_core.js（v11.25分離） */
+function homeTop3(r,exclude){
+  const ex=exclude||[];
+  return ["☆","◎","◇"].map(function(mark){
+    const cands=NATL_SAKE.filter(function(b){return b.mark===mark&&ex.indexOf(b.name)<0;})
+      .map(function(b){return {b:b,d:(b.x-r.X)*(b.x-r.X)+(b.y-r.Y)*(b.y-r.Y)+(b.z-r.Z)*(b.z-r.Z)};});
+    if(!cands.length)return null;
+    let min=Infinity;cands.forEach(function(c){if(c.d<min)min=c.d;});
+    const ties=cands.filter(function(c){return c.d===min;});
+    /* 完全同点は回答由来のシードで振り分け：同じ回答なら同じ1本、違う回答なら同点銘柄にも出番が回る（v11.8） */
+    return ties[(r.seed||0)%ties.length].b;
+  }).filter(Boolean);
+}
 
 /* =============================================
    結果描画

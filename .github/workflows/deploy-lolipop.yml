@@ -10,6 +10,7 @@ on:
     paths:
       - '.github/workflows/deploy-lolipop.yml'
       - 'index.html'
+      - 'shindan_core.js'
       - 'cat_*.png'
       - 'ogp.png'
       - 'ogp-*.png'
@@ -75,6 +76,7 @@ jobs:
           set -euo pipefail
           mkdir -p deploy
           cp index.html deploy/
+          cp shindan_core.js deploy/
           cp ogp.png deploy/
           cp ogp-en.png deploy/
           cp ogp-zh-cn.png deploy/
@@ -97,7 +99,7 @@ jobs:
           find deploy -type f -printf '%f\n' | sort
           count=$(find deploy -type f | wc -l | tr -d ' ')
           echo "staged count: ${count}"
-          test "${count}" -eq 67   # 既存58（50+言語別OGP4+言語別入口4）+ 酒造りゲーム7（index.html+酒猫5枚+OGP画像）+ マイページ2（index.html+store.html）。数が合わなければ失敗させる
+          test "${count}" -eq 68   # 既存58（50+言語別OGP4+言語別入口4）+ 酒造りゲーム7（index.html+酒猫5枚+OGP画像）+ マイページ2（index.html+store.html）+ shindan_core.js（v11.25ロジック分離）。数が合わなければ失敗させる
 
       - name: lftp を導入
         run: sudo apt-get update && sudo apt-get install -y lftp
