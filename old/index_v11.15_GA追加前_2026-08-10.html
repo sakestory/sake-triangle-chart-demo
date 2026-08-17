@@ -39,12 +39,10 @@
     window.dataLayer=window.dataLayer||[];
     window.gtag=window.gtag||function(){window.dataLayer.push(arguments);};
     window.gtag("js",new Date());
-    var gaOpt={allow_google_signals:false,allow_ad_personalization_signals:false};
-    /* 2つのプロパティへ同時送信（2026-08-10）。
-       G-NK2MW06S5P … 従来の集計（本体サイトと共通）
-       G-98BQ8NC620 … 橋野さんのアカウント(sakestory1)で見られるプロパティ */
-    window.gtag("config","G-NK2MW06S5P",gaOpt);
-    window.gtag("config","G-98BQ8NC620",gaOpt);
+    window.gtag("config","G-NK2MW06S5P",{
+      allow_google_signals:false,
+      allow_ad_personalization_signals:false
+    });
     var s=document.createElement("script");
     s.async=true;
     s.src="https://www.googletagmanager.com/gtag/js?id=G-NK2MW06S5P";
@@ -273,30 +271,6 @@ body{
 .cross-reason{font-size:11.5px;color:var(--sumi-soft);line-height:1.7;margin:0;}
 .cross-note{font-size:10px;color:#8A8071;line-height:1.65;margin:7px 3px 0;}
 .brew-game{margin-top:26px;}
-/* v11.23：姉妹版「居酒屋探訪帳」へのバナー（2026-08-10・橋野さん指示）。
-   トップと結果の2か所。日本語のみのため外国語表示では隠す。 */
-.izakaya-banner{display:block;text-decoration:none;margin:22px 0 0;padding:15px 16px;
-  background:linear-gradient(180deg,#FDFAF3,#F7F0DF);border:1px solid #E0CFA6;border-radius:12px;
-  box-shadow:0 1px 2px rgba(44,38,32,.05),0 6px 16px rgba(44,38,32,.06);text-align:left;transition:.15s;}
-.izakaya-banner:hover{border-color:#C0893C;transform:translateY(-1px);}
-/* v11.24：裏メニュー「3頂点飲み比べセット」の来店案内（2026-08-18・橋野さん指示）。
-   割引ではなく付加価値（メニューにない飲み比べ＋好みの言語化）で来店につなげる。 */
-.flight-offer{margin:14px 0 0;padding:15px 16px;background:linear-gradient(180deg,#FDFAF3,#F7F0DF);
-  border:1px solid #D8B9A0;border-radius:12px;text-align:left;
-  box-shadow:0 1px 2px rgba(44,38,32,.05),0 6px 16px rgba(44,38,32,.06);}
-.fo-label{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.1em;color:#FFFDF8;
-  background:#A8433B;border-radius:3px;padding:3px 7px;}
-.fo-title{margin:8px 0 0;font-size:15px;font-weight:700;color:var(--sumi);}
-.fo-body{margin:8px 0 0;font-size:12.5px;line-height:1.8;color:var(--sumi-soft);}
-.fo-note{margin:6px 0 0;font-size:11px;color:#746A5C;}
-.fo-map{display:inline-block;margin-top:10px;font-size:12.5px;color:#A8433B;text-decoration:underline;text-underline-offset:3px;}
-.izakaya-banner[hidden]{display:none;}   /* display:block が hidden を打ち消すのを防ぐ */
-.ib-head{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
-.ib-label{flex:0 0 auto;font-size:10px;font-weight:700;letter-spacing:.1em;color:#FFFDF8;
-  background:#C0893C;border-radius:3px;padding:3px 7px;}
-.ib-title{font-family:var(--serif,serif);font-size:19px;font-weight:700;color:var(--sumi);line-height:1.4;}
-.ib-sub{display:block;margin:8px 0 0;font-size:12px;line-height:1.75;color:var(--sumi-soft);}
-.ib-go{display:block;margin:10px 0 0;font-size:12.5px;font-weight:500;color:#B23A2E;text-align:right;}
 .btn-mypage{background:#165E83;color:#FFFDF8;box-shadow:0 3px 10px rgba(22,94,131,.25);}
 .mypage-save{margin-top:4px;}
 .mypage-save .cross-jump .btn{font-size:14px;padding:14px 8px;}
@@ -359,7 +333,7 @@ a.btn{text-decoration:none;text-align:center;box-sizing:border-box;display:block
       <div class="hero-sub">SAKE story</div>
       <h1 style="font-size:clamp(28px,8.6vw,38px);letter-spacing:0.06em;">日本酒三角チャート診断</h1>
       <div class="hero-cat">好きな日本酒と、あなたの&#8220;酒猫&#8221;が見つかる</div>
-      <p style="margin:9px 0 0;font-size:11.5px;letter-spacing:.08em;color:#746A5C;">最終更新 2026.8.18</p>
+      <p style="margin:9px 0 0;font-size:11.5px;letter-spacing:.08em;color:#746A5C;">最終更新 2026.8.2</p>
     </div>
 
     <div class="start-chips">
@@ -408,15 +382,10 @@ a.btn{text-decoration:none;text-align:center;box-sizing:border-box;display:block
       </svg>
 
       <p class="hero-desc">簡単な質問に答えると、独自開発の三角チャートであなたの日本酒の好みの傾向を診断。飲食20年の酒場店主が実際に飲んで確かめた銘柄の中から、おすすめを提案します。</p>
-      <div style="margin:16px 0 0;padding:12px 14px;border:1px solid var(--line);border-radius:10px;color:var(--sumi-soft);font-size:12.5px;line-height:1.8;text-align:left;"><p style="margin:0;">結果画面では、2種類のおすすめをご案内します。店内で飲める候補を3本、お家や他店で探しやすい候補を3本ご紹介します。どちらも、酒場店主が実際に飲んで確かめた銘柄の中から選んで掲載しています。</p><p style="margin:6px 0 0;font-size:11px;color:#746A5C;text-align:right;">2026年8月18日改訂</p></div>
-      <a class="izakaya-banner" id="izakayaBannerTop" href="https://sake-story.com/izakaya/" target="_blank" rel="noopener" onclick="trackEvent('izakaya_click',{from:'start'})">
-        <span class="ib-head"><span class="ib-label">姉妹版</span><span class="ib-title">居酒屋探訪帳</span></span>
-        <span class="ib-sub">太田和彦さんが番組と本で訪れたお店を近い順、地域、作品から探せます。行きたいお店や行ったお店の記録も♩</span>
-        <span class="ib-go">開いてみる →</span>
-      </a>
+      <div style="margin:16px 0 0;padding:12px 14px;border:1px solid var(--line);border-radius:10px;color:var(--sumi-soft);font-size:12.5px;line-height:1.8;text-align:left;"><p style="margin:0;">結果画面では、2種類のおすすめをご案内します。店内で飲める候補を3本、お家や他店で探しやすい候補を3本ご紹介します。どちらも、酒場店主が実際に飲んで確かめた銘柄の中から選んで掲載しています。</p><p style="margin:6px 0 0;font-size:11px;color:#746A5C;text-align:right;">2026年8月2日改訂</p></div>
     </div>
 
-    <div class="foot">v11.24 座標マスターv4.2反映版</div>
+    <div class="foot">v11.22 座標マスターv4.2反映版</div>
   </section>
 
   <!-- ===== 質問 ===== -->
@@ -462,18 +431,6 @@ a.btn{text-decoration:none;text-align:center;box-sizing:border-box;display:block
     <div class="sec">あなたから広がる、店の三杯</div>
     <p id="storeIntro" class="rec-intro">いちばん近い1本と、結果から別の味わいへ広がる2本です。</p>
     <div id="storeList"></div>
-    <!-- v11.24：裏メニュー「3頂点飲み比べセット」の来店案内（2026-08-18・橋野さん指示）。
-         結果画面を店で見せる→上の3本を飲み比べで提供→感想を聞いて好みの言語化を手伝う、の流れ。
-         割引ではなく付加価値で誘う設計。地図リンクは store_map_click でGA計測（キーイベント化はGA管理画面側）。
-         文言は4言語辞書（zh/tw/ko/en）にも登録済み。変更時は辞書のキーも一緒に直すこと。 -->
-    <div class="flight-offer">
-      <div><span class="fo-label">お店の裏メニュー</span></div>
-      <p class="fo-title">この3杯、お店で飲み比べできます</p>
-      <p class="fo-body">ご来店時にこの結果画面をスタッフにお見せください。上の3本を小さなグラスにお注ぎした、メニューにはない飲み比べセットをご用意します。</p>
-      <p class="fo-body">飲み比べた感想をお聞かせいただければ、スタッフがあなたの「好き」の理由を言葉にするお手伝いをします。</p>
-      <p class="fo-note">※仕入れの状況により、近い味わいの銘柄に変わることがあります。</p>
-      <div><a class="fo-map" href="https://www.google.com/maps/search/?api=1&amp;query=SAKE+story+%E4%BA%94%E5%8F%8D%E7%94%B0" target="_blank" rel="noopener" onclick="trackEvent('store_map_click',{from:'result'})">SAKE story（東京・五反田）の場所を見る →</a></div>
-    </div>
     <!-- v11.10：店内の全銘柄メニュー（橋野さん発案 2026-07-19）。店で見せる用途を想定し、
          おすすめ3本の外にある銘柄も読めるようにする。一言コメントが入ればそちらを優先表示 -->
     <button id="menuToggle" class="menu-toggle" type="button" aria-expanded="false" aria-controls="menuList"></button>
@@ -510,18 +467,6 @@ a.btn{text-decoration:none;text-align:center;box-sizing:border-box;display:block
       <p class="cross-intro">米づくりから貯蔵まで、十一の工程を選びながら一本の酒を仕込む体験ゲームです。造り方が変わると味がどう動くのか、手を動かして確かめられます。</p>
       <div class="cross-jump"><a class="btn btn-ghost cross-jump-btn" href="game/" onclick="trackEvent('brew_game_click',{from:'result'})">🍶 酒造りゲームで遊ぶ（5〜10分）</a></div>
       <p class="cross-note">遊び終わると、あなたが仕込んだ一本も日本酒三角チャートの上に置かれます。</p>
-    </div>
-
-    <!-- v11.23：姉妹版「居酒屋探訪帳」への相互リンク（2026-08-10・橋野さん指示）。
-         日本語のみのため、外国語表示のときは酒造りゲームと同じく自動で隠す。 -->
-    <div id="izakayaSection" class="brew-game">
-      <div class="sec"><span class="new-badge">New！</span>その一杯を、旅先で</div>
-      <a class="izakaya-banner" id="izakayaBannerResult" href="https://sake-story.com/izakaya/" target="_blank" rel="noopener" onclick="trackEvent('izakaya_click',{from:'result'})">
-        <span class="ib-head"><span class="ib-label">姉妹版</span><span class="ib-title">居酒屋探訪帳</span></span>
-        <span class="ib-sub">太田和彦さんが番組と本で訪れたお店を近い順、地域、作品から探せます。行きたいお店や行ったお店の記録も♩</span>
-        <span class="ib-go">開いてみる →</span>
-      </a>
-      <p class="cross-note">非公式のファンガイドです。太田和彦さんご本人・出版社・放送局とは関係がありません。</p>
     </div>
 
     <button class="btn btn-shu" onclick="restart()" style="margin-top:22px;">もう一度、診断する</button>
@@ -1195,16 +1140,10 @@ zh:{htmlLang:"zh-Hans",param:"zh-CN",langName:"中文（简体）",romaji:false,
   "あなたの味わい傾向":"你的口味倾向",
   "あなたの味わいと近い銘柄":"与你口味接近的酒款",
   "あなたから広がる、店の三杯":"从你的结果延伸出的店内三杯",
-  "お店の裏メニュー":"本店隐藏菜单",
-  "この3杯、お店で飲み比べできます":"这3杯，可以在店里对比品尝",
-  "ご来店時にこの結果画面をスタッフにお見せください。上の3本を小さなグラスにお注ぎした、メニューにはない飲み比べセットをご用意します。":"光临时请向店员出示此结果页面。我们会把上面的3款酒装入小杯，作为菜单上没有的品鉴套组为您奉上。",
-  "飲み比べた感想をお聞かせいただければ、スタッフがあなたの「好き」の理由を言葉にするお手伝いをします。":"品尝后请告诉我们您的感受，店员会帮您把自己的喜好用语言表达出来。",
-  "※仕入れの状況により、近い味わいの銘柄に変わることがあります。":"※视进货情况，可能会换成味道相近的酒款。",
-  "SAKE story（東京・五反田）の場所を見る →":"查看 SAKE story（东京·五反田）的位置 →",
   "お家や他店で飲むなら":"在家或其他店喝的话",
   "「日本酒三角チャート」は登録商標です。文章・画像・銘柄データの無断転用はご遠慮ください。":"‘清酒三角图’为注册商标。请勿擅自转载或使用文字、图片及酒款数据。",
-  "2026年8月18日改訂":"2026年8月18日修订",
-  "最終更新 2026.8.18":"最后更新 2026.8.18",
+  "2026年8月2日改訂":"2026年8月2日修订",
+  "最終更新 2026.8.2":"最后更新 2026.8.2",
   "☆ なかなか出会えないかも　／　◎ 酒屋・オンラインで探しやすい　／　◇ スーパー・コンビニで見つけやすい":"☆ 也许不太容易遇到　／　◎ 酒铺・网购较容易找到　／　◇ 超市・便利店较容易找到",
   "日本酒は各銘柄にも多様な味わいがあります。作者の独断で各銘柄の代表的なお酒を基に結果に反映しています。":"同一品牌的清酒也有多种风味。本结果由制作者根据个人判断，以各品牌的代表性酒款为基础呈现。",
   "シェア用カード":"分享卡片",
@@ -1321,16 +1260,10 @@ tw:{htmlLang:"zh-Hant",param:"zh-TW",langName:"中文（繁體）",romaji:false,
   "あなたの味わい傾向":"你的口味傾向",
   "あなたの味わいと近い銘柄":"與你口味接近的酒款",
   "あなたから広がる、店の三杯":"從你的結果延伸出的店內三杯",
-  "お店の裏メニュー":"本店隱藏菜單",
-  "この3杯、お店で飲み比べできます":"這3杯，可以在店裡比較品嚐",
-  "ご来店時にこの結果画面をスタッフにお見せください。上の3本を小さなグラスにお注ぎした、メニューにはない飲み比べセットをご用意します。":"光臨時請向店員出示此結果頁面。我們會把上面的3款酒裝入小杯，作為菜單上沒有的品飲套組為您奉上。",
-  "飲み比べた感想をお聞かせいただければ、スタッフがあなたの「好き」の理由を言葉にするお手伝いをします。":"品嚐後請告訴我們您的感受，店員會幫您把自己的喜好用語言表達出來。",
-  "※仕入れの状況により、近い味わいの銘柄に変わることがあります。":"※視進貨情況，可能會換成味道相近的酒款。",
-  "SAKE story（東京・五反田）の場所を見る →":"查看 SAKE story（東京・五反田）的位置 →",
   "お家や他店で飲むなら":"在家或其他店喝的話",
   "「日本酒三角チャート」は登録商標です。文章・画像・銘柄データの無断転用はご遠慮ください。":"「清酒三角圖」為註冊商標。請勿擅自轉載或使用文字、圖片及酒款資料。",
-  "2026年8月18日改訂":"2026年8月18日修訂",
-  "最終更新 2026.8.18":"最後更新 2026.8.18",
+  "2026年8月2日改訂":"2026年8月2日修訂",
+  "最終更新 2026.8.2":"最後更新 2026.8.2",
   "☆ なかなか出会えないかも　／　◎ 酒屋・オンラインで探しやすい　／　◇ スーパー・コンビニで見つけやすい":"☆ 也許不太容易遇到　／　◎ 酒鋪・網購較容易找到　／　◇ 超市・便利商店較容易找到",
   "日本酒は各銘柄にも多様な味わいがあります。作者の独断で各銘柄の代表的なお酒を基に結果に反映しています。":"同一品牌的清酒也有多種風味。本結果由製作者依個人判斷，以各品牌的代表性酒款為基礎呈現。",
   "シェア用カード":"分享卡片",
@@ -1447,16 +1380,10 @@ ko:{htmlLang:"ko",param:"ko",langName:"한국어",romaji:true,
   "あなたの味わい傾向":"당신의 맛 취향",
   "あなたの味わいと近い銘柄":"당신의 취향과 가까운 사케",
   "あなたから広がる、店の三杯":"당신의 결과에서 펼쳐지는 가게의 세 잔",
-  "お店の裏メニュー":"가게의 비밀 메뉴",
-  "この3杯、お店で飲み比べできます":"이 3잔, 매장에서 비교 시음할 수 있습니다",
-  "ご来店時にこの結果画面をスタッフにお見せください。上の3本を小さなグラスにお注ぎした、メニューにはない飲み比べセットをご用意します。":"방문하실 때 이 결과 화면을 직원에게 보여 주세요. 위의 3종을 작은 잔에 담아, 메뉴에 없는 비교 시음 세트로 준비해 드립니다.",
-  "飲み比べた感想をお聞かせいただければ、スタッフがあなたの「好き」の理由を言葉にするお手伝いをします。":"시음 후 느낌을 들려주시면, 직원이 당신이 '좋아하는 이유'를 말로 표현하는 것을 도와드립니다.",
-  "※仕入れの状況により、近い味わいの銘柄に変わることがあります。":"※재고 상황에 따라 비슷한 맛의 다른 술로 바뀔 수 있습니다.",
-  "SAKE story（東京・五反田）の場所を見る →":"SAKE story(도쿄 고탄다) 위치 보기 →",
   "お家や他店で飲むなら":"집이나 다른 가게에서 마신다면",
   "「日本酒三角チャート」は登録商標です。文章・画像・銘柄データの無断転用はご遠慮ください。":"‘사케 삼각 차트’는 등록상표입니다. 글·이미지·사케 데이터의 무단 사용은 삼가 주세요.",
-  "2026年8月18日改訂":"2026년 8월 18일 개정",
-  "最終更新 2026.8.18":"최종 업데이트 2026.8.18",
+  "2026年8月2日改訂":"2026년 8월 2일 개정",
+  "最終更新 2026.8.2":"최종 업데이트 2026.8.2",
   "☆ なかなか出会えないかも　／　◎ 酒屋・オンラインで探しやすい　／　◇ スーパー・コンビニで見つけやすい":"☆ 만나기 어려울 수 있어요　／　◎ 주류점・온라인에서 찾기 쉬워요　／　◇ 마트・편의점에서 찾기 쉬워요",
   "日本酒は各銘柄にも多様な味わいがあります。作者の独断で各銘柄の代表的なお酒を基に結果に反映しています。":"같은 브랜드의 사케도 맛은 다양합니다. 제작자가 각 브랜드의 대표적인 술을 직접 판단해 결과에 반영했습니다.",
   "シェア用カード":"공유 카드",
@@ -1574,13 +1501,7 @@ function applyEnUI(){
     "すっきり":"Crisp","フルーティー":"Fruity","しっかり":"Rich",
     "あなたの酒猫は":"Your Sake Cat is...",
     "あなたの味わい傾向":"Your Flavor Profile","あなたの味わいと近い銘柄":"Labels Close to Your Taste",
-    "あなたから広がる、店の三杯":"Three Ways to Explore Our Menu",
-    "お店の裏メニュー":"Off-Menu Special",
-    "この3杯、お店で飲み比べできます":"Taste these three side by side at our bar",
-    "ご来店時にこの結果画面をスタッフにお見せください。上の3本を小さなグラスにお注ぎした、メニューにはない飲み比べセットをご用意します。":"Show this result screen to our staff when you visit. We’ll pour the three bottles above into small glasses as an off-menu tasting flight.",
-    "飲み比べた感想をお聞かせいただければ、スタッフがあなたの「好き」の理由を言葉にするお手伝いをします。":"Tell us what you taste, and our staff will help you put into words what you really love.",
-    "※仕入れの状況により、近い味わいの銘柄に変わることがあります。":"*Depending on stock, a bottle may be swapped for one with a similar profile.",
-    "SAKE story（東京・五反田）の場所を見る →":"See SAKE story on the map (Gotanda, Tokyo) →","お家や他店で飲むなら":"To Enjoy at Home or Other Bars","「日本酒三角チャート」は登録商標です。文章・画像・銘柄データの無断転用はご遠慮ください。":"“Sake Triangle Chart” is a registered trademark. Please do not copy or reuse the text, images, or data without permission.","2026年8月18日改訂":"Updated: Aug 18, 2026","最終更新 2026.8.18":"Last updated Aug 18, 2026","🍺 ビール版をやってみる":"🍺 Try the Beer version","🍷 ワイン版をやってみる":"🍷 Try the Wine version",
+    "あなたから広がる、店の三杯":"Three Ways to Explore Our Menu","お家や他店で飲むなら":"To Enjoy at Home or Other Bars","「日本酒三角チャート」は登録商標です。文章・画像・銘柄データの無断転用はご遠慮ください。":"“Sake Triangle Chart” is a registered trademark. Please do not copy or reuse the text, images, or data without permission.","2026年8月2日改訂":"Updated: Aug 2, 2026","最終更新 2026.8.2":"Last updated Aug 2, 2026","🍺 ビール版をやってみる":"🍺 Try the Beer version","🍷 ワイン版をやってみる":"🍷 Try the Wine version",
     "☆ なかなか出会えないかも　／　◎ 酒屋・オンラインで探しやすい　／　◇ スーパー・コンビニで見つけやすい":"☆ Rare finds / ◎ Easy at sake shops & online / ◇ Easy at supermarkets & convenience stores",
     "日本酒は各銘柄にも多様な味わいがあります。作者の独断で各銘柄の代表的なお酒を基に結果に反映しています。":"Every label has many expressions. Results reflect each brand’s representative style, chosen at the author’s discretion.",
     "シェア用カード":"Share Card","この診断を作った人":"The person behind this quiz","🍺🍷 現在、ビール版・ワイン版なども製作中！続報は酒場店主のXで。":"🍺🍷 Beer & wine versions are in the works! Updates on the owner\u2019s X.","🍶 酒場店主の独り言をのぞく（X）":"🍶 Peek at the owner\u2019s X (mostly musings)","お店のことを見る":"See the bar","酒場店主の独り言をフォロー（X）":"Follow the owner’s X (mostly musings)","画像つきでシェア":"Share with Image","画像を保存":"Save Image","もう一度、診断する":"Take the Quiz Again"
@@ -1604,9 +1525,6 @@ applyEnUI();
    チャート凡例（赤／茶）とページ名は、子要素があって文字置換で届かないため全外国語でここで差し替える */
 function applyPackUI(){
   if(!PACK)return;
-  /* v11.23：居酒屋探訪帳は日本語のみ。外国語ではトップも結果も最初から隠す */
-  const izaTop0=document.getElementById("izakayaBannerTop");if(izaTop0)izaTop0.hidden=true;
-  const izaSec0=document.getElementById("izakayaSection");if(izaSec0)izaSec0.hidden=true;
   if(PACK.ui){
     document.querySelectorAll(".wrap *").forEach(function(el){
       if(el.children.length)return;
@@ -2143,9 +2061,6 @@ function renderResult(){
   const giftBox=document.getElementById("visitGift");if(giftBox)giftBox.hidden=!!PACK;
   /* v11.15：酒造りゲームは日本語のみのため、外国語表示では隠す */
   const brewBox=document.getElementById("brewGameSection");if(brewBox)brewBox.hidden=!!PACK;
-  /* v11.23：居酒屋探訪帳も日本語のみのため、外国語表示では隠す（結果画面・トップの2か所） */
-  const izaBox=document.getElementById("izakayaSection");if(izaBox)izaBox.hidden=!!PACK;
-  const izaTop=document.getElementById("izakayaBannerTop");if(izaTop)izaTop.hidden=!!PACK;
   /* v11.17：マイページ保存ボタン。結果をURL引数で引き継ぐ（日本語のみ・外国語では隠す） */
   const mpBox=document.getElementById("mypageSection");
   if(mpBox){
