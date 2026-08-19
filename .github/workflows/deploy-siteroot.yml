@@ -1,0 +1,74 @@
+name: Deploy site TOP to Lolipop (/wp) via SFTP
+
+# sake-story.com の本番トップページ（静的 index.html 1枚）を web/wp/ 直下へ配達する。
+# ・原本は sitenew/index.html（下書き・noindex付き）。build_root.py が本番用に変換する
+#   （タイトル・canonical・GA・下書き表記の除去）。
+# ・アップロードするのは index.html の1枚だけ。WordPress本体のファイルには一切触れない。
+# ・戻すときは、ロリポップ上の web/wp/index.html を削除すれば即座に元のWordPressトップに戻る。
+# ・誤配達防止のため、自動トリガーは workflow_dispatch（手動起動）のみ。
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-siteroot
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      REMOTE_PARENT: web
+      REMOTE_WP: wp
+    steps:
+      - name: リポジトリを取得
+        uses: actions/checkout@v4
+
+      - name: 下書きから本番用トップを生成（5点変換＋検算）
+        run: |
+          set -euo pipefail
+          python3 build_root.py
+          echo "----- staged files -----"
+          find deploy -type f | sort
+          count=$(find deploy -type f | wc -l | tr -d ' ')
+          echo "staged count: ${count}"
+          test "${count}" -eq 1   # index.html の1枚だけ。増やしたらこの数字も直す
+
+      - name: lftp を導入
+        run: sudo apt-get update && sudo apt-get install -y lftp
+
+      - name: SFTP でアップロード（index.html 1枚のみ・削除しない）
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_PORT: ${{ secrets.SSH_PORT }}
+          SSH_USERNAME: ${{ secrets.SSH_USERNAME }}
+          SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
+        run: |
+          set -euo pipefail
+          : "${SSH_HOST:?SSH_HOST secret が未設定です}"
+          : "${SSH_PORT:?SSH_PORT secret が未設定です}"
+          : "${SSH_USERNAME:?SSH_USERNAME secret が未設定です}"
+          : "${SSH_PASSWORD:?SSH_PASSWORD secret が未設定です}"
+          lftp <<LFTP
+          set cmd:fail-exit true
+          set sftp:auto-confirm yes
+          set net:max-retries 2
+          set net:timeout 25
+          open -u "${SSH_USERNAME}","${SSH_PASSWORD}" "sftp://${SSH_HOST}:${SSH_PORT}"
+          debug 3
+          # web/ → wp/ の順に移動。どちらかが無ければ失敗＝誤配置防止の安全弁。
+          cd "${REMOTE_PARENT}"
+          cd "${REMOTE_WP}"
+          put deploy/index.html -o index.html
+          bye
+          LFTP
+
+      - name: 公開URLの応答を確認（情報表示のみ・失敗しても続行）
+        continue-on-error: true
+        run: |
+          set -uo pipefail
+          echo "HTTP status:"
+          curl -s -o /dev/null -w "%{http_code}\n" "https://sake-story.com/?deploycheck=1" || true
+          curl -s "https://sake-story.com/?deploycheck=1" | grep -o "旅するように" | head -1 || echo "(文字列検出できず: 反映待ち/キャッシュ/DirectoryIndex設定の可能性)"
