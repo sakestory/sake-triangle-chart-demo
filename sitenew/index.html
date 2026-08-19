@@ -676,7 +676,7 @@ setTimeout(()=>document.body.classList.add('loaded'),2600); // 保険
 
 // ---- ヘッダー ----
 const hd=document.getElementById('hd');
-addEventListener('scroll',()=>hd.classList.toggle('scrolled',scrollY>innerHeight*0.75),{passive:true});
+addEventListener('scroll',()=>hd.classList.toggle('scrolled',scrollY>80),{passive:true});
 
 // ---- マーキー複製 ----
 (function(){const t=document.getElementById('mq');t.innerHTML+=t.innerHTML;})();
