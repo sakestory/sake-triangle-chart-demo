@@ -1,0 +1,83 @@
+name: Deploy sitenew to Lolipop (/wp/new) via SFTP
+
+# sitenew/ が変わったら、sake-story.com/new/（＝web/wp/new）へ SFTP でアップロードする。
+# ・アップロードのみ・削除なし（--delete は付けない）
+# ・WordPress本体のファイルには一切触らない（wp/ 直下には new フォルダを作るだけ）
+# ・既存の deploy-lolipop.yml（shindan向け）とは独立。同じ Secrets を使う。
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - '.github/workflows/deploy-sitenew.yml'
+      - 'sitenew/**'
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-sitenew
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      REMOTE_PARENT: web
+      REMOTE_WP: wp
+      REMOTE_DIR: new
+    steps:
+      - name: リポジトリを取得
+        uses: actions/checkout@v4
+
+      - name: 公開対象ファイルだけを staging に集める
+        run: |
+          set -euo pipefail
+          mkdir -p deploy
+          cp -R sitenew/. deploy/
+          echo "----- staged files -----"
+          find deploy -type f | sort
+          count=$(find deploy -type f | wc -l | tr -d ' ')
+          echo "staged count: ${count}"
+          test "${count}" -eq 1   # 現在は index.html の1枚だけ。増やしたらこの数字も直す
+
+      - name: lftp を導入
+        run: sudo apt-get update && sudo apt-get install -y lftp
+
+      - name: SFTP でアップロード（アップロードのみ・削除しない）
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_PORT: ${{ secrets.SSH_PORT }}
+          SSH_USERNAME: ${{ secrets.SSH_USERNAME }}
+          SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
+        run: |
+          set -euo pipefail
+          : "${SSH_HOST:?SSH_HOST secret が未設定です}"
+          : "${SSH_PORT:?SSH_PORT secret が未設定です}"
+          : "${SSH_USERNAME:?SSH_USERNAME secret が未設定です}"
+          : "${SSH_PASSWORD:?SSH_PASSWORD secret が未設定です}"
+          lftp <<LFTP
+          set cmd:fail-exit true
+          set sftp:auto-confirm yes
+          set net:max-retries 2
+          set net:timeout 25
+          open -u "${SSH_USERNAME}","${SSH_PASSWORD}" "sftp://${SSH_HOST}:${SSH_PORT}"
+          debug 3
+          # web/ → wp/ の順に移動。どちらかが無ければ失敗させる＝誤配置防止の安全弁。
+          cd "${REMOTE_PARENT}"
+          cd "${REMOTE_WP}"
+          # new フォルダが未作成なら作る（既にあればエラーになるが無視して続行）
+          set cmd:fail-exit false
+          mkdir "${REMOTE_DIR}"
+          set cmd:fail-exit true
+          mirror --reverse --verbose --no-perms --no-symlinks deploy "${REMOTE_DIR}"
+          bye
+          LFTP
+
+      - name: 公開URLの応答を確認（情報表示のみ・失敗しても続行）
+        continue-on-error: true
+        run: |
+          set -uo pipefail
+          echo "HTTP status:"
+          curl -s -o /dev/null -w "%{http_code}\n" https://sake-story.com/new/ || true
+          curl -s https://sake-story.com/new/ | grep -o "旅するように" | head -1 || echo "(文字列検出できず: 反映待ち/キャッシュの可能性)"
