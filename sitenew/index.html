@@ -136,16 +136,23 @@ header nav a::after{
 }
 header nav a:hover::after{transform:scaleX(1);transform-origin:left}
 .h-btn{
-  font-size:12px;letter-spacing:.2em;padding:11px 22px;
+  font-size:12px;letter-spacing:.2em;padding:11px 22px;white-space:nowrap;
   background:var(--moss-deep);border:1px solid var(--moss-deep);
   color:#fff;border-radius:2px;transition:all .45s var(--ease);
 }
 .h-btn:hover{background:var(--moss);border-color:var(--moss)}
 .h-right{display:flex;gap:10px;align-items:center}
 .lang-sw{display:flex;gap:7px}
-.lang-sw a{font-family:var(--latin);font-size:11.5px;letter-spacing:.14em;padding:9px 13px;border-radius:2px;background:var(--aka);color:#fff;transition:opacity .3s,transform .3s}
+.lang-sw a{font-family:var(--latin);font-size:11.5px;letter-spacing:.14em;padding:9px 13px;border-radius:2px;background:var(--aka);color:#fff;transition:opacity .3s,transform .3s;white-space:nowrap}
 .lang-sw a:hover{opacity:.85;transform:translateY(-1px)}
-@media(max-width:480px){.lang-sw a{padding:8px 10px;font-size:10.5px}}
+@media(max-width:520px){
+  header{padding:12px 14px}
+  .h-right{gap:7px}
+  .h-logo{font-size:14.5px;letter-spacing:.18em}
+  .h-logo small{font-size:8px;letter-spacing:.14em}
+  .h-btn{padding:9px 12px;font-size:11px;letter-spacing:.12em;white-space:nowrap}
+  .lang-sw a{padding:8px 9px;font-size:10.5px;letter-spacing:.08em}
+}
 header.scrolled{background:rgba(248,245,238,.92);backdrop-filter:blur(10px);box-shadow:0 1px 0 var(--line);padding:14px clamp(18px,4.5vw,56px)}
 header.scrolled .h-logo,header.scrolled nav{color:var(--ink)}
 header.scrolled .h-logo{color:var(--moss-deep)}
