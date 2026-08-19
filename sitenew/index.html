@@ -126,10 +126,11 @@ header nav a::after{
 }
 header nav a:hover::after{transform:scaleX(1);transform-origin:left}
 .h-btn{
-  font-size:12px;letter-spacing:.2em;padding:11px 22px;border:1px solid rgba(255,255,255,.75);
+  font-size:12px;letter-spacing:.2em;padding:11px 22px;
+  background:var(--moss-deep);border:1px solid var(--moss-deep);
   color:#fff;border-radius:2px;transition:all .45s var(--ease);
 }
-.h-btn:hover{background:#fff;color:var(--ink)}
+.h-btn:hover{background:var(--moss);border-color:var(--moss)}
 .h-right{display:flex;gap:10px;align-items:center}
 .lang-sw{display:flex;gap:7px}
 .lang-sw a{font-family:var(--latin);font-size:11.5px;letter-spacing:.14em;padding:9px 13px;border-radius:2px;background:var(--aka);color:#fff;transition:opacity .3s,transform .3s}
@@ -138,8 +139,6 @@ header nav a:hover::after{transform:scaleX(1);transform-origin:left}
 header.scrolled{background:rgba(248,245,238,.92);backdrop-filter:blur(10px);box-shadow:0 1px 0 var(--line);padding:14px clamp(18px,4.5vw,56px)}
 header.scrolled .h-logo,header.scrolled nav{color:var(--ink)}
 header.scrolled .h-logo{color:var(--moss-deep)}
-header.scrolled .h-btn{border-color:var(--moss);color:var(--moss-deep)}
-header.scrolled .h-btn:hover{background:var(--moss);color:#fff}
 @media(min-width:821px){.hero-inner{padding-right:clamp(90px,10vw,150px)}}
 @media(max-width:820px){header nav{display:none}.tate{display:none}}
 
@@ -181,8 +180,8 @@ body.loaded .hero .feat{opacity:1;transform:none}
 .hero .cta{margin-top:26px;display:flex;gap:12px;flex-wrap:wrap;opacity:0;transform:translateY(14px);transition:opacity 1s 1.45s var(--ease),transform 1s 1.45s var(--ease)}
 body.loaded .hero .cta{opacity:1;transform:none}
 .hero .cta .btn{margin-top:0}
-.hero .cta .btn.ghost{background:rgba(30,26,20,.25);border:1px solid rgba(255,255,255,.75);color:#fff}
-.hero .cta .btn.ghost:hover{background:#fff;color:var(--ink)}
+.hero .cta .btn.ghost{background:rgba(255,255,255,.92);border:none;color:var(--ink)}
+.hero .cta .btn.ghost:hover{background:#fff;transform:translateY(-2px)}
 .hero .h-en{
   font-family:var(--latin);font-size:12px;letter-spacing:.5em;margin-bottom:20px;color:rgba(255,255,255,.9);
   opacity:0;transition:opacity 1.2s .6s;
