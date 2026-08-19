@@ -42,7 +42,10 @@ jobs:
           test "${count}" -eq 4   # index.html＋en/＋zh-cn/＋business/ の4枚。増やしたらこの数字も直す
 
       - name: lftp を導入
-        run: sudo apt-get update && sudo apt-get install -y lftp
+        run: |
+          set -euo pipefail
+          # aptミラー渋滞で固まらないよう、updateを飛ばして直接インストール→失敗時のみupdateして再試行
+          sudo timeout 120 apt-get install -y lftp || { sudo timeout 300 apt-get update; sudo timeout 300 apt-get install -y lftp; }
 
       - name: SFTP でアップロード（アップロードのみ・削除しない）
         env:
