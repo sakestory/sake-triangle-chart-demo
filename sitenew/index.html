@@ -109,9 +109,19 @@ a{color:inherit;text-decoration:none}
 @keyframes lline{to{width:120px}}
 body.loaded #loader{opacity:0;visibility:hidden}
 
+/* ============ 最上部の帯バナー（ご接待・ご宴席） ============ */
+.notice-bar{
+  position:fixed;top:0;left:0;right:0;z-index:85;display:block;
+  background:#8a682e;color:#f6f1e2;text-align:center;
+  font-size:12px;letter-spacing:.08em;padding:10px 12px;line-height:1.4;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  transition:background .3s;
+}
+.notice-bar:hover{background:#9a7636}
+
 /* ============ ヘッダー ============ */
 header{
-  position:fixed;top:0;left:0;right:0;z-index:80;
+  position:fixed;top:38px;left:0;right:0;z-index:80;
   display:flex;align-items:center;justify-content:space-between;
   padding:20px clamp(18px,4.5vw,56px);
   transition:background .5s,box-shadow .5s,padding .5s;
@@ -414,6 +424,7 @@ footer{background:var(--moss-deep);color:#e9e5d7;padding:clamp(52px,7vw,84px) cl
 
 <div class="sample-tag">PREVIEW v3.6 — 下書き・検索対象外</div>
 
+<a class="notice-bar" href="business/">ご接待・ご宴席 ─ 完全個室（5〜8名様）のご案内 →</a>
 <header id="hd">
   <a class="h-logo" href="#top">SAKE story<small>五反田・少し大人の為の日本酒酒場</small></a>
   <nav>
