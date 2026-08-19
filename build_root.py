@@ -63,3 +63,15 @@ import os
 os.makedirs("deploy", exist_ok=True)
 open("deploy/index.html", "w", encoding="utf-8").write(t)
 print("本番用 index.html を生成（全5点の変換と検算に合格）")
+
+# --- 言語版・接待ページ：noindexを外して本番化 ---
+for sub in ["en", "zh-cn", "business"]:
+    p = f"sitenew/{sub}/index.html"
+    s = open(p, encoding="utf-8").read()
+    old = '<meta name="robots" content="noindex,nofollow">'
+    assert old in s, f"{sub}: noindex行が見つからない"
+    s = s.replace(old, "")
+    assert "noindex" not in s, f"{sub}: noindexが残っている"
+    os.makedirs(f"deploy/{sub}", exist_ok=True)
+    open(f"deploy/{sub}/index.html", "w", encoding="utf-8").write(s)
+    print(f"本番用 {sub}/index.html を生成（noindex解除）")

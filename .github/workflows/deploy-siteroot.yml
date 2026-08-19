@@ -34,7 +34,7 @@ jobs:
           find deploy -type f | sort
           count=$(find deploy -type f | wc -l | tr -d ' ')
           echo "staged count: ${count}"
-          test "${count}" -eq 1   # index.html の1枚だけ。増やしたらこの数字も直す
+          test "${count}" -eq 4   # index.html＋en/＋zh-cn/＋business/ の4枚。増やしたらこの数字も直す
 
       - name: lftp を導入
         run: sudo apt-get update && sudo apt-get install -y lftp
@@ -62,6 +62,9 @@ jobs:
           cd "${REMOTE_PARENT}"
           cd "${REMOTE_WP}"
           put deploy/index.html -o index.html
+          mirror --reverse --verbose --no-perms --no-symlinks deploy/en en
+          mirror --reverse --verbose --no-perms --no-symlinks deploy/zh-cn zh-cn
+          mirror --reverse --verbose --no-perms --no-symlinks deploy/business business
           bye
           LFTP
 
