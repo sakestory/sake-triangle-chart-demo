@@ -305,14 +305,16 @@ h2.tit{
 .btn.line:hover{background:var(--moss-deep);color:#fff;transform:translateY(-2px)}
 .tanbo{
   grid-column:1/-1;margin-top:clamp(28px,4vw,44px);
-  background:#fdfbf5;border:1px solid var(--line);border-radius:3px;
-  padding:clamp(24px,3.5vw,36px);
+  background:var(--moss-deep);border:none;border-radius:3px;
+  padding:clamp(26px,3.8vw,40px);
   display:flex;justify-content:space-between;align-items:center;gap:20px 32px;flex-wrap:wrap;
+  color:#f2efe4;
 }
-.tanbo h3{font-family:var(--mincho);font-size:clamp(18px,2.2vw,22px);letter-spacing:.14em;font-weight:500}
-.tanbo h3 small{font-size:11px;color:var(--aka);letter-spacing:.2em;margin-left:12px;font-family:var(--gothic);font-weight:400}
-.tanbo p{font-size:13px;color:var(--ink-soft);margin-top:8px;max-width:40em;line-height:1.95}
-.tanbo .btn{margin-top:0;white-space:nowrap}
+.tanbo h3{font-family:var(--mincho);font-size:clamp(19px,2.3vw,23px);letter-spacing:.14em;font-weight:500;color:#fff}
+.tanbo h3 small{font-size:11px;color:#dfc08c;letter-spacing:.2em;margin-left:12px;font-family:var(--gothic);font-weight:400}
+.tanbo p{font-size:13px;color:rgba(242,239,228,.85);margin-top:8px;max-width:40em;line-height:1.95}
+.tanbo .btn{margin-top:0;white-space:nowrap;background:#f8f5ee;border:none;color:var(--moss-deep)}
+.tanbo .btn:hover{background:#fff;transform:translateY(-2px)}
 @media(max-width:820px){.shindan .wrap{grid-template-columns:1fr}}
 
 /* ============ 店主 ============ */
