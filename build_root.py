@@ -30,7 +30,9 @@ must_replace(
     '<meta name="description" content="五反田の日本酒酒場「SAKE story」は、Mr.SAKEグランプリ受賞の店主が厳選した日本酒専門店。十四代・鍋島・新政など希少銘柄と郷土料理のペアリング。店主考案の「日本酒三角チャート」診断で好みの一杯が見つかります。JR五反田駅 西口徒歩4分。">',
 )
 
-# ④ Googleアナリティクス（現行トップと同じ3つのID）を先頭のpreconnect前に挿入
+# ④ Googleアナリティクス（現行トップと同じ3つのID）をフォント読み込みの前に挿入
+#    ※目印はページ内に1か所しかない完全な行を使う（2重挿入事故の防止）
+anchor = '<link rel="preconnect" href="https://fonts.googleapis.com">'
 ga = """<script async src="https://www.googletagmanager.com/gtag/js?id=G-NK2MW06S5P"></script>
 <script>
 window.dataLayer = window.dataLayer || [];
@@ -40,8 +42,9 @@ gtag('config', 'G-NK2MW06S5P');
 gtag('config', 'GT-TWZ9QN7H');
 gtag('config', 'G-98BQ8NC620');
 </script>
-<link rel="preconnect\""""
-must_replace('<link rel="preconnect"', ga)
+""" + anchor
+assert src.count(anchor) == 1, "GA挿入の目印が1か所ではない"
+must_replace(anchor, ga)
 
 # ⑤ 下書き表記を削除
 must_replace('<div class="sample-tag">PREVIEW v3.6 — 下書き・検索対象外</div>\n', "")
