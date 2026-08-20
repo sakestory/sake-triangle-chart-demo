@@ -311,7 +311,11 @@ h2.tit{
 @keyframes draw{to{stroke-dashoffset:0}}
 @keyframes dotin{from{opacity:0;transform:scale(0)}to{opacity:1;transform:scale(1)}}
 .shindan h2.tit em{font-style:normal;color:var(--moss-deep)}
-.shindan .copy{margin-top:14px;font-family:var(--mincho);color:var(--aka);letter-spacing:.18em;font-size:clamp(14.5px,1.8vw,17px)}
+.reg2{font-size:.45em;vertical-align:super;letter-spacing:0}
+.shindan .copy{margin-top:16px;font-family:var(--mincho);color:var(--aka);letter-spacing:.14em;font-size:clamp(16px,2vw,19px);line-height:1.9}
+.note-link{margin-top:16px;font-size:12.5px;letter-spacing:.1em}
+.note-link a{color:var(--moss-deep);text-decoration:underline;text-underline-offset:4px}
+.note-link a:hover{color:var(--moss)}
 .btn{
   display:inline-block;margin-top:36px;padding:16px 44px;border-radius:2px;
   background:var(--moss-deep);color:#fff;font-size:13.5px;letter-spacing:.24em;
@@ -437,6 +441,7 @@ footer{background:var(--moss-deep);color:#e9e5d7;padding:clamp(52px,7vw,84px) cl
   <nav>
     <a href="#menu">お品書き</a>
     <a href="#shindan">日本酒診断</a>
+    <a href="business/">ご宴会・ご接待</a>
     <a href="#story">物語</a>
     <a href="#owner">店主</a>
     <a href="#news">お知らせ</a>
@@ -553,10 +558,11 @@ footer{background:var(--moss-deep);color:#e9e5d7;padding:clamp(52px,7vw,84px) cl
     </div>
     <div>
       <div class="label rv">SAKE DIAGNOSIS</div>
-      <h2 class="tit rv d1">日本酒三角チャート<br><em>あなたの中の“酒猫”を探そう</em></h2>
-      <p class="copy rv d2">好きな日本酒が、見つかる。</p>
-      <p class="lead-p rv d2">店主がAIを使って開発した診断アプリ。<br>10の質問に答えるだけで、あなたの好みが三角チャートの上にあらわれます。<br>その結果からおすすめの一杯をナビゲートします。</p>
+      <h2 class="tit rv d1">日本酒三角チャート<sup class="reg2">®</sup></h2>
+      <p class="copy rv d2">10の質問で、好きな日本酒が見つかる。</p>
+      <p class="lead-p rv d2">店主がAIを使って開発した無料の診断アプリ。<br>答えるだけで、あなたの好みが三角チャートの上にあらわれます。<br>その結果からおすすめの一杯をナビゲートします。</p>
       <div class="rv d3"><a class="btn" href="https://shindan.sake-story.com/">診断をはじめる（無料・約1〜2分）</a></div>
+      <p class="note-link rv d3"><a href="https://note.com/mr_sake" target="_blank" rel="noopener">開発秘話は、店主のnoteで →</a></p>
     </div>
     <div class="tanbo rv">
       <div>
@@ -690,7 +696,7 @@ footer{background:var(--moss-deep);color:#e9e5d7;padding:clamp(52px,7vw,84px) cl
   <div class="f-grid">
     <div class="adr">少し大人の為の日本酒酒場 SAKE story<br>東京都品川区西五反田2-17-8 安東ビル2F</div>
     <nav class="f-nav">
-      <a href="#menu">お品書き</a><a href="#shindan">日本酒診断</a><a href="#story">物語</a><a href="#owner">店主</a><a href="#news">お知らせ</a><a href="#info">店舗情報</a>
+      <a href="#menu">お品書き</a><a href="#shindan">日本酒診断</a><a href="business/">ご宴会・ご接待</a><a href="#story">物語</a><a href="#owner">店主</a><a href="#news">お知らせ</a><a href="#info">店舗情報</a>
     </nav>
   </div>
   <div class="f-copy"><span>© SAKE story</span><span>DESIGN SAMPLE v3.6 — NOT PUBLISHED</span></div>
