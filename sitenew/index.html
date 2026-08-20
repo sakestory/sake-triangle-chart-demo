@@ -225,18 +225,18 @@ body.loaded .tate{opacity:1}
 .slide-dots b{width:26px;height:2px;background:rgba(255,255,255,.35);cursor:pointer;transition:background .4s}
 .slide-dots b.on{background:#fff}
 
-/* ============ マーキー ============ */
+/* ============ 帯（静止表示） ============ */
 .marquee{
   border-top:1px solid var(--line);border-bottom:1px solid var(--line);
-  overflow:hidden;white-space:nowrap;padding:16px 0;background:var(--paper);
+  overflow-x:auto;white-space:nowrap;padding:16px 0;background:var(--paper);
+  text-align:center;
 }
-.marquee .track{display:inline-block;animation:mq 34s linear infinite}
+.marquee .track{display:inline-block}
 .marquee span{
-  font-family:var(--latin);font-size:clamp(15px,2vw,19px);letter-spacing:.34em;color:var(--ink-soft);
-  padding:0 2.2em;
+  font-family:var(--latin);font-size:clamp(13px,2vw,19px);letter-spacing:.28em;color:var(--ink-soft);
+  padding:0 1.4em;
 }
 .marquee span.jp{font-family:var(--mincho);color:var(--moss-deep)}
-@keyframes mq{to{transform:translateX(-50%)}}
 
 /* ============ 共通 ============ */
 section{position:relative}
@@ -478,9 +478,9 @@ footer{background:var(--moss-deep);color:#e9e5d7;padding:clamp(52px,7vw,84px) cl
   <div class="slide-dots" id="dots"></div>
 </div>
 
-<!-- マーキー -->
+<!-- 帯（静止表示） -->
 <div class="marquee" aria-hidden="true">
-  <div class="track" id="mq">
+  <div class="track">
     <span>SAKE STORY</span><span class="jp">日本酒に、物語を。</span><span>GOTANDA TOKYO</span><span class="jp">季節の日本酒、地域の肴</span>
   </div>
 </div>
@@ -741,19 +741,14 @@ setTimeout(()=>document.body.classList.add('loaded'),2600); // 保険
 const hd=document.getElementById('hd');
 addEventListener('scroll',()=>hd.classList.toggle('scrolled',scrollY>80),{passive:true});
 
-// ---- マーキー複製 ----
-(function(){const t=document.getElementById('mq');t.innerHTML+=t.innerHTML;})();
-
 // ---- スクロール出現 ----
 const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:0.18});
 document.querySelectorAll('.rv,.tri-box').forEach(el=>io.observe(el));
 
-// ---- ささやかな視差（タッチ端末は対象外：iOSの慣性スクロール中にJSの追従が遅れ、
-//      指を離した瞬間に写真が一気に動いて見える不具合があるため） ----
+// ---- ささやかな視差 ----
 (function(){
   const els=[...document.querySelectorAll('[data-plx]')];
-  const isTouch=matchMedia('(pointer: coarse)').matches;
-  if(!els.length||isTouch||matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  if(!els.length||matchMedia('(prefers-reduced-motion: reduce)').matches)return;
   let tick=false;
   function run(){
     els.forEach(el=>{
