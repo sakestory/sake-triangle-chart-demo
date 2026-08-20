@@ -225,19 +225,6 @@ body.loaded .tate{opacity:1}
 .slide-dots b{width:26px;height:2px;background:rgba(255,255,255,.35);cursor:pointer;transition:background .4s}
 .slide-dots b.on{background:#fff}
 
-/* ============ 帯（静止表示） ============ */
-.marquee{
-  border-top:1px solid var(--line);border-bottom:1px solid var(--line);
-  overflow-x:auto;white-space:nowrap;padding:16px 0;background:var(--paper);
-  text-align:center;
-}
-.marquee .track{display:inline-block}
-.marquee span{
-  font-family:var(--latin);font-size:clamp(13px,2vw,19px);letter-spacing:.28em;color:var(--ink-soft);
-  padding:0 1.4em;
-}
-.marquee span.jp{font-family:var(--mincho);color:var(--moss-deep)}
-
 /* ============ 共通 ============ */
 section{position:relative}
 .wrap{max-width:1120px;margin:0 auto;padding:clamp(76px,12vw,140px) clamp(20px,5.5vw,56px)}
@@ -476,13 +463,6 @@ footer{background:var(--moss-deep);color:#e9e5d7;padding:clamp(52px,7vw,84px) cl
     </div>
   </div>
   <div class="slide-dots" id="dots"></div>
-</div>
-
-<!-- 帯（静止表示） -->
-<div class="marquee" aria-hidden="true">
-  <div class="track">
-    <span>SAKE STORY</span><span class="jp">日本酒に、物語を。</span><span>GOTANDA TOKYO</span><span class="jp">季節の日本酒、地域の肴</span>
-  </div>
 </div>
 
 <!-- お品書き・コース（トップ直下に配置） -->
