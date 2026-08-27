@@ -197,8 +197,6 @@ body.loaded .hero .feat{opacity:1;transform:none}
 .hero .cta{margin-top:26px;display:flex;gap:12px;flex-wrap:wrap;opacity:0;transform:translateY(14px);transition:opacity 1s 1.45s var(--ease),transform 1s 1.45s var(--ease)}
 body.loaded .hero .cta{opacity:1;transform:none}
 .hero .cta .btn{margin-top:0}
-.hero .cta .btn.ghost{background:rgba(255,255,255,.92);border:none;color:var(--ink)}
-.hero .cta .btn.ghost:hover{background:#fff;transform:translateY(-2px)}
 .hero .h-en{
   font-family:var(--latin);font-size:12px;letter-spacing:.5em;margin-bottom:20px;color:rgba(255,255,255,.9);
   opacity:0;transition:opacity 1.2s .6s;
@@ -368,6 +366,28 @@ footer{background:var(--moss-deep);color:#e9e5d7;padding:clamp(52px,7vw,84px) cl
 .f-nav a{opacity:.85}.f-nav a:hover{opacity:1;text-decoration:underline;text-underline-offset:5px}
 .f-copy{margin-top:44px;padding-top:20px;border-top:1px solid rgba(233,229,215,.2);font-family:var(--latin);font-size:10.5px;letter-spacing:.3em;color:rgba(233,229,215,.6);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
 
+/* ============ クイック店舗情報（ヒーロー直下） ============ */
+.quick-info{background:var(--paper-2);border-bottom:1px solid var(--line)}
+.qi-wrap{
+  max-width:1120px;margin:0 auto;padding:22px clamp(20px,5.5vw,56px);
+  display:flex;gap:clamp(22px,4vw,44px);align-items:stretch;flex-wrap:wrap;
+}
+.qi-row{display:flex;gap:clamp(20px,4vw,44px);flex-wrap:wrap;flex:1;min-width:240px}
+.qi-item{min-width:135px}
+.qi-label{font-size:10.5px;letter-spacing:.2em;color:var(--moss-deep);font-weight:500;margin-bottom:6px}
+.qi-value{font-size:12.5px;line-height:1.85;letter-spacing:.03em}
+.qi-value small{display:block;color:var(--ink-soft);font-size:11px;margin-top:2px;letter-spacing:.02em}
+.qi-map{flex:none;width:220px;display:flex;flex-direction:column;gap:6px}
+.qi-map iframe{width:100%;height:118px;border:0;border-radius:2px;display:block}
+.qi-maplink{font-size:11px;letter-spacing:.06em;color:var(--moss-deep);text-align:right}
+.qi-maplink:hover{text-decoration:underline;text-underline-offset:3px}
+@media(max-width:820px){
+  .qi-wrap{flex-direction:column;padding:20px clamp(18px,5vw,28px)}
+  .qi-row{gap:18px 28px}
+  .qi-map{width:100%}
+  .qi-map iframe{height:150px}
+}
+
 /* ============ お品書き・コース ============ */
 .course-list{margin-top:44px;border-top:1px solid var(--line)}
 .course{display:grid;grid-template-columns:1fr auto;gap:18px;align-items:baseline;padding:22px 4px;border-bottom:1px solid var(--line)}
@@ -458,12 +478,36 @@ footer{background:var(--moss-deep);color:#e9e5d7;padding:clamp(52px,7vw,84px) cl
     </div>
     <div class="cta">
       <a class="btn" href="https://yoyaku.tabelog.com/yoyaku/net_booking_form/index?rcd=13212028" target="_blank" rel="noopener">ネット予約はこちら</a>
-      <a class="btn ghost" href="https://shindan.sake-story.com/">日本酒診断をやってみる</a>
-      <a class="btn ghost" href="business/">ご宴会・ご接待</a>
+      <a class="btn" href="https://shindan.sake-story.com/">日本酒診断をやってみる</a>
+      <a class="btn" href="business/">ご宴会・ご接待</a>
     </div>
   </div>
   <div class="slide-dots" id="dots"></div>
 </div>
+
+<!-- クイック店舗情報：営業時間・定休日・住所・地図（ヒーロー直下） -->
+<section class="quick-info" aria-label="店舗情報">
+  <div class="qi-wrap">
+    <div class="qi-row">
+      <div class="qi-item">
+        <div class="qi-label">営業時間</div>
+        <div class="qi-value">火〜金 17:00〜24:00<br>月・土 17:00〜22:00</div>
+      </div>
+      <div class="qi-item">
+        <div class="qi-label">定休日</div>
+        <div class="qi-value">日曜・祝日<small>（ほか第2・4・5土曜）</small></div>
+      </div>
+      <div class="qi-item">
+        <div class="qi-label">住所</div>
+        <div class="qi-value">西五反田2-17-8 安東ビル2F<small>JR五反田駅 西口より徒歩4分</small></div>
+      </div>
+    </div>
+    <div class="qi-map">
+      <iframe src="https://www.google.com/maps?q=35.626614,139.723450&z=16&output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="SAKE story 地図"></iframe>
+      <a class="qi-maplink" href="https://www.google.com/maps/search/?api=1&query=35.626614,139.723450" target="_blank" rel="noopener">Googleマップで開く →</a>
+    </div>
+  </div>
+</section>
 
 <!-- お品書き・コース（トップ直下に配置） -->
 <section class="menu-sec" id="menu">
