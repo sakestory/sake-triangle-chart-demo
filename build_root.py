@@ -59,10 +59,15 @@ assert t.count("gtag('config'") == 3, "GA設定が3本ない"
 assert "PREVIEW" not in t and "DESIGN SAMPLE" not in t, "下書き表記が残っている"
 assert 'rel="canonical"' in t, "canonicalが無い"
 
-import os
+import os, shutil
 os.makedirs("deploy", exist_ok=True)
 open("deploy/index.html", "w", encoding="utf-8").write(t)
 print("本番用 index.html を生成（全5点の変換と検算に合格）")
+
+# --- 画像アセット：加工不要のためそのままコピー ---
+if os.path.isdir("sitenew/assets"):
+    shutil.copytree("sitenew/assets", "deploy/assets", dirs_exist_ok=True)
+    print("assets/ をそのままコピー")
 
 # --- 言語版・接待ページ：noindexを外して本番化 ---
 for sub in ["en", "zh-cn", "business"]:

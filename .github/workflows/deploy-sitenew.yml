@@ -39,7 +39,7 @@ jobs:
           find deploy -type f | sort
           count=$(find deploy -type f | wc -l | tr -d ' ')
           echo "staged count: ${count}"
-          test "${count}" -eq 4   # index.html＋en/＋zh-cn/＋business/ の4枚。増やしたらこの数字も直す
+          test "${count}" -eq 5   # index.html＋en/＋zh-cn/＋business/＋assets/img/shukou-gyoza.jpg の5枚。増やしたらこの数字も直す
 
       - name: lftp を導入
         run: |
