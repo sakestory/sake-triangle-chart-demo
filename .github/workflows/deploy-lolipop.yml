@@ -99,7 +99,7 @@ jobs:
           find deploy -type f -printf '%f\n' | sort
           count=$(find deploy -type f | wc -l | tr -d ' ')
           echo "staged count: ${count}"
-          test "${count}" -eq 68   # 既存58（50+言語別OGP4+言語別入口4）+ 酒造りゲーム7（index.html+酒猫5枚+OGP画像）+ マイページ2（index.html+store.html）+ shindan_core.js（v11.25ロジック分離）。数が合わなければ失敗させる
+          test "${count}" -eq 73   # 既存58（50+言語別OGP4+言語別入口4）+ 酒造りゲーム7（index.html+酒猫5枚+OGP画像）+ マイページ7（index.html+store.html+manifest+sw.js+アイコン3枚。v0.5でホーム画面追加に対応し2→7）+ shindan_core.js（v11.25ロジック分離）。数が合わなければ失敗させる
 
       - name: lftp を導入
         run: sudo apt-get update && sudo apt-get install -y lftp

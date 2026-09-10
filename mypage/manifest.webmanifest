@@ -1,0 +1,17 @@
+{
+  "name": "SAKE story マイページ",
+  "short_name": "SAKE story",
+  "description": "日本酒居酒屋 SAKE story のマイページ。診断結果と飲んだお酒の記録、好きなお酒の入荷のお知らせ。",
+  "lang": "ja",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#faf6ee",
+  "theme_color": "#faf6ee",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
