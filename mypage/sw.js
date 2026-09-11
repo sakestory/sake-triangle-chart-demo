@@ -10,13 +10,20 @@
 
    【版上げルール・必ず守る】
    公開のたびに下の CACHE の数字を1つ上げること。上げ忘れると、前に開いた方の画面に
-   最初の1回だけ古い版が出る（探訪帳v4.3公開時に実際に起きた）。 */
+   最初の1回だけ古い版が出る（探訪帳v4.3公開時に実際に起きた）。
 
-var CACHE = "mypage-v1";
+   【2026-09-11 v2の修正】マニフェストのファイル名を manifest.webmanifest から
+   manifest.json に変えた。ロリポップのApacheが .webmanifest 拡張子を知らず、
+   Content-Type ヘッダが一切付かずに配信されていた（他のhtml/png/jsには付いていた）。
+   Androidのブラウザはマニフェストが正しく配信されないと「その場でホーム画面に追加」の
+   合図を出さないため、.json（Apacheが既定で知っている拡張子）に寄せて解決した。
+   .htaccess でMIMEタイプを足す手もあるが、サーバ設定の失敗で500になる恐れがあるので採らない。 */
+
+var CACHE = "mypage-v2";
 var ASSETS = [
   "./",
   "./index.html",
-  "./manifest.webmanifest",
+  "./manifest.json",
   "./icon-192.png",
   "./icon-512.png",
   "./apple-touch-icon.png"
@@ -25,7 +32,7 @@ var ASSETS = [
 /* 中身が変わりうるもの＝毎回かならず取りにいく */
 function isFresh(url, req) {
   if (req.mode === "navigate") return true;
-  return /\.html$|\.json$|\.webmanifest$|\/$/.test(url.pathname);
+  return /\.html$|\.json$|\/$/.test(url.pathname);
 }
 
 self.addEventListener("install", function (e) {

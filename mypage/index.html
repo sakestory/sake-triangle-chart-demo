@@ -5,13 +5,18 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex">
 <title>SAKE story マイページ</title>
-<link rel="manifest" href="manifest.webmanifest">
+<link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="SAKE story">
 <meta name="theme-color" content="#faf6ee">
 <!--
-  SAKE story マイページ（お客様側） v0.5
+  SAKE story マイページ（お客様側） v0.6
+  v0.6（2026-09-11）：マニフェストを manifest.webmanifest → manifest.json に改名。
+    ロリポップのApacheが .webmanifest を知らず、Content-Typeヘッダが付かずに
+    配信されていた（html/png/jsには付いていた）。Androidはマニフェストが正しく
+    配信されないと「その場で追加」の合図を出さないため、.jsonに寄せて解決。
+    sw.jsのCACHEも v1→v2 に加算。
   v0.5（2026-09-11）：ホーム画面追加のおすすめを画面下の帯で出すようにした。
     Android・パソコンのChromeは beforeinstallprompt で「押せばその場で追加」。
     iPhoneのSafariはその仕組みが無いので、共有ボタンを矢印で指す案内にとどめる（技術的な限界）。
@@ -239,7 +244,7 @@
 <div class="wrap">
   <h1>SAKE story</h1>
   <div class="sub-title">日本酒居酒屋 SAKE story ｜ マイページ</div>
-  <div class="ver">バージョン 0.5（開発中の試作版です）</div>
+  <div class="ver">バージョン 0.6（開発中の試作版です）</div>
 
   <!-- ようこそ（初回のニックネーム登録） -->
   <div id="viewWelcome" class="hidden">
